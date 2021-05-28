@@ -1,0 +1,14 @@
+.body {
+  width: 100%;
+  min-height: 10vh;
+  background-image: linear-gradient(to right top, #2468cd, #6d67cf, #9b66cc, #c064c4, #df64b9, #ef68a9, #f96f9a, #ff798c, #ff887c, #ff9a6f, #ffae65, #ffc261);
+}
+
+.login-center {
+  width: 60%;
+  margin-right: 20%;
+  margin-left: 20%;
+  background-color: rgba(255,255,255,0.64);
+  min-height: 400px;
+}
+
