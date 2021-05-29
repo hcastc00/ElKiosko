@@ -19,15 +19,6 @@ var connection  = mysql.createConnection({
 });
 
 
-// connect to mysql
-connection.connect(function(err) {
-    // in case of error
-    if(err){
-        console.log(err.code);
-        console.log(err.fatal);
-    }
-});
-
 // Perform a query
 $query = 'SELECT * from colecciones LIMIT 10';
 
@@ -38,9 +29,4 @@ connection.query($query, function(err, rows, fields) {
     }
 
     console.log("Query succesfully executed: ", rows);
-});
-
-// Close the connection
-connection.end(function(){
-    // The connection has been closed
 });
