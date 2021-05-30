@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Kiosko</title>
@@ -30,6 +32,9 @@
             </div>
         </div>
     </nav>
+    <div class="color form-group mb-3"><label class="form-label" style="margin-top: 15px;">Introduzca la fotografía asociada al cromo</label>
+        <div class="files overflow-hidden" style="width: 100%;"><input type="file" id="imagen" accept="image/*" onchange="imagenIntroducida()"></div>
+    </div><button class="btn btn-primary action-button" type="button" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);" onclick="enviaFormulario()">Enviar</button>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
