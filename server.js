@@ -33,7 +33,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// Post para recibir imagenes introducidas por el admin
+//Post para recibir imagenes introducidas por el admin
 app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
   const file = req.file;
   if (!file) {
@@ -43,3 +43,15 @@ app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
   }
   res.send(200);
 });
+
+//Uploading multiple files
+app.post('/uploadmultiple', upload.array('files', 12), (req, res, next) => {
+  const files = req.files
+  if (!files) {
+    const error = new Error('Please choose files')
+    error.httpStatusCode = 400
+    return next(error)
+  }
+  res.send(files)
+
+})

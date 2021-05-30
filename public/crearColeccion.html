@@ -1,101 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Kiosko</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css" />
-    <link
-      rel="stylesheet"
-      href="assets/css/Bold-BS4-Jumbotron-with-Particles-js-1.css"
-    />
-    <link
-      rel="stylesheet"
-      href="assets/css/Bold-BS4-Jumbotron-with-Particles-js.css"
-    />
-    <link rel="stylesheet" href="assets/css/Highlight-Blue.css" />
-    <link rel="stylesheet" href="assets/css/Highlight-Phone.css" />
-    <link rel="stylesheet" href="assets/css/login-form---Ambrodu-1.css" />
-    <link rel="stylesheet" href="assets/css/login-form---Ambrodu.css" />
-    <link rel="stylesheet" href="assets/css/Ludens-Users---2-Register.css" />
-    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css" />
-    <link rel="stylesheet" href="assets/css/Responsive-Image-File-Input.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-  </head>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css">
+    <link rel="stylesheet" href="assets/css/Bold-BS4-Jumbotron-with-Particles-js-1.css">
+    <link rel="stylesheet" href="assets/css/Bold-BS4-Jumbotron-with-Particles-js.css">
+    <link rel="stylesheet" href="assets/css/Drag-and-Drop-File-Input.css">
+    <link rel="stylesheet" href="assets/css/Drag-and-Drop-Multiple-File-Form-Input-upload-Advanced.css">
+    <link rel="stylesheet" href="assets/css/Highlight-Blue.css">
+    <link rel="stylesheet" href="assets/css/Highlight-Phone.css">
+    <link rel="stylesheet" href="assets/css/login-form---Ambrodu-1.css">
+    <link rel="stylesheet" href="assets/css/login-form---Ambrodu.css">
+    <link rel="stylesheet" href="assets/css/Ludens-Users---2-Register.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="assets/css/Responsive-Image-File-Input.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
 
-  <body>
+<body>
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-      <div class="container">
-        <a class="navbar-brand" href="index.html" style="font-size: 40px"
-          >El Kiosko</a
-        ><button
-          data-bs-toggle="collapse"
-          class="navbar-toggler"
-          data-bs-target="#navcol-1"
-        >
-          <span class="visually-hidden">Toggle navigation</span
-          ><span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navcol-1">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"></li>
-            <li class="nav-item"></li>
-          </ul>
-          <span class="navbar-text actions">
-            <a
-              class="btn btn-light action-button"
-              role="button"
-              href="registro.html"
-              style="
-                font-size: 20px;
-                background: rgb(179, 236, 236);
-                color: rgb(34, 34, 34);
-              "
-              >Cerrar Sesión</a
-            ></span
-          >
+        <div class="container"><a class="navbar-brand" href="index.html" style="font-size: 40px;">El Kiosko</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul><span class="navbar-text actions"> <a class="btn btn-light action-button" role="button" href="registro.html" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);">Cerrar Sesión</a></span>
+            </div>
         </div>
-      </div>
     </nav>
-    <form
-      id="imagen"
-      action="/uploadfile"
-      enctype="multipart/form-data"
-      method="POST"
-    >
-      <div class="color form-group mb-3">
-        <label class="form-label" style="margin-top: 15px"
-          >Introduzca la fotografía asociada al cromo</label
-        >
-        <div class="files overflow-hidden" style="width: 100%">
-          <input
-            type="file"
-            name="myFile"
-            accept="image/*"
-            onchange="imagenIntroducida()"
-          />
+    <div class="m-5">
+        <div id="backdrop" class="backdrop backdrop-transition backdrop-dark">
+            <div class="text-center w-100" style="position: absolute;top: 50%;">
+                <div class="bg-light border rounded border-success shadow-lg m-auto" style="width: 150px;height: 150px;"><i class="fa fa-upload d-block p-4" style="font-size: 50px;"></i><span>Drop file to attach</span></div>
+            </div>
         </div>
-      </div>
-      <button
-        class="btn btn-primary action-button"
-        type="button"
-        style="
-          font-size: 20px;
-          background: rgb(179, 236, 236);
-          color: rgb(34, 34, 34);
-        "
-        onclick="enviaFormulario()"
-      >
-        Enviar
-      </button>
-    </form>
+        <div class="bg-light border rounded border-light pt-1 jumbotron py-5 px-4">
+            <div class="alert alert-success invisible mt-5" role="alert"><span id="notify"></span></div>
+            <h1>Subida de imagenes</h1>
+            <p><label class="form-label" for="form-files"><a class="btn btn-secondary btn-sm" role="button">Selecciona</a></label>&nbsp;o arrastra aqui tus archivos<br></p>
+            <p id="filecount"><br></p>
+            <div id="list"></div>
+            <form id="imagen" method="post" action="/uploadmultiple" enctype="multipart/form-data"><input class="form-control invisible" type="file" id="form-files" name="files" multiple=""><button class="btn btn-outline-primary d-block w-100" type="button" onclick="enviaFormulario()">Enviar</button><button class="btn btn-danger mt-5" type="reset" onclick="clearFiles()">Resetear</button></form>
+        </div>
+        <div class="text-center bg-light border rounded border-dark shadow-lg p-3"><img id="image_preview" width="100">
+            <div><button class="btn btn-warning btn-sm m-3" onclick="previewClose()">Cerrar</button></div>
+        </div>
+        <div class="m-5">
+            <div id="backdrop-1" class="backdrop backdrop-transition backdrop-dark">
+                <div class="text-center w-100" style="position: absolute;top: 50%;">
+                    <div class="bg-light border rounded border-success shadow-lg m-auto" style="width: 150px;height: 150px;"><i class="fa fa-upload d-block p-4" style="font-size: 50px;"></i><span>Drop file to attach</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/Drag-and-Drop-Multiple-File-Form-Input-upload-Advanced.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="assets/js/script.js"></script>
-  </body>
+</body>
+
 </html>
