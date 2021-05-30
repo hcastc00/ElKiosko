@@ -33,10 +33,8 @@
             </div>
         </div>
     </nav>
-    <div>
-        <p>Introduzca las 10 imágenes correspondientes a los cromos de la nueva colección.</p>
-    </div>
     <div class="m-5">
+        <p>Introduzca al menos 10 imágenes correspondientes a los cromos de la nueva colección.</p>
         <div id="backdrop" class="backdrop backdrop-transition backdrop-dark">
             <div class="text-center w-100" style="position: absolute;top: 50%;">
                 <div class="bg-light border rounded border-success shadow-lg m-auto" style="width: 150px;height: 150px;"><i class="fa fa-upload d-block p-4" style="font-size: 50px;"></i><span>Drop file to attach</span></div>
@@ -48,7 +46,7 @@
             <p><label class="form-label" for="form-files"><a class="btn btn-secondary btn-sm" role="button">Selecciona</a></label>&nbsp;o arrastra aqui tus archivos<br></p>
             <p id="filecount"><br></p>
             <div id="list"></div>
-            <form id="imagen" method="post" action="/uploadmultiple" enctype="multipart/form-data"><input class="form-control invisible" type="file" id="form-files" name="files" multiple="" accept="image/*"><button class="btn btn-outline-primary d-block w-100" type="button" onclick="enviaFormulario()">Enviar</button><button class="btn btn-danger mt-5" type="reset" onclick="clearFiles()">Resetear</button></form>
+            <form id="imagen" method="post" action="/uploadmultiple" enctype="multipart/form-data"><input class="form-control invisible" type="file" id="form-files" name="files" multiple="" accept="image/*"><input class="form-control" type="text" id="nombreColeccion" placeholder="Nombre de la coleccion" style="margin-bottom: 15px;margin-top: 15px;" name="nombreColeccion"><button class="btn btn-outline-primary d-block w-100" type="button" onclick="submitForm()">Enviar</button><button class="btn btn-danger mt-5" type="reset" onclick="clearFiles()">Resetear</button></form>
         </div>
         <div class="text-center bg-light border rounded border-dark shadow-lg p-3"><img id="image_preview" width="100">
             <div><button class="btn btn-warning btn-sm m-3" onclick="previewClose()">Cerrar</button></div>

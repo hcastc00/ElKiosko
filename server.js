@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const multer = require("multer");
 
+const fs = require("fs");
+const path = require("path");
+
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded());
 
@@ -24,7 +27,7 @@ app.listen(80, () => {
 //Storage con multer
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "cromos");
+    cb(null, "tmp");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -44,14 +47,30 @@ app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
   res.send(200);
 });
 
-//Uploading multiple files
-app.post('/uploadmultiple', upload.array('files', 12), (req, res, next) => {
-  const files = req.files
-  if (!files) {
-    const error = new Error('Please choose files')
-    error.httpStatusCode = 400
-    return next(error)
-  }
-  res.send(files)
 
-})
+app.post("/upload_things", upload.array("files"), uploadThings);
+function uploadThings(req,res){
+  let coleccion = req.body;
+  moverAColeccion(coleccion.name);
+  res.json({message:"Sucessfully uploaded files"});
+}
+
+function moverAColeccion(coleccion){
+  let newDir = 'cromos/' + coleccion;
+  if(!fs.existsSync(newDir)){
+    fs.mkdirSync(newDir);
+  }
+
+  fs.readdir('tmp', function(err, list) {
+    if(err) return done(err);
+    let old = '';
+    let newPath = '';
+    for(let i = 0; i < list.length; i++){
+      old = 'tmp/' + list[i];
+      newPath = newDir + '/' + list[i];
+      fs.rename(old, newPath, function(err){
+        if(err) throw err;
+      });
+    }
+  });
+}
