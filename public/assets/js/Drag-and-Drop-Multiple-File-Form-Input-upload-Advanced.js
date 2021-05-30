@@ -114,7 +114,7 @@ function listFiles(w=true) {
         listwait=setTimeout(function(){ listwait=null; listFiles(false); },200);
         return;
     }
-    var thelist=dt_allowed? readerfiles : fileinput;
+    var thelist=dt_allowed ? readerfiles : fileinput;
     listsync=true;
     fileCount.innerHTML=thelist.files.length+' files: '
     list.innerHTML='';
@@ -145,6 +145,11 @@ function listFiles(w=true) {
     }
     if (dt_allowed) fileinput.files=readerfiles.files;
     listsync=false;
+}
+
+function getNumberOfFiles(){
+    var thelist=dt_allowed ? readerfiles : fileinput;
+    return thelist.files.length;
 }
 
 

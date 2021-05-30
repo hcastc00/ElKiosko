@@ -23,5 +23,12 @@ $("#imagen").submit(function (e) {
   
   function enviaFormulario() {
     console.log("Enviando");
-    $("#imagen").submit();
+    //Solo se hace el POST si son exactamente 10 imagenes.
+    
+    let numberOfFiles = getNumberOfFiles();
+    if(numberOfFiles != 10){
+      notify_msg('Debe introducir al menos 10 imágenes para crear una coleccion.');
+    }else{
+      $("#imagen").submit();
+    }
   }
