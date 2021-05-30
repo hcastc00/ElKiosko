@@ -1,42 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
     <title>Kiosko</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css">
-    <link rel="stylesheet" href="assets/css/Bold-BS4-Jumbotron-with-Particles-js-1.css">
-    <link rel="stylesheet" href="assets/css/Bold-BS4-Jumbotron-with-Particles-js.css">
-    <link rel="stylesheet" href="assets/css/Highlight-Blue.css">
-    <link rel="stylesheet" href="assets/css/Highlight-Phone.css">
-    <link rel="stylesheet" href="assets/css/login-form---Ambrodu-1.css">
-    <link rel="stylesheet" href="assets/css/login-form---Ambrodu.css">
-    <link rel="stylesheet" href="assets/css/Ludens-Users---2-Register.css">
-    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
-    <link rel="stylesheet" href="assets/css/Responsive-Image-File-Input.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/Bold-BS4-Jumbotron-with-Particles-js-1.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/Bold-BS4-Jumbotron-with-Particles-js.css"
+    />
+    <link rel="stylesheet" href="assets/css/Highlight-Blue.css" />
+    <link rel="stylesheet" href="assets/css/Highlight-Phone.css" />
+    <link rel="stylesheet" href="assets/css/login-form---Ambrodu-1.css" />
+    <link rel="stylesheet" href="assets/css/login-form---Ambrodu.css" />
+    <link rel="stylesheet" href="assets/css/Ludens-Users---2-Register.css" />
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css" />
+    <link rel="stylesheet" href="assets/css/Responsive-Image-File-Input.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-        <div class="container"><a class="navbar-brand" href="index.html" style="font-size: 40px;">El Kiosko</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                </ul><span class="navbar-text actions"> <a class="btn btn-light action-button" role="button" href="registro.html" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);">Cerrar Sesión</a></span>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="index.html" style="font-size: 40px"
+          >El Kiosko</a
+        ><button
+          data-bs-toggle="collapse"
+          class="navbar-toggler"
+          data-bs-target="#navcol-1"
+        >
+          <span class="visually-hidden">Toggle navigation</span
+          ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navcol-1">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"></li>
+            <li class="nav-item"></li>
+          </ul>
+          <span class="navbar-text actions">
+            <a
+              class="btn btn-light action-button"
+              role="button"
+              href="registro.html"
+              style="
+                font-size: 20px;
+                background: rgb(179, 236, 236);
+                color: rgb(34, 34, 34);
+              "
+              >Cerrar Sesión</a
+            ></span
+          >
         </div>
+      </div>
     </nav>
-    <div class="color form-group mb-3"><label class="form-label" style="margin-top: 15px;">Introduzca la fotografía asociada al cromo</label>
-        <div class="files overflow-hidden" style="width: 100%;"><input type="file" id="imagen" accept="image/*" onchange="imagenIntroducida()"></div>
-    </div><button class="btn btn-primary action-button" type="button" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);" onclick="enviaFormulario()">Enviar</button>
+    <form
+      id="imagen"
+      action="/uploadfile"
+      enctype="multipart/form-data"
+      method="POST"
+    >
+      <div class="color form-group mb-3">
+        <label class="form-label" style="margin-top: 15px"
+          >Introduzca la fotografía asociada al cromo</label
+        >
+        <div class="files overflow-hidden" style="width: 100%">
+          <input
+            type="file"
+            name="myFile"
+            accept="image/*"
+            onchange="imagenIntroducida()"
+          />
+        </div>
+      </div>
+      <button
+        class="btn btn-primary action-button"
+        type="button"
+        style="
+          font-size: 20px;
+          background: rgb(179, 236, 236);
+          color: rgb(34, 34, 34);
+        "
+        onclick="enviaFormulario()"
+      >
+        Enviar
+      </button>
+    </form>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
-</body>
-
+  </body>
 </html>
