@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 const multer = require("multer");
 
+const ejs = require('ejs');
+
 const fs = require("fs");
 const path = require("path");
+
+//Para usar ejs en los renders
+app.set('view engine', 'ejs');
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded());
@@ -49,28 +54,48 @@ app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
 
 
 app.post("/upload_things", upload.array("files"), uploadThings);
-function uploadThings(req,res){
-  let coleccion = req.body;
-  moverAColeccion(coleccion.name);
-  res.json({message:"Sucessfully uploaded files"});
+function uploadThings(req, res) {
+  //console.log('Este es el post');
+  let coleccion = req.body.name;
+  moverAColeccion(coleccion);
+  let url = 'modificaColeccion?nombreColeccion=' + coleccion;
+  res.redirect(301, 'modificaColeccion');
+  //res.send({respuesta: url});
 }
 
-function moverAColeccion(coleccion){
+function moverAColeccion(coleccion) {
   let newDir = 'cromos/' + coleccion;
-  if(!fs.existsSync(newDir)){
+  if (!fs.existsSync(newDir)) {
     fs.mkdirSync(newDir);
   }
 
-  fs.readdir('tmp', function(err, list) {
-    if(err) return done(err);
+  fs.readdir('tmp', function (err, list) {
+    if (err) return done(err);
     let old = '';
     let newPath = '';
-    for(let i = 0; i < list.length; i++){
+    for (let i = 0; i < list.length; i++) {
       old = 'tmp/' + list[i];
       newPath = newDir + '/' + list[i];
-      fs.rename(old, newPath, function(err){
-        if(err) throw err;
+      fs.rename(old, newPath, function (err) {
+        if (err) throw err;
       });
     }
   });
+}
+
+
+app.get("/modificaColeccion", renderiza);
+function renderiza(req, res) {
+  let coleccion = req.query.nombreColeccion;
+  let dir = 'cromos/' + coleccion ;
+  let abs = path.resolve(dir);
+  fs.readdir(dir,  {basePath: abs}, (err, archivos) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(archivos);
+    res.render('prueba', { nombreColeccion: coleccion , fotos: archivos} );
+  });
+
 }
