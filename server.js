@@ -97,5 +97,12 @@ function renderiza(req, res) {
     console.log(archivos);
     res.render('prueba', { nombreColeccion: coleccion , fotos: archivos} );
   });
+}
 
+app.post('/login', login)
+function login(req, res){
+  require('./DBHandler.js').login(req.body.usuario, req.body.contrasenya)
+      .then(function(result){
+        res.send(result)
+      })
 }

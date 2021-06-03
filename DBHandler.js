@@ -12,7 +12,7 @@ var connection  = mysql.createConnection({
 function insertarCromo(ruta){
     // Perform a query
     $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
-            + 'VALUES ("matias", "' + ruta + '", "60", "1", "Cars")';
+        + 'VALUES ("matias", "' + ruta + '", "60", "1", "Cars")';
 
     connection.query($query, function(err, rows, fields) {
         if(err){
@@ -39,5 +39,23 @@ function visualizarCromos(){
     });
 }
 
-insertarCromo('/cromos/matias.png');
-visualizarCromos();
+//insertarCromo('/cromos/matias.png');
+//visualizarCromos();
+
+module.exports.login  = function login(usuario, contrasenya){
+    return new Promise(function (resolve, reject){
+        $query = 'SELECT nombre, tipo FROM usuarios WHERE usuarios.nombre = ? AND usuarios.contrasenya = ?';
+
+        connection.query($query, [usuario, contrasenya], function(err, rows, fields) {
+            if(err) {
+                console.log(err)
+                reject(err)
+            }
+            if (rows.length > 0) {
+                resolve(rows[0])
+            }else {
+                resolve("null")
+            }
+        })
+    });
+}
