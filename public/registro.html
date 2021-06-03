@@ -37,14 +37,13 @@
         <div class="form-container" style="margin-top: 40px;">
             <div class="image-holder" style="background: url(&quot;assets/img/joinUs.png&quot;) left / cover no-repeat;"></div>
             <form method="post" action="afterRegister.html" style="box-shadow: inset 0px 0px;">
-                <h2 class="text-center"><strong>Crea una cuenta</strong></h2>
-                <div class="form-group mb-3"><input class="form-control" type="email" name="email" placeholder="Correo"></div><input class="form-control" type="text" style="margin-bottom: 10px;" placeholder="Usuario">
-                <div class="form-group mb-3"><input class="form-control" type="password" name="password" placeholder="Contraseña"></div>
-                <div class="form-group mb-3"><input class="form-control" type="password" name="password-repeat" placeholder="Repetir contraseña"></div>
+                <h2 class="text-center"><strong>Crea una cuenta</strong></h2><input class="form-control" type="text" id="usuario_registro" style="margin-bottom: 10px;" placeholder="Usuario">
+                <div class="form-group mb-3"><input class="form-control" type="password" id="contrasenya_registro" name="password" placeholder="Contraseña"></div>
+                <div class="form-group mb-3"><input class="form-control" type="password" id="repetir_contrasenya_registro" name="password-repeat" placeholder="Repetir contraseña"></div>
                 <div class="form-group mb-3">
-                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox">Estoy de acuerdo con los términos y condiciones.</label></div>
+                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox" id="check_terminos_registro">Estoy de acuerdo con los términos y condiciones.</label></div>
                 </div>
-                <div class="form-group mb-3"><button class="btn btn-primary d-block w-100" type="submit" style="color: rgb(34,34,34);background: rgb(179,236,236);" onclick="registrar()">Crear cuenta</button></div><a class="already" href="index.html#loginForm">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+                <div class="form-group mb-3"><button class="btn btn-primary d-block w-100" type="button" style="color: rgb(34,34,34);background: rgb(179,236,236);" onclick="registrar()">Crear cuenta</button></div><a class="already" href="index.html#loginForm">¿Ya tienes una cuenta? Inicia sesión aquí</a>
             </form>
         </div>
     </section>

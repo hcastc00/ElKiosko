@@ -59,3 +59,17 @@ module.exports.login  = function login(usuario, contrasenya){
         })
     });
 }
+
+module.exports.registrar_usuario  = function registrar_usuario(usuario, contrasenya, tipo){
+    return new Promise(function (resolve, reject){
+        $query = 'INSERT INTO usuarios (nombre, contrasenya, tipo) VALUES (?, ?, ?)';
+
+        connection.query($query, [usuario, contrasenya, tipo], function(err, rows, fields) {
+            if(err) {
+                reject(err)
+            }else {
+                resolve(usuario, tipo)
+            }
+        })
+    });
+}

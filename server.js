@@ -106,3 +106,20 @@ function login(req, res){
         res.send(result)
       })
 }
+
+app.post('/registar_usuario', registrar_usuario)
+function registrar_usuario(req, res){
+  require('./DBHandler.js').registrar_usuario(req.body.usuario, req.body.contrasenya, req.body.tipo)
+      .then(function(){
+        res.setHeader('Content-Type', 'application/json');
+        res.json({error: 'no'})
+      })
+      .catch(function(error) {
+        if (error['code'] === 'ER_DUP_ENTRY') {
+          // Error de que la primary key este duplicada
+          res.json({error: 'duplicado'})
+        }else{
+          console.log(error)
+        }
+      });
+}
