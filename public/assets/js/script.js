@@ -20,7 +20,11 @@ function submitForm() {
             method: 'post',
             body: datosFormulario
         })
-            .then((res) => location.href = dir)
+            .then(function(res){
+                console.log('Si que entra');
+                $.get(dir);
+                location.href = dir;
+            })
             .catch((err) => ("Error occured", err));
     }
 }
@@ -76,7 +80,7 @@ function registrar() {
         console.log('ES ADMINSITRADOR');
     }else{
         //TODO: alertar de que no se ha escogido nignuno
-        console.log('NO HAY TIPO ESPECI')
+        console.log('NO HAY TIPO ESPECIFICADO');
         formulario_correcto = false;
     }
 

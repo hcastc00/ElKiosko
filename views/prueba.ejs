@@ -1,5 +1,15 @@
 <h2>Bienvenido, la coleccion es <%= nombreColeccion %>!</h2>
 
-<% fotos.forEach(function(foto) { %>
-    <img href=<%=foto %> ></strong>
-<% }); %>
+Rellene los atributos de cada cromo de la colección:
+
+<form>
+    <% fotos.forEach(function(foto) { %>
+        <div class="cromoRellenar">
+            La imagen del cromo es: <%= foto %>
+            <input type='text' placeholder="Nombre"/>
+            <input type='text' placeholder="Precio"/>
+            <img src='/cromos/Cars/matias.png'>
+        </div>
+    <% }); %>
+</form>
+
