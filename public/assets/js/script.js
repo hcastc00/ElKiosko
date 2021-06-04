@@ -66,7 +66,19 @@ function registrar() {
     let contrasenya_r = document.getElementById('repetir_contrasenya_registro').value
     let terminos = document.getElementById('check_terminos_registro').checked
     let formulario_correcto = true
-    let tipo = 'socio'
+    let tipo;
+
+    if( document.getElementById('socio').checked){
+        tipo = 'socio';
+        console.log('ES SOCIO');
+    }else if(document.getElementById('administrador').checked){
+        tipo = 'admin';
+        console.log('ES ADMINSITRADOR');
+    }else{
+        //TODO: alertar de que no se ha escogido nignuno
+        console.log('NO HAY TIPO ESPECI')
+        formulario_correcto = false;
+    }
 
     if (usuario == '' || usuario == null) {
         console.log("Usuario vacio")
@@ -100,10 +112,10 @@ function registrar() {
                 //TODO: crear cookie
 
                 if (tipo == 'socio') {
-                    console.log("Registrado el socio", usuario)
+                    console.log("Registrado el SOCIO", usuario)
                     //TODO: cargar vista socio
                 } else {
-                    console.log("Es admin", usuario)
+                    console.log("Registrado el ADMIN", usuario)
                     //TODO: cargar vista admin
                 }
             } else {
