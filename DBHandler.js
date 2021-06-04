@@ -1,6 +1,9 @@
 //Conexion con la base de datos
 var mysql = require('mysql');
 
+//Constantes para encriptar con bcrypt
+const bcrypt = require('bcrypt');
+
 var connection  = mysql.createConnection({
     host     : 'lishowebproject.a2hosted.com',
     user     : 'lishoweb_kiosko',
@@ -44,7 +47,7 @@ function visualizarCromos(){
 
 module.exports.login  = function login(usuario, contrasenya){
     return new Promise(function (resolve, reject){
-        $query = 'SELECT nombre, tipo FROM usuarios WHERE usuarios.nombre = ? AND usuarios.contrasenya = ?';
+        $query = 'SELECT nombre, tipo, contrasenya FROM usuarios WHERE usuarios.nombre = ?';
 
         connection.query($query, [usuario, contrasenya], function(err, rows, fields) {
             if(err) {
@@ -52,7 +55,17 @@ module.exports.login  = function login(usuario, contrasenya){
                 reject(err)
             }
             if (rows.length > 0) {
-                resolve(rows[0])
+
+                bcrypt.compare(contrasenya, rows[0]['contrasenya'])
+                    .then(function(result) {
+                        if (result){
+                            delete rows[0]['contrasenya']
+                            resolve(rows[0])
+                        }else {
+                            resolve("null")
+                        }
+                });
+
             }else {
                 resolve("null")
             }

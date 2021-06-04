@@ -28,9 +28,8 @@ function submitForm() {
 function login(){
     const datosFormulario = new FormData();
 
-    let usuario = document.getElementById('usuario_registro').value
-    let contrasenya = document.getElementById('contrasenya_registro').value
-    let contrasenya_r = document.getElementById('repetir_contrasenya_registro').value
+    let usuario = document.getElementById('usuario_login').value
+    let contrasenya = document.getElementById('contrasenya_login').value
 
     if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null){
 
@@ -67,12 +66,12 @@ function registrar() {
     let formulario_correcto = true
     let tipo = 'socio'
 
-    if (usuario == '' || usuario == null ){
+    if (usuario == '' || usuario == null) {
         console.log("Usuario vacio")
         formulario_correcto = false
         //TODO: marcar como vacio el usuario
     }
-    if(contrasenya == '' || contrasenya == null){
+    if (contrasenya == '' || contrasenya == null) {
         console.log("contrasenya vacio")
         formulario_correcto = false
         //TODO: marcar como vacio la contraseña
@@ -82,23 +81,24 @@ function registrar() {
         formulario_correcto = false
         //TODO: marcar como vacio la repeticion de la contraseña
     }
-    if(contrasenya != contrasenya_r) {
+    if (contrasenya != contrasenya_r) {
         console.log("Contrasenyas distintas")
         formulario_correcto = false
         //TODO: marcar contrasenya y repeticion distintas
     }
-    if(!terminos) {
+    if (!terminos) {
         formulario_correcto = false
         //TODO: avisar de que no estan aceptados los terminos
     }
-    if(formulario_correcto) {
+
+    if (formulario_correcto) {
         $.post("/registar_usuario", {usuario: usuario, contrasenya: contrasenya, tipo: tipo}, function (data) {
 
             if (data['error'] == "no") {
                 //TODO: crear cookie
 
                 if (tipo == 'socio') {
-                    console.log("Es socio", usuario)
+                    console.log("Registrado el socio", usuario)
                     //TODO: cargar vista socio
                 } else {
                     console.log("Es admin", usuario)
