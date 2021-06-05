@@ -1,3 +1,5 @@
+<script src="assets/js/script.js"> </script>
+
 <h2>Bienvenido, la coleccion es <%= nombreColeccion %>!</h2>
 
 Rellene los atributos de cada cromo de la colección:
@@ -6,10 +8,13 @@ Rellene los atributos de cada cromo de la colección:
     <% fotos.forEach(function(foto) { %>
         <div class="cromoRellenar">
             La imagen del cromo es: <%= foto %>
-            <input type='text' placeholder="Nombre"/>
-            <input type='text' placeholder="Precio"/>
+            <input type='text' id="nombre_<%= foto %>"   placeholder="Nombre"/>
+            <input type='text' id="precio_<%= foto %>" placeholder="Precio"/>
             <img width="50" src='cromos/<%= nombreColeccion %>/<%= foto %>'>
         </div>
     <% }); %>
+    
+    <button onclick='crearColeccion()'>Crear colección</button>
+
 </form>
 

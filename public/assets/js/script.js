@@ -133,3 +133,9 @@ function registrar() {
 function imagenIntroducida() {
     console.log("Ha cambiado la imagen del formulario");
 }
+
+
+function crearColeccion(){
+    let formulario = document.getElementsByTagName('form');
+    let hijos = formulario.childNodes;
+}
