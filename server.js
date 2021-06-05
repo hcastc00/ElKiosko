@@ -15,6 +15,7 @@ dotenv.config();
 const ejs = require('ejs');
 
 const fs = require("fs");
+const fsPro = fs.promises;
 const path = require("path");
 
 //Para usar ejs en los renders
@@ -49,7 +50,7 @@ var storage = multer.diskStorage({
     },
 });
 
-var upload = multer({storage: storage});
+var upload = multer({ storage: storage });
 
 //Post para recibir imagenes introducidas por el admin
 app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
@@ -66,22 +67,26 @@ app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
 app.post("/upload_things", upload.array("files"), uploadThings);
 
 function uploadThings(req, res) {
-    //console.log('Este es el post');
     let coleccion = req.body.name;
-    moverAColeccion(coleccion);
-    res.send(200);
+    if(moverAColeccion(coleccion) == 1){
+        res.send(200);
+    }else{
+        res.sendStatus(500);
+        //send('El nombre de coleccion introducido ya esta utilizado')
+    }
+    
 }
 app.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
-   console.log(req.body)
+    console.log(req.body)
     res.sendStatus(200);
 }
 
 app.post("/crear_album", crearAlbum);
 
 function crearAlbum(req, res) {
-   console.log(req)
+    console.log(req)
     res.sendStatus(200);
 }
 
@@ -89,20 +94,36 @@ function moverAColeccion(coleccion) {
     let newDir = 'public/cromos/' + coleccion;
     if (!fs.existsSync(newDir)) {
         fs.mkdirSync(newDir);
-    }
 
-    fs.readdir('tmp', function (err, list) {
-        if (err) return done(err);
-        let old = '';
-        let newPath = '';
-        for (let i = 0; i < list.length; i++) {
-            old = 'tmp/' + list[i];
-            newPath = newDir + '/' + list[i];
-            fs.rename(old, newPath, function (err) {
-                if (err) throw err;
-            });
-        }
-    });
+        fs.readdir('tmp', function (err, list) {
+            if (err) return done(err);
+            let old = '';
+            let newPath = '';
+            for (let i = 0; i < list.length; i++) {
+                old = 'tmp/' + list[i];
+                newPath = newDir + '/' + list[i];
+                fs.rename(old, newPath, function (err) {
+                    if (err) throw err;
+                });
+            }
+        });
+        return 1;
+    } else {
+        //Borro las imagenes del directorio temporal y aviso del error
+        fsPro.readdir('tmp/')
+            .then(files => {
+                const unlinkPromises = files.map(file => {
+                    const filePath = path.join('tmp/', file)
+                    return fsPro.unlink(filePath)
+                })
+
+                return Promise.all(unlinkPromises)
+            }).catch(err => {
+                console.error(`Something wrong happened removing files of tmp/`)
+            })
+
+        return -1;
+    }
 }
 
 
@@ -117,7 +138,7 @@ function renderiza(req, res) {
             return;
         }
         console.log(archivos);
-        res.render('cromos', {nombreColeccion: coleccion, fotos: archivos});
+        res.render('cromos', { nombreColeccion: coleccion, fotos: archivos });
     });
 }
 
@@ -127,8 +148,8 @@ function login(req, res) {
     require('./DBHandler.js').login(req.body.usuario, req.body.contrasenya)
         .then(function (result) {
             if (result != "null") {
-                const token = crear_token({'nombre': result['nombre'], 'tipo': result['tipo']})
-                res.json({'datos': result, 'token': token})
+                const token = crear_token({ 'nombre': result['nombre'], 'tipo': result['tipo'] })
+                res.json({ 'datos': result, 'token': token })
             }
 
         })
@@ -145,12 +166,12 @@ function registrar_usuario(req, res) {
         console.log("Tenemos este hash!", hash)
         require('./DBHandler.js').registrar_usuario(req.body.usuario, hash, req.body.tipo)
             .then(function () {
-                res.json({error: 'no'})
+                res.json({ error: 'no' })
             })
             .catch(function (error) {
                 if (error['code'] === 'ER_DUP_ENTRY') {
                     // Error de que la primary key este duplicada
-                    res.json({error: 'duplicado'})
+                    res.json({ error: 'duplicado' })
                 } else {
                     console.log(error)
                 }
@@ -158,12 +179,12 @@ function registrar_usuario(req, res) {
     })
 }
 
-app.all('/admin',function(req, res)  {
+app.all('/admin', function (req, res) {
     console.log(req)
 })
 
 function crear_token(usuario) {
-    return jwt.sign({'usuario': usuario}, process.env.TOKEN_SECRET, {expiresIn: 60*30})
+    return jwt.sign({ 'usuario': usuario }, process.env.TOKEN_SECRET, { expiresIn: 60 * 30 })
 }
 
 function authenticarToken(req, res, next) {
