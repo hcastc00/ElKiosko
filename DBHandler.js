@@ -12,7 +12,7 @@ var connection  = mysql.createConnection({
 });
 
 
-function insertarAlbum(usuario, coleccion, estado){
+module.exports.insertarAlbum  = function insertarAlbum(usuario, coleccion, estado){
     // Perform a query
     $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES ('
             + '"' + usuario + '", "' + coleccion + '", "' + estado + '")';
@@ -28,8 +28,28 @@ function insertarAlbum(usuario, coleccion, estado){
     });
 }
 
+module.exports.getAlbum = function getAlbum(usuario, coleccion){
 
-function insertarColeccion(nombre, precio_album, estado){
+    return new Promise (function(resolve, reject){
+
+        $query = 'SELECT id FROM albumes WHERE usuario = "' + usuario + '" AND coleccion = "' + coleccion + '"';
+        connection.query($query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            }
+
+            console.log("Query succesfully executed: ", rows);  
+            resolve(rows[0].id);          
+        });
+
+
+    });
+}
+
+
+module.exports.insertarColeccion  = function insertarColeccion(nombre, precio_album, estado){
     // Perform a query
     $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES ('
             + '"' + nombre + '", "' + precio_album + '", "' + estado + '")';
@@ -46,7 +66,7 @@ function insertarColeccion(nombre, precio_album, estado){
 }
 
 
-function insertarCromo(nombre, ruta, precio, album, nombreColeccion){
+module.exports.insertarCromo  = function insertarCromo(nombre, ruta, precio, album, nombreColeccion){
     // Perform a query
     $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
         + 'VALUES ("' + nombre + '", "' + ruta + '", "' + precio 
@@ -65,8 +85,8 @@ function insertarCromo(nombre, ruta, precio, album, nombreColeccion){
 
 
 //insertarColeccion('Cars', 50, 'activa');
-insertarAlbum('RuboAdmin' , 'Cars', 'finalizada');
-insertarCromo('Mate', 'matias.png', '5', '7', 'Cars');
+//insertarAlbum('RuboAdmin' , 'Cars', 'finalizada');
+//insertarCromo('Mate', 'matias.png', '5', '7', 'Cars');
 
 
 function visualizarCromos(){

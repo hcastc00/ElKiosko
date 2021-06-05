@@ -83,15 +83,48 @@ function uploadThings(req, res) {
 app.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
-    console.log(req.body)
-    res.sendStatus(200);
+    
+    //TODO sacar el usuario del token o lo que sea
+    let usuario = 'RuboAdmin';
+    let nombre = req.body.nombre;
+    let ruta = 'proximamente';
+    let precio = req.body.precio;
+    let cantidad = req.body.cantidad;
+    let coleccion = req.body.nombreColeccion;
+    let album;
+    require('./DBHandler.js').getAlbum(usuario, coleccion)
+        .then(function(id){
+            album = id;
+            for(let i = 0; i < cantidad; i++){
+                require('./DBHandler.js').insertarCromo(nombre, ruta, precio, album, coleccion);
+            }
+            res.sendStatus(200);
+        })
+        .catch(function(err){
+            console.log(err);
+        })
 }
 
 app.post("/crear_album", crearAlbum);
 
 function crearAlbum(req, res) {
-    console.log(req)
+    let coleccion = req.body.nombreColeccion;
+    //TODO HARDCODEO EL USUARIO RUBOADMIN PERO AQUI SE NECESITA PASAR EL NOMBRE DEL USUARIO CON TOKEN O LO QUE SEA
+    let usuario = 'RuboAdmin';
+    //TODO lo del estado pues ni idea, supongo que de igual
+    let estado = 'finalizada'
+    require('./DBHandler.js').insertarAlbum(usuario, coleccion, estado);
+    //console.log(req)
     res.sendStatus(200);
+}
+
+app.post('/crear_coleccion', crearColeccion);
+
+function crearColeccion(req, res){
+    let nombre = req.body.nombreColeccion;
+    let precioAlbum = req.body.precio;
+    let estado = 'activa';
+    require('./DBHandler.js').insertarColeccion(nombre, precioAlbum, estado);
 }
 
 function moverAColeccion(coleccion) {
@@ -141,7 +174,7 @@ function renderiza(req, res) {
             console.log(err);
             return;
         }
-        console.log(archivos);
+        //console.log(archivos);
         res.render('cromos', { nombreColeccion: coleccion, fotos: archivos });
     });
 }
