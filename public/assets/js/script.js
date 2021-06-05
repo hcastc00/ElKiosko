@@ -21,11 +21,18 @@ function submitForm() {
             body: datosFormulario
         })
             .then(function(res){
-                console.log('Si que entra');
-                $.get(dir);
-                location.href = dir;
+                if(res.status === 500){
+                    notify_msg('El nombre de la coleccion ya existe. Utilice otro nombre');
+                }else{
+                    console.log('Si que entra');
+                    $.get(dir);
+                    location.href = dir;
+                }
+                
             })
-            .catch((err) => ("Error occured", err));
+            .catch(function(err){
+                console.log("Some error occurred with fetch.", err);
+            })   
     }
 }
 
