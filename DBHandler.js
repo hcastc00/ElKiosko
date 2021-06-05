@@ -12,10 +12,10 @@ var connection  = mysql.createConnection({
 });
 
 
-function insertarCromo(ruta){
+function insertarAlbum(usuario, coleccion, estado){
     // Perform a query
-    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
-        + 'VALUES ("matias", "' + ruta + '", "60", "1", "Cars")';
+    $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES ('
+            + '"' + usuario + '", "' + coleccion + '", "' + estado + '")';
 
     connection.query($query, function(err, rows, fields) {
         if(err){
@@ -27,6 +27,47 @@ function insertarCromo(ruta){
         console.log("Query succesfully executed: ", rows);
     });
 }
+
+
+function insertarColeccion(nombre, precio_album, estado){
+    // Perform a query
+    $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES ('
+            + '"' + nombre + '", "' + precio_album + '", "' + estado + '")';
+
+    connection.query($query, function(err, rows, fields) {
+    if(err){
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+    }
+
+    console.log("Query succesfully executed: ", rows);
+    });
+}
+
+
+function insertarCromo(nombre, ruta, precio, album, nombreColeccion){
+    // Perform a query
+    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
+        + 'VALUES ("' + nombre + '", "' + ruta + '", "' + precio 
+        + '", "' + album + '", "' + nombreColeccion + '")';
+
+    connection.query($query, function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+
+        console.log("Query succesfully executed: ", rows);
+    });
+}
+
+
+//insertarColeccion('Cars', 50, 'activa');
+insertarAlbum('RuboAdmin' , 'Cars', 'finalizada');
+insertarCromo('Mate', 'matias.png', '5', '7', 'Cars');
+
 
 function visualizarCromos(){
     // Perform a query
@@ -42,8 +83,6 @@ function visualizarCromos(){
     });
 }
 
-//insertarCromo('/cromos/matias.png');
-//visualizarCromos();
 
 module.exports.login  = function login(usuario, contrasenya){
     return new Promise(function (resolve, reject){
@@ -72,6 +111,7 @@ module.exports.login  = function login(usuario, contrasenya){
         })
     });
 }
+
 
 module.exports.registrar_usuario  = function registrar_usuario(usuario, contrasenya, tipo){
     return new Promise(function (resolve, reject){

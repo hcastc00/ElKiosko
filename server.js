@@ -74,15 +74,15 @@ function uploadThings(req, res) {
 app.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
-   console.log(req)
-    res.send(200);
+   console.log(req.body)
+    res.sendStatus(200);
 }
 
 app.post("/crear_album", crearAlbum);
 
 function crearAlbum(req, res) {
    console.log(req)
-    res.send(200);
+    res.sendStatus(200);
 }
 
 function moverAColeccion(coleccion) {
