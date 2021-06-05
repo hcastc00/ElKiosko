@@ -78,6 +78,13 @@ function uploadCromos(req, res) {
     res.send(200);
 }
 
+app.post("/crear_album", crearAlbum);
+
+function crearAlbum(req, res) {
+   console.log(req)
+    res.send(200);
+}
+
 function moverAColeccion(coleccion) {
     let newDir = 'public/cromos/' + coleccion;
     if (!fs.existsSync(newDir)) {
@@ -110,7 +117,7 @@ function renderiza(req, res) {
             return;
         }
         console.log(archivos);
-        res.render('prueba', {nombreColeccion: coleccion, fotos: archivos});
+        res.render('cromos', {nombreColeccion: coleccion, fotos: archivos});
     });
 }
 
