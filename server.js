@@ -34,7 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static("public"));
-app.use(express.static("cromos"));
 
 app.listen(80, () => {
     console.log("El Kiosko ha abierto! 😈 Escuchando en http://localhost:80");
@@ -70,14 +69,11 @@ function uploadThings(req, res) {
     //console.log('Este es el post');
     let coleccion = req.body.name;
     moverAColeccion(coleccion);
-    let url = 'modificaColeccion?nombreColeccion=' + coleccion;
-    //res.redirect(301, 'modificaColeccion');
-    //res.send({respuesta: url});
     res.send(200);
 }
 
 function moverAColeccion(coleccion) {
-    let newDir = 'cromos/' + coleccion;
+    let newDir = 'public/cromos/' + coleccion;
     if (!fs.existsSync(newDir)) {
         fs.mkdirSync(newDir);
     }
@@ -101,9 +97,8 @@ app.get("/modificaColeccion", renderiza);
 
 function renderiza(req, res) {
     let coleccion = req.query.nombreColeccion;
-    let dir = 'cromos/' + coleccion;
-    let abs = path.resolve(dir);
-    fs.readdir(dir, {basePath: abs}, (err, archivos) => {
+    let dir = 'public/cromos/' + coleccion;
+    fs.readdir(dir, (err, archivos) => {
         if (err) {
             console.log(err);
             return;
