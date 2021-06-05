@@ -35,7 +35,7 @@
         </div>
     </nav>
     <h1 style="margin-left: 40px;margin-bottom: 1em;">Creando colección&nbsp;</h1>
-    <input type="number" id="precioAlbum" style=" margin-left: 40px ;border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio del Album" placeholder="Precio del Album" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
+    <input type="number" min="1" id="precioAlbum" style=" margin-left: 40px ;border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio del Album" placeholder="Precio del Album" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
     <div>
         <div class="container">
             <div class="cust_bloglistintro">
@@ -48,8 +48,8 @@
                     <h3 style="text-align:left;margin-top:20px;font-family:'Open Sans', sans-serif;font-size:18px;margin-right:0;margin-left:24px;line-height:34px;letter-spacing:0px;font-style:normal;font-weight:bold;">Cromo<br></h3>
                     <form id="formulario_<%= foto %>">
                         <input class="form-control-sm" type="text" id="nombre_<%= foto %>" style="text-align:left;margin-top:20px;font-family:'Open Sans', sans-serif;font-size:18px;margin-right:0;margin-left:24px;line-height:34px;letter-spacing:0px;font-style:normal;font-weight:bold;" name="Nombre" placeholder="Nombre"><a class="h4" href="#"></a>
-                        <input type="number" id="precio_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio" placeholder="Precio" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
-                        <input type="number" id="cantidad_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Cantidad" placeholder="Cantidad" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
+                        <input type="number" min="1" id="precio_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio" placeholder="Precio" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
+                        <input type="number" min="1" id="cantidad_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Cantidad" placeholder="Cantidad" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
                     </form>
                 </div>
                 <% }); %>
