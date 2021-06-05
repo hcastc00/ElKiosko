@@ -71,6 +71,12 @@ function uploadThings(req, res) {
     moverAColeccion(coleccion);
     res.send(200);
 }
+app.post("/upload_cromo", uploadCromos);
+
+function uploadCromos(req, res) {
+   console.log(req)
+    res.send(200);
+}
 
 function moverAColeccion(coleccion) {
     let newDir = 'public/cromos/' + coleccion;

@@ -136,6 +136,14 @@ function imagenIntroducida() {
 
 
 function crearColeccion(){
-    let formulario = document.getElementsByTagName('form');
-    let hijos = formulario.childNodes;
+    console.log("estoy dentro putas");
+    $("[id^=formulario_]").each(function(){
+        console.log($(this).children);
+        let nombre = $(this).children("[id^=nombre]").value;
+        let precio = $(this).children("[id^=precio]").value;
+        //TODO album (tiene que ser el por defecto que hablamos)
+        $.post("/upload_cromo", {nombre: nombre, precio: precio, nombreColeccion: nombreColeccion}, function (res) {
+            console.log("enviao")
+        })
+    })
 }
