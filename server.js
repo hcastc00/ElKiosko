@@ -19,6 +19,7 @@ const fsPro = fs.promises;
 const path = require("path");
 
 //Para usar ejs en los renders
+app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // Parse URL-encoded bodies (as sent by HTML forms)
@@ -35,6 +36,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static("public"));
+app.use(require('./routes/index'))
+app.use('/admin', require('./routes/admin'))
+
 
 app.listen(80, () => {
     console.log("El Kiosko ha abierto! 😈 Escuchando en http://localhost:80");
@@ -178,10 +182,6 @@ function registrar_usuario(req, res) {
             });
     })
 }
-
-app.all('/admin', function (req, res) {
-    console.log(req)
-})
 
 function crear_token(usuario) {
     return jwt.sign({ 'usuario': usuario }, process.env.TOKEN_SECRET, { expiresIn: 60 * 30 })
