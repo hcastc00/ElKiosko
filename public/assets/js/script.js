@@ -21,18 +21,11 @@ function submitForm() {
             body: datosFormulario
         })
             .then(function(res){
-                if(res.status === 500){
-                    notify_msg('El nombre de la coleccion ya existe. Utilice otro nombre');
-                }else{
-                    console.log('Si que entra');
-                    $.get(dir);
-                    location.href = dir;
-                }
-                
+                console.log('Si que entra');
+                $.get(dir);
+                location.href = dir;
             })
-            .catch(function(err){
-                console.log("Some error occurred with fetch.", err);
-            })   
+            .catch((err) => ("Error occured", err));
     }
 }
 
@@ -45,10 +38,6 @@ function login(){
     if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null){
         console.log("hago el post")
         $.post("/login", {usuario: usuario, contrasenya: contrasenya}, function (res) {
-
-            const data = res['datos']
-            const token = res['token']
-            document.cookie = `token=${token}`
 
             if (data != "null") {
                 //TODO: crear cookie
@@ -135,4 +124,8 @@ function registrar() {
             }
         })
     }
+}
+
+function imagenIntroducida() {
+    console.log("Ha cambiado la imagen del formulario");
 }

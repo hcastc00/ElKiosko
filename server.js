@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const multer = require("multer");
-const jwt = require('jsonwebtoken');
 
 //Constantes para encriptar con bcrypt
 const bcrypt = require('bcrypt');
@@ -179,23 +178,6 @@ function renderiza(req, res) {
     });
 }
 
-app.post('/login', login)
-
-function login(req, res) {
-    require('./DBHandler.js').login(req.body.usuario, req.body.contrasenya)
-        .then(function (result) {
-            if (result != "null") {
-                const token = crear_token({ 'nombre': result['nombre'], 'tipo': result['tipo'] })
-                res.json({ 'datos': result, 'token': token })
-            }
-
-        })
-        .catch(function (error) {
-            console.log(error)
-        })
-
-}
-
 app.post('/registar_usuario', registrar_usuario)
 function registrar_usuario(req, res) {
 
@@ -213,26 +195,5 @@ function registrar_usuario(req, res) {
                     console.log(error)
                 }
             });
-    })
-}
-
-function crear_token(usuario) {
-    return jwt.sign({ 'usuario': usuario }, process.env.TOKEN_SECRET, { expiresIn: 60 * 30 })
-}
-
-function authenticarToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-
-    if (token == null) return res.sendStatus(401)
-
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-        console.log(err)
-
-        if (err) return res.sendStatus(403)
-
-        req.user = user
-
-        next()
     })
 }

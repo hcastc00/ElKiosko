@@ -1,11 +1,23 @@
 express = require('express')
 router = express.Router()
 
-router.get('/',(require,  res) => {
-    res.render("admin")
+const {isAuth} = require('../isAuth.js')
+
+router.get('/*', (req, res) => {
+    try {
+        const usuario = isAuth(req)
+        if (usuario !== null) {
+            res.render("admin")
+        } else {
+            res.redirect('/#loginForm')
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
 })
 
-router.get('/crearColeccion',(require,  res) => {
+router.get('/crearColeccion', (req, res) => {
     res.redirect('/#loginForm')
 })
 
