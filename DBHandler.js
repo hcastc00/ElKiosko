@@ -83,6 +83,25 @@ module.exports.insertarCromo  = function insertarCromo(nombre, ruta, precio, alb
     });
 }
 
+module.exports.getNumCromosDisponibles = function getNumCromosDisponibles(coleccion, ruta){
+
+    return new Promise (function(resolve, reject){
+
+        $query = 'SELECT COUNT(id) as num FROM cromos WHERE coleccion = ? AND ruta_imagen = ?' 
+                + 'AND  album.usuario.tipo = "admin" ';
+        connection.query($query, [coleccion, ruta] , function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            }
+
+            console.log("Query succesfully executed: ", rows);  
+            resolve(rows[0].num);          
+        });
+    });
+}
+
 
 //insertarColeccion('Cars', 50, 'activa');
 //insertarAlbum('RuboAdmin' , 'Cars', 'finalizada');
