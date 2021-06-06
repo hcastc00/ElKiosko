@@ -180,3 +180,22 @@ module.exports.importar_tokenrefresco = function importar_tokenrefresco(token){
         console.log("Query succesfully executed: ", rows);
     });
 }
+
+
+//Revisar el resolve que no se como va
+module.exports.get_usuario = function get_usuario(id) {
+    return new Promise(function (resolve, reject) {
+        $query = 'SELECT * FROM usuarios WHERE usuarios.id = ?';
+
+        connection.query($query, [id], function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            }
+
+            console.log("Query succesfully executed: ", rows);
+            resolve(rows[0].value);
+        });
+    });
+}

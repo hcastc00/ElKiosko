@@ -1,7 +1,7 @@
 const {verify} = require('jsonwebtoken')
 
 const isAuth = req => {
-    const autorizacion = req.header['authorization']
+    const autorizacion = req.headers['authorization']
     if (!autorizacion) throw new Error("Necesitas iniciar sesion")
 
     // 'Bearer uioyagsfiuyagsfoyagsdfuy'

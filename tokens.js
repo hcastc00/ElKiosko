@@ -32,7 +32,7 @@ module.exports = {
     enviarTokenAcceso,
     enviarTokenRefresco
 }
-
+/*
 function authenticarToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -49,3 +49,5 @@ function authenticarToken(req, res, next) {
         next()
     })
 }
+
+ */
