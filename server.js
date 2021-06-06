@@ -16,6 +16,7 @@ const ejs = require('ejs');
 const fs = require("fs");
 const fsPro = fs.promises;
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 //Para usar ejs en los renders
 app.set('views', './views');
@@ -26,6 +27,9 @@ app.use(express.urlencoded());
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
+
+
+app.use(cookieParser());
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -83,8 +87,8 @@ app.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
     
-    //TODO sacar el usuario del token o lo que sea
-    let usuario = 'RuboAdmin';
+    let token = req.cookies.token;
+    let usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
     let nombre = req.body.nombre;
     let ruta = 'proximamente';
     let precio = req.body.precio;
@@ -108,8 +112,8 @@ app.post("/crear_album", crearAlbum);
 
 function crearAlbum(req, res) {
     let coleccion = req.body.nombreColeccion;
-    //TODO HARDCODEO EL USUARIO RUBOADMIN PERO AQUI SE NECESITA PASAR EL NOMBRE DEL USUARIO CON TOKEN O LO QUE SEA
-    let usuario = 'RuboAdmin';
+    let token = req.cookies.token;
+    let usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
     //TODO lo del estado pues ni idea, supongo que de igual
     let estado = 'finalizada'
     require('./DBHandler.js').insertarAlbum(usuario, coleccion, estado);

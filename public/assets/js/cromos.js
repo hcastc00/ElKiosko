@@ -24,6 +24,7 @@ function crearColeccion() {
       let nombre = this[0].value;
       let precio = this[1].value;
       let cantidad = this[2].value;
+      let ruta = this.id.split('_')[1];
 
       //Se sube la informacion de los cromos uno a uno
       $.post(
@@ -31,12 +32,18 @@ function crearColeccion() {
         { nombre: nombre, 
           precio: precio, 
           nombreColeccion: nombreColeccion, 
-          cantidad: cantidad },
+          cantidad: cantidad,
+          ruta: ruta 
+        },
         function (res) {
           console.log("enviao");
         }
       );
     });
+
+
+    alert('Se ha creado la colección de manera satisfactoria');
+    //TODO redireccionar a la pagina principal del admin, supongo
   }
 }
 
@@ -53,6 +60,11 @@ function hayVacios(){
         return false;
       }
   });
+
+  if(document.getElementById('precioAlbum').value == ""){
+    vacio = true;
+  }
+
   //Este es el verdadero retorno de la funcion
   return vacio;
 }
