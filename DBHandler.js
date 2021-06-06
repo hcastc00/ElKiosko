@@ -146,3 +146,18 @@ module.exports.registrar_usuario  = function registrar_usuario(usuario, contrase
         })
     });
 }
+
+//Para importar el token de refresco
+module.exports.importar_tokenrefresco = function importar_tokenrefresco(token){
+    $query = 'INSERT INTO usuarios (token_refresco) VALUES ?';
+
+    connection.query($query,[token], function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+
+        console.log("Query succesfully executed: ", rows);
+    });
+}
