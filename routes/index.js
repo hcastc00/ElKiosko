@@ -27,19 +27,19 @@ router.get('/registro', (require, res) => {
 router.post('/login', (req, res) => {
     require('../DBHandler.js').login(req.body.usuario, req.body.contrasenya)
         .then(function (result) {
-            if (result != "null") {
+            if (result !== "null") {
+
                 const tokenacceso = crearTokenAcceso({'nombre': result['nombre'], 'tipo': result['tipo']})
-                const tokenrefresco = crearTokenRefresco({'nombre': result['nombre'], 'tipo': result['tipo']})
 
                 //Revisar
-                require('../DBHandler.js').guardar_tokenrefresco(tokenrefresco, req.body.usuario)
-                    .then(function (result) {
-                    }).catch(function (error) {
-                    console.log(error)
-                });
+                // require('../DBHandler.js').guardar_tokenrefresco(tokenrefresco, req.body.usuario)
+                //     .then(function (result) {
+                //     }).catch(function (error) {
+                //     console.log(error)
+                // });
 
-                enviarTokenRefresco(res, tokenrefresco)
                 enviarTokenAcceso(req, res, tokenacceso, result['tipo'])
+                res.end()
 
             }
         })
@@ -50,7 +50,7 @@ router.post('/login', (req, res) => {
 
 
 router.all('/logout', (req, res) => {
-    res.clearCookie('tokenrefresco', {path: '/refrescar_token'})
+    res.clearCookie('token_acceso')
     res.redirect('/')
 })
 

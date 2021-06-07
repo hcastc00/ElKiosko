@@ -1,15 +1,24 @@
-const {verify} = require('jsonwebtoken')
+const {verify, decode} = require('jsonwebtoken')
 
 const isAuth = req => {
-    const autorizacion = req.headers['authorization']
-    if (!autorizacion) throw new Error("Necesitas iniciar sesion")
 
-    // 'Bearer uioyagsfiuyagsfoyagsdfuy'
-    const token = autorizacion.split(' ')[1]
-    const userId  = verify(token, process.env.TOKEN_SECRET)
-    return userId
+    const token = req.cookies['token_acceso']
+    if (!token) throw new Error("Necesitas iniciar sesion")
+
+    const token_valido  = verify(token, process.env.TOKEN_SECRET)
+    return token_valido
+}
+
+const isAdmin = req => {
+
+    const token = req.cookies['token_acceso']
+    if (!token) throw new Error("Necesitas iniciar sesion")
+
+    const es_admin  = decode(token, process.env.TOKEN_SECRET)['tipo'] === 'admin'
+    return es_admin
 }
 
 module.exports = {
     isAuth,
+    isAdmin
 }

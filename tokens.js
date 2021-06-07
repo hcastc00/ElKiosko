@@ -6,32 +6,30 @@ const crearTokenAcceso = (usuario, tipo) => {
     })
 }
 
-const crearTokenRefresco = (usuario, tipo) => {
-    return jwt.sign({'usuario': usuario, 'tipo': tipo}, process.env.TOKEN_SECRET, {
-        expiresIn: '7d'
-    })
-}
+// const crearTokenRefresco = (usuario, tipo) => {
+//     return jwt.sign({'usuario': usuario, 'tipo': tipo}, process.env.TOKEN_SECRET, {
+//         expiresIn: '7d'
+//     })
+// }
 
-const enviarTokenAcceso = (req, res, tokenacceso, tipo) => {
-    res.send({
-        tokenacceso,
-        usuario: req.body.usuario,
-        tipo: tipo
+const enviarTokenAcceso = (req, res, tokenacceso) => {
+    res.cookie('token_acceso', tokenacceso, {
+        httpOnly: true
     })
 }
-
-const enviarTokenRefresco = (res, tokenrefresco) => {
-    res.cookie('tokenrefresco', tokenrefresco, {
-        httpOnly: true,
-        path: 'refrescar_token'
-    })
-}
+//
+// const enviarTokenRefresco = (res, tokenrefresco) => {
+//     res.cookie('tokenrefresco', tokenrefresco, {
+//         httpOnly: true,
+//         path: 'refrescar_token'
+//     })
+// }
 
 module.exports = {
     crearTokenAcceso,
-    crearTokenRefresco,
+    // crearTokenRefresco,
     enviarTokenAcceso,
-    enviarTokenRefresco
+    // enviarTokenRefresco
 }
 /*
 function authenticarToken(req, res, next) {

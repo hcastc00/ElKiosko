@@ -17,6 +17,7 @@ const fs = require("fs");
 const fsPro = fs.promises;
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 //Para usar ejs en los renders
 app.set('views', './views');
@@ -87,7 +88,7 @@ app.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
     
-    let token = req.cookies.token;
+    let token = req.cookies.token_acceso;
     let usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
     let nombre = req.body.nombre;
     let ruta = 'proximamente';

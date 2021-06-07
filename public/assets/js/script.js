@@ -3,9 +3,9 @@ function submitForm() {
     let nombreColeccion = document.getElementById("nombreColeccion").value;
     if (numberOfFiles < 10) {
         notify_msg('Porfavor, introduzca al menos 10 imágenes para crear una colección.');
-    }else if(nombreColeccion == ""){
+    } else if (nombreColeccion == "") {
         notify_msg('Porfavor, introduzca el nombre de la colección.');
-    }else{
+    } else {
         console.log('SE ENVIA AHORA BRO');
 
         const files = document.getElementById("form-files");
@@ -20,7 +20,7 @@ function submitForm() {
             method: 'post',
             body: datosFormulario
         })
-            .then(function(res){
+            .then(function (res) {
                 console.log('Si que entra');
                 $.get(dir);
                 location.href = dir;
@@ -29,34 +29,44 @@ function submitForm() {
     }
 }
 
-function login(){
+function login() {
     const datosFormulario = new FormData();
 
     let usuario = document.getElementById('usuario_login').value
     let contrasenya = document.getElementById('contrasenya_login').value
 
-    if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null){
+    if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null) {
         console.log("hago el post")
-        $.post("/login", {usuario: usuario, contrasenya: contrasenya}, function (data) {
+        $.post("/login", {usuario: usuario, contrasenya: contrasenya},
+            function (data) {
+                console.log("Realizo el get")
+                location.href = "/admin"
+                // $.get("/admin", {}, function (res) {
 
-            console.log(data)
+                    console.log(res)
+                    //
+                    // if (data != "null") {
+                    //     //TODO: crear cookie
+                    //
+                    //     $.get("/admin")
+                    //         .dome( (data)=>{
+                    //             console.log(data)
+                    //         })
 
-            if (data != "null") {
-                //TODO: crear cookie
-
-                if (data['tipo'] == 'socio') {
-                    console.log("Es socio", data['usuario'])
-                    //TODO: cargar vista socio
-                } else {
-                    console.log("Es admin", data['usuario'])
-                    //TODO: cargar vista admin
-                }
-            } else {
-                console.log("Combinacion erronea")
-                //mostrar alerta datos incorrectos
-            }
-        })
-    }else {
+                    // if (data['tipo'] == 'socio') {
+                    //     console.log("Es socio", data['usuario'])
+                    //     //TODO: cargar vista socio
+                    // } else {
+                    //     console.log("Es admin", data['usuario'])
+                    //     //TODO: cargar vista admin
+                    // }
+                    // } else {
+                    //     console.log("Combinacion erronea")
+                    //     //mostrar alerta datos incorrectos
+                    // }
+                // })
+            })
+    } else {
         //TODO: mostrar alerta datos vacios
     }
 
@@ -70,13 +80,13 @@ function registrar() {
     let formulario_correcto = true
     let tipo;
 
-    if( document.getElementById('socio').checked){
+    if (document.getElementById('socio').checked) {
         tipo = 'socio';
         console.log('ES SOCIO');
-    }else if(document.getElementById('administrador').checked){
+    } else if (document.getElementById('administrador').checked) {
         tipo = 'admin';
         console.log('ES ADMINSITRADOR');
-    }else{
+    } else {
         //TODO: alertar de que no se ha escogido nignuno
         console.log('NO HAY TIPO ESPECIFICADO');
         formulario_correcto = false;
