@@ -12,10 +12,11 @@ const crearTokenRefresco = (usuario, tipo) => {
     })
 }
 
-const enviarTokenAcceso = (req, res, tokenacceso) => {
+const enviarTokenAcceso = (req, res, tokenacceso, tipo) => {
     res.send({
         tokenacceso,
         usuario: req.body.usuario,
+        tipo: tipo
     })
 }
 

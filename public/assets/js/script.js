@@ -37,16 +37,18 @@ function login(){
 
     if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null){
         console.log("hago el post")
-        $.post("/login", {usuario: usuario, contrasenya: contrasenya}, function (res) {
+        $.post("/login", {usuario: usuario, contrasenya: contrasenya}, function (data) {
+
+            console.log(data)
 
             if (data != "null") {
                 //TODO: crear cookie
 
                 if (data['tipo'] == 'socio') {
-                    console.log("Es socio", data['nombre'])
+                    console.log("Es socio", data['usuario'])
                     //TODO: cargar vista socio
                 } else {
-                    console.log("Es admin", data['nombre'])
+                    console.log("Es admin", data['usuario'])
                     //TODO: cargar vista admin
                 }
             } else {

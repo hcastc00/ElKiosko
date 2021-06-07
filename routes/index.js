@@ -9,7 +9,7 @@ const {
     enviarTokenRefresco
 } = require('../tokens.js')
 
-const {isAuth} = require('./isAuth.js');
+const {isAuth} = require('../isAuth.js');
 
 router.get('/', (require, res) => {
     res.render('index')
@@ -32,14 +32,14 @@ router.post('/login', (req, res) => {
                 const tokenrefresco = crearTokenRefresco({'nombre': result['nombre'], 'tipo': result['tipo']})
 
                 //Revisar
-                require('../DBHandler.js').importar_tokenrefresco(tokenrefresco)
+                require('../DBHandler.js').guardar_tokenrefresco(tokenrefresco, req.body.usuario)
                     .then(function (result) {
                     }).catch(function (error) {
                     console.log(error)
                 });
 
-                enviarTokenAcceso(req, res, tokenacceso)
                 enviarTokenRefresco(res, tokenrefresco)
+                enviarTokenAcceso(req, res, tokenacceso, result['tipo'])
 
             }
         })
@@ -49,7 +49,7 @@ router.post('/login', (req, res) => {
 })
 
 
-router.post('/logout', (req, res) => {
+router.all('/logout', (req, res) => {
     res.clearCookie('tokenrefresco', {path: '/refrescar_token'})
     res.redirect('/')
 })
@@ -97,7 +97,7 @@ router.post("/refrescar_token", (req, res) => {
         console.log(error)
     });
 
-    if (user == null){
+    if (user === 'null') {
         return res.send({
             accestoken: ''
         })
@@ -106,7 +106,7 @@ router.post("/refrescar_token", (req, res) => {
     //Si el usuario existe, comprobar que existe su token de refresco
 
     //El token de refresco no existe en el usuario
-    if (user.tokenrefresco !== token){
+    if (user.tokenrefresco !== token) {
         return res.send({
             accestoken: ''
         })
@@ -117,21 +117,15 @@ router.post("/refrescar_token", (req, res) => {
     const tokenrefresco = crearTokenRefresco({'nombre': user.nombre, 'tipo': user.tipo})
 
     //Actualizar el token de refresco en la base de datos
-    require('../DBHandler.js').importar_tokenrefresco(tokenrefresco)
-        .then(function (result) {
-        }).catch(function (error) {
-        console.log(error)
-    });
+    require('../DBHandler.js').guardar_tokenrefresco(tokenrefresco, user.nombre)
+        .catch(function (error) {
+            console.log(error)
+        });
 
     //Enviar nuestros nuevos token, de acceso y de refresco
 
-    enviarTokenAcceso(tokenacceso);
     enviarTokenRefresco(tokenrefresco);
-
-
-
-
-
+    enviarTokenAcceso(tokenacceso);
 
 })
 
