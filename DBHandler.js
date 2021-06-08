@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     database: 'lishoweb_kiosko'
 });
 
-
+//TODO Cambiar las queries que hizo Bayon para hacerlas anti inyeccion de codigo
 module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
     // Perform a query
     $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES ('
@@ -83,13 +83,18 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
     });
 }
 
-module.exports.getNumCromosDisponibles = function getNumCromosDisponibles(coleccion, ruta) {
+
+module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
 
     return new Promise(function (resolve, reject) {
+        
+        $query = 'SELECT cromos.id, cromos.ruta_imagen, COUNT(cromos.id) AS reps FROM cromos '
+                + 'INNER JOIN albumes ON cromos.album = albumes.id '
+                + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
+                + 'WHERE usuarios.tipo = "admin" AND cromos.coleccion = ? '
+                + 'GROUP BY cromos.ruta_imagen';
 
-        $query = 'SELECT COUNT(id) as num FROM cromos WHERE coleccion = ? AND ruta_imagen = ?'
-            + 'AND  album.usuario.tipo = "admin" ';
-        connection.query($query, [coleccion, ruta], function (err, rows, fields) {
+        connection.query($query, [coleccion], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
@@ -97,15 +102,29 @@ module.exports.getNumCromosDisponibles = function getNumCromosDisponibles(colecc
             }
 
             console.log("Query succesfully executed: ", rows);
-            resolve(rows[0].num);
+            resolve(rows);
         });
     });
 }
 
+module.exports.getColeccionesActivas = function getColeccionesActivas() {
 
-//insertarColeccion('Cars', 50, 'activa');
-//insertarAlbum('RuboAdmin' , 'Cars', 'finalizada');
-//insertarCromo('Mate', 'matias.png', '5', '7', 'Cars');
+    return new Promise(function (resolve, reject) {
+        
+        $query = 'SELECT nombre FROM colecciones WHERE estado="activa"';
+
+        connection.query($query, function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            }
+
+            console.log("Query succesfully executed: ", rows);
+            resolve(rows);
+        });
+    });
+}
 
 
 function visualizarCromos() {
