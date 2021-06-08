@@ -1,21 +1,21 @@
 express = require('express')
 router = express.Router()
 
-const {isAdmin} = require('../isAuth.js')
+const {isSocio} = require('../isAuth.js')
 const {crearTokenAcceso, enviarTokenAcceso} = require('../tokens.js')
 
 router.use((req, res, next) => {
         try {
-            let token = isAdmin(req)
+            let token = isSocio(req)
             enviarTokenAcceso(req, res, crearTokenAcceso(token.usuario, token.tipo))
             next()
-        } catch (e) {
+        }catch (e) {
             if (e.message === 'No tienes los permisos') {
                 //Seria redirigir a vista de usuario
-                res.redirect('/socio')
-            } else if (e.name === 'TokenExpiredError') {
+                res.redirect('/admin')
+            }else if(e.name === 'TokenExpiredError'){
                 res.redirect('/?err=caducado#loginForm')
-            } else if (e.message === 'Necesitas iniciar sesion') {
+            }else if(e.message === 'Necesitas iniciar sesion'){
                 res.redirect('/?error=noSesion#loginForm')
             }
         }
@@ -23,11 +23,11 @@ router.use((req, res, next) => {
 )
 
 router.get('/', (req, res) => {
-    res.render("admin")
+    res.render("socio")
 })
 
-router.get('/crearColeccion', (req, res) => {
-    res.redirect('/#loginForm')
+router.get('/tienda',(req, res) => {
+    res.send("Norabuena, llegaste a la tienda")
 })
 
 module.exports = router

@@ -28,8 +28,6 @@ app.use(express.urlencoded());
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
-
-
 app.use(cookieParser());
 
 // Configurar cabeceras y cors
@@ -42,6 +40,7 @@ app.use((req, res, next) => {
 app.use(express.static("public"));
 app.use(require('./routes/index'))
 app.use('/admin', require('./routes/admin'))
+app.use('/socio', require('./routes/socio'))
 
 
 app.listen(80, () => {
@@ -52,6 +51,7 @@ app.listen(80, () => {
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "tmp");
+
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);

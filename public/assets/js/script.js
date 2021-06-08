@@ -40,30 +40,29 @@ function login() {
         $.post("/login", {usuario: usuario, contrasenya: contrasenya},
             function (data) {
                 console.log("Realizo el get")
-                location.href = "/admin"
+                location.href = '/' + data.tipo
                 // $.get("/admin", {}, function (res) {
 
-                    console.log(res)
-                    //
-                    // if (data != "null") {
-                    //     //TODO: crear cookie
-                    //
-                    //     $.get("/admin")
-                    //         .dome( (data)=>{
-                    //             console.log(data)
-                    //         })
+                //
+                // if (data != "null") {
+                //     //TODO: crear cookie
+                //
+                //     $.get("/admin")
+                //         .dome( (data)=>{
+                //             console.log(data)
+                //         })
 
-                    // if (data['tipo'] == 'socio') {
-                    //     console.log("Es socio", data['usuario'])
-                    //     //TODO: cargar vista socio
-                    // } else {
-                    //     console.log("Es admin", data['usuario'])
-                    //     //TODO: cargar vista admin
-                    // }
-                    // } else {
-                    //     console.log("Combinacion erronea")
-                    //     //mostrar alerta datos incorrectos
-                    // }
+                // if (data['tipo'] == 'socio') {
+                //     console.log("Es socio", data['usuario'])
+                //     //TODO: cargar vista socio
+                // } else {
+                //     console.log("Es admin", data['usuario'])
+                //     //TODO: cargar vista admin
+                // }
+                // } else {
+                //     console.log("Combinacion erronea")
+                //     //mostrar alerta datos incorrectos
+                // }
                 // })
             })
     } else {

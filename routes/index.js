@@ -4,18 +4,18 @@ router = express.Router()
 
 const {
     crearTokenAcceso,
-    crearTokenRefresco,
     enviarTokenAcceso,
-    enviarTokenRefresco
 } = require('../tokens.js')
 
 const {isAuth} = require('../isAuth.js');
 
-router.get('/', (require, res) => {
-    res.render('index')
+router.get('/', (req, res) => {
+
+        res.render('index')
+
 })
 
-router.get('/registro', (require, res) => {
+router.get('/registro',  (req, res) => {
     res.render('registro')
 })
 
@@ -24,7 +24,7 @@ router.get('/registro', (require, res) => {
 //     res.render('registro')
 // })
 
-router.post('/login', (req, res) => {
+router.post('/login',  (req, res) => {
     require('../DBHandler.js').login(req.body.usuario, req.body.contrasenya)
         .then(function (result) {
             if (result !== "null") {
@@ -38,8 +38,8 @@ router.post('/login', (req, res) => {
                 //     console.log(error)
                 // });
 
-                enviarTokenAcceso(req, res, tokenacceso, result['tipo'])
-                res.end()
+                enviarTokenAcceso(req, res, tokenacceso, result.tipo)
+                res.send({tipo: result.tipo})
 
             }
         })
@@ -49,13 +49,13 @@ router.post('/login', (req, res) => {
 })
 
 
-router.all('/logout', (req, res) => {
+router.all('/logout',  (req, res) => {
     res.clearCookie('token_acceso')
     res.redirect('/')
 })
 
 //Para ver como se hace la autentiacacion del usuario
-router.post('/protected', async (req, res) => {
+router.post('/protected',  (req, res) => {
     try {
         const userID = isAuth(req);
         if (userID !== null) {
