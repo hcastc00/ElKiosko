@@ -139,6 +139,29 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
 }
 
 
+module.exports.venderAlbum = function venderAlbum(usuario, album) {
+
+    return new Promise(function (resolve, reject) {
+
+        $query = 'INSERT INTO albumes (usuario, coleccion, estado) '
+                + 'SELECT ?, colecciones.nombre, "no iniciada" '
+                + 'FROM colecciones INNER JOIN albumes ON albumes.coleccion = colecciones.nombre '
+                + 'WHERE albumes.id = ?;'
+
+        connection.query($query, [usuario, album] ,function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            }
+
+            console.log("Query succesfully executed: ", rows);
+            resolve(rows);
+        });
+    });
+}
+
+
 module.exports.getColeccionesActivas = function getColeccionesActivas() {
 
     return new Promise(function (resolve, reject) {
