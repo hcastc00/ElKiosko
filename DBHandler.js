@@ -13,11 +13,10 @@ var connection = mysql.createConnection({
 
 //TODO Cambiar las queries que hizo Bayon para hacerlas anti inyeccion de codigo
 module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
-    // Perform a query
-    $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES ('
-        + '"' + usuario + '", "' + coleccion + '", "' + estado + '")';
 
-    connection.query($query, function (err, rows, fields) {
+    $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
+
+    connection.query($query, [usuario, coleccion, estado], function (err, rows, fields) {
         if (err) {
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -32,8 +31,8 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'SELECT id FROM albumes WHERE usuario = "' + usuario + '" AND coleccion = "' + coleccion + '"';
-        connection.query($query, function (err, rows, fields) {
+        $query = 'SELECT id FROM albumes WHERE usuario = ? AND coleccion = ?';
+        connection.query($query, [usuario, coleccion], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
@@ -51,10 +50,9 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
 
 module.exports.insertarColeccion = function insertarColeccion(nombre, precio_album, estado) {
     // Perform a query
-    $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES ('
-        + '"' + nombre + '", "' + precio_album + '", "' + estado + '")';
+    $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES (?, ?, ?)';
 
-    connection.query($query, function (err, rows, fields) {
+    connection.query($query, [nombre, precio_album, estado], function (err, rows, fields) {
         if (err) {
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -68,11 +66,9 @@ module.exports.insertarColeccion = function insertarColeccion(nombre, precio_alb
 
 module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, album, nombreColeccion) {
     // Perform a query
-    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
-        + 'VALUES ("' + nombre + '", "' + ruta + '", "' + precio
-        + '", "' + album + '", "' + nombreColeccion + '")';
+    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
 
-    connection.query($query, function (err, rows, fields) {
+    connection.query($query, [nombre, ruta, precio, album, nombreColeccion], function (err, rows, fields) {
         if (err) {
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -87,12 +83,12 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
 module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
 
     return new Promise(function (resolve, reject) {
-        
+
         $query = 'SELECT cromos.id, cromos.ruta_imagen, COUNT(cromos.id) AS reps FROM cromos '
-                + 'INNER JOIN albumes ON cromos.album = albumes.id '
-                + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
-                + 'WHERE usuarios.tipo = "admin" AND cromos.coleccion = ? '
-                + 'GROUP BY cromos.ruta_imagen';
+            + 'INNER JOIN albumes ON cromos.album = albumes.id '
+            + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
+            + 'WHERE usuarios.tipo = "admin" AND cromos.coleccion = ? '
+            + 'GROUP BY cromos.ruta_imagen';
 
         connection.query($query, [coleccion], function (err, rows, fields) {
             if (err) {
@@ -107,10 +103,46 @@ module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
     });
 }
 
+
+module.exports.venderCromo = function venderCromo(cromo, usuario) {
+
+
+    return new Promise(function (resolve, reject) {
+        $query = 'SELECT albumes.id FROM albumes '
+            + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
+            + 'INNER JOIN colecciones ON albumes.coleccion = colecciones.nombre '
+            + 'INNER JOIN cromos ON albumes.coleccion = cromos.coleccion '
+            + 'WHERE usuarios.nombre = ? AND colecciones.nombre = cromos.coleccion '
+            + 'GROUP BY albumes.id;'
+
+        connection.query($query, [usuario], function (err, rows, fields) {
+            if (err || rows[0] == null) {
+                console.log("No tiene el album necesario para comprar ese cromo");
+                reject(err);
+            }else{
+                console.log("Query succesfully executed: ", rows);
+
+                $query = 'UPDATE cromos SET cromos.album = ? WHERE cromos.id = ?'
+
+                connection.query($query, [rows[0].id, cromo], function (err, filas, fields) {
+                    if (err) {
+                        console.log("An error ocurred performing the query.");
+                        reject(err);
+                    }else{
+                        console.log("Query succesfully executed: ", filas);
+                        resolve(filas);
+                    }
+                });
+            }
+        });
+    });
+}
+
+
 module.exports.getColeccionesActivas = function getColeccionesActivas() {
 
     return new Promise(function (resolve, reject) {
-        
+
         $query = 'SELECT nombre FROM colecciones WHERE estado="activa"';
 
         connection.query($query, function (err, rows, fields) {
@@ -123,21 +155,6 @@ module.exports.getColeccionesActivas = function getColeccionesActivas() {
             console.log("Query succesfully executed: ", rows);
             resolve(rows);
         });
-    });
-}
-
-
-function visualizarCromos() {
-    // Perform a query
-    $query = 'SELECT * from cromos LIMIT 10';
-
-    connection.query($query, function (err, rows, fields) {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            return;
-        }
-
-        console.log("Query succesfully executed: ", rows);
     });
 }
 
