@@ -1,16 +1,24 @@
 express = require('express')
 router = express.Router()
 
-const {isAuth} = require('../isAuth.js')
+const {isAuth, isAdmin} = require('../isAuth.js')
 
 router.get('/', (req, res) => {
 
-        const usuario = isAuth(req)
-        if (usuario !== null) {
+    try {
+        isAuth(req)
+        if (isAdmin) {
             res.render("admin")
         } else {
+            res.redirect('/registro')
+        }
+    }catch (e) {
+
+        //Si el error tiene este nombre, significa que el toquen esta expirado
+        if(e.name === 'TokenExpiredError'){
             res.redirect('/#loginForm')
         }
+    }
 
 })
 
