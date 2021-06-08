@@ -139,6 +139,29 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
 }
 
 
+module.exports.generarCopiasCromos = function generarCopiasCromos(cromo, numCopias) {
+
+    //TODO o hacer un for marronero o una PROCEDURE en SQL para meter las copias de los cromos especificadas
+    //O que el usuario vaya de uno en uno
+
+    return new Promise(function (resolve, reject) {
+        $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
+                + 'SELECT nombre, ruta_imagen, precio, album, coleccion '
+                + 'FROM cromos '
+                + 'WHERE id = ?;';
+
+        connection.query($query, [cromo], function (err, rows, fields) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve()
+            }
+        })
+    });
+}
+
+
+
 module.exports.venderAlbum = function venderAlbum(usuario, album) {
 
     return new Promise(function (resolve, reject) {
