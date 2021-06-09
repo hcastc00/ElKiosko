@@ -91,7 +91,7 @@ function uploadCromos(req, res) {
     let token = req.cookies.token_acceso;
     let usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
     let nombre = req.body.nombre;
-    let ruta = 'proximamente';
+    let ruta = req.body.ruta;
     let precio = req.body.precio;
     let cantidad = req.body.cantidad;
     let coleccion = req.body.nombreColeccion;
