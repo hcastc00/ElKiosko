@@ -95,12 +95,47 @@ module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
                 reject(err);
+            } else {
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows);
             }
-
-            console.log("Query succesfully executed: ", rows);
-            resolve(rows);
         });
     });
+}
+
+module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, usuario){
+    return new Promise(function(resolve, reject){
+        $query = 'SELECT socios.usuario '
+                + 'FROM socios, cromos '
+                + 'WHERE socios.usuario = ? AND cromos.id = ? AND socios.saldo >= cromos.precio';
+
+        connection.query($query, [usuario, cromo], function (err, rows, fields) {
+            if (rows[0] == null) {
+                console.log("No tiene saldo necesario para comprar ese cromo");
+                reject('NO hay saldo suficiente');
+            } else {
+                resolve('Hay saldo suficiente')
+            }
+        })
+    })
+}
+
+module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(usuario, album){
+    return new Promise(function(resolve, reject){
+        $query = 'SELECT socios.usuario '
+                + 'FROM socios, albumes '
+                + 'INNER JOIN colecciones ON albumes.coleccion = colecciones.nombre '
+                + 'WHERE socios.usuario = ? AND albumes.id = ? AND socios.saldo >= colecciones.precio_album';
+
+        connection.query($query, [usuario, album], function (err, rows, fields) {
+            if (rows[0] == null) {
+                console.log("No tiene saldo necesario para comprar ese cromo");
+                reject('NO hay saldo suficiente');
+            } else {
+                resolve('Hay saldo suficiente')
+            }
+        })
+    })
 }
 
 
@@ -118,8 +153,8 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
         connection.query($query, [usuario], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("No tiene el album necesario para comprar ese cromo");
-                reject(err);
-            }else{
+                reject("No tiene el album necesario para comprar ese cromo");
+            } else {
                 console.log("Query succesfully executed: ", rows);
 
                 $query = 'UPDATE cromos SET cromos.album = ? WHERE cromos.id = ?'
@@ -128,7 +163,7 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
                     if (err) {
                         console.log("An error ocurred performing the query.");
                         reject(err);
-                    }else{
+                    } else {
                         console.log("Query succesfully executed: ", filas);
                         resolve(filas);
                     }
@@ -146,9 +181,9 @@ module.exports.generarCopiasCromos = function generarCopiasCromos(cromo, numCopi
 
     return new Promise(function (resolve, reject) {
         $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
-                + 'SELECT nombre, ruta_imagen, precio, album, coleccion '
-                + 'FROM cromos '
-                + 'WHERE id = ?;';
+            + 'SELECT nombre, ruta_imagen, precio, album, coleccion '
+            + 'FROM cromos '
+            + 'WHERE id = ?;';
 
         connection.query($query, [cromo], function (err, rows, fields) {
             if (err) {
@@ -167,19 +202,19 @@ module.exports.venderAlbum = function venderAlbum(usuario, album) {
     return new Promise(function (resolve, reject) {
 
         $query = 'INSERT INTO albumes (usuario, coleccion, estado) '
-                + 'SELECT ?, colecciones.nombre, "no iniciada" '
-                + 'FROM colecciones INNER JOIN albumes ON albumes.coleccion = colecciones.nombre '
-                + 'WHERE albumes.id = ?;'
+            + 'SELECT ?, colecciones.nombre, "no iniciada" '
+            + 'FROM colecciones INNER JOIN albumes ON albumes.coleccion = colecciones.nombre '
+            + 'WHERE albumes.id = ?;'
 
-        connection.query($query, [usuario, album] ,function (err, rows, fields) {
+        connection.query($query, [usuario, album], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
-                reject(err);
+                reject('No puede comprar de nuevo un album que ya ha comprado.');
+            } else {
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows);
             }
-
-            console.log("Query succesfully executed: ", rows);
-            resolve(rows);
         });
     });
 }
@@ -240,11 +275,38 @@ module.exports.registrar_usuario = function registrar_usuario(usuario, contrasen
 
         connection.query($query, [usuario, contrasenya, tipo], function (err, rows, fields) {
             if (err) {
+                console.log(err)
                 reject(err)
             } else {
                 resolve(usuario, tipo)
             }
         })
+
+        if (tipo == 'admin') {
+            $query = 'INSERT INTO admins (usuario) VALUES (?)';
+
+            connection.query($query, [usuario], function (err, rows, fields) {
+                if (err) {
+                    console.log(err)
+                    reject(err)
+                } else {
+                    resolve(usuario, tipo)
+                }
+            })
+        } else {
+            $query = 'INSERT INTO socios (usuario, saldo) VALUES (?, ?)';
+
+            connection.query($query, [usuario, 0], function (err, rows, fields) {
+                if (err) {
+                    console.log(err)
+                    reject(err)
+                } else {
+                    resolve(usuario, tipo)
+                }
+            })
+        }
+
+
     });
 }
 
