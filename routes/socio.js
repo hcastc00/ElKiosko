@@ -4,7 +4,7 @@ router = express.Router()
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
         try {
             let token = isSocio(req)
             enviarTokenAcceso(req, res, crearTokenAcceso(token.usuario, token.tipo))
@@ -20,10 +20,10 @@ const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
             }
         }
     }
-)*/
+)
 
 router.get('/', (req, res) => {
-    res.render("socio")
+    res.render("socio", {nombre: "pepe", saldo: 2})
 })
 
 router.get('/tienda', (req, res) => {
