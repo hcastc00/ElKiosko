@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     database: 'lishoweb_kiosko'
 });
 
-//TODO Cambiar las queries que hizo Bayon para hacerlas anti inyeccion de codigo
+
 module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
 
     $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
@@ -33,18 +33,34 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
 
         $query = 'SELECT id FROM albumes WHERE usuario = ? AND coleccion = ?';
         connection.query($query, [usuario, coleccion], function (err, rows, fields) {
-            if (err) {
-                console.log("An error ocurred performing the query.");
+            if (err || rows[0] == null) {
+                console.log("Este usuario no tiene ese album");
                 //console.log(err);
-                reject(err);
+                reject('Este usuario no tiene ese album');
+            }else{
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows[0].id);
             }
-
-            console.log("Query succesfully executed: ", rows);
-            resolve(rows[0].id);
         });
-
-
     });
+}
+
+
+module.exports.getCromosAlbum = function getCromosAlbum(album){
+    return new Promise(function(resolve, reject){
+        $query = 'SELECT * '
+                + 'FROM albumes, cromos '
+                + 'WHERE albumes.id = ? AND cromos.album = albumes.id';
+
+        connection.query($query, [], function(err, rows, fields){
+            if(err){
+                reject(err);
+            }else{
+                console.log('Query succesfully executed');
+                resolve(rows);
+            }
+        })
+    })
 }
 
 
@@ -103,13 +119,13 @@ module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
     });
 }
 
-module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, usuario){
+module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio){
     return new Promise(function(resolve, reject){
         $query = 'SELECT socios.usuario '
                 + 'FROM socios, cromos '
                 + 'WHERE socios.usuario = ? AND cromos.id = ? AND socios.saldo >= cromos.precio';
 
-        connection.query($query, [usuario, cromo], function (err, rows, fields) {
+        connection.query($query, [socio, cromo], function (err, rows, fields) {
             if (rows[0] == null) {
                 console.log("No tiene saldo necesario para comprar ese cromo");
                 reject('NO hay saldo suficiente');
@@ -120,14 +136,50 @@ module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, usuar
     })
 }
 
-module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(usuario, album){
+
+module.exports.tieneCromoEnAlbum = function tieneCromoEnAlbum(rutaCromo, album){
+    return new Promise(function(resolve, reject){
+        $query = 'SELECT COUNT(cromos.id) as num '
+                + 'FROM cromos '
+                + 'INNER JOIN albumes ON cromos.album = albumes.id '
+                + 'WHERE cromos.ruta_imagen = ? AND albumes.id = ?'
+
+        connection.query($query, [rutaCromo, album], function (err, rows, fields) {
+            if (rows[0].num > 0) {
+                console.log("Este usuario ya tiene este cromo en ese album");
+                reject("Cromo ya existente en album");
+            } else {
+                resolve("El cromo no esta, puede comprarlo")
+            }
+        })
+    })
+}
+
+
+module.exports.modificaSaldo = function modificaSaldo(socio, dinero){
+    return new Promise(function(resolve, reject){
+        $query = 'UPDATE socios SET saldo = saldo + ? WHERE usuario = ?'
+
+        connection.query($query, [dinero, socio], function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                resolve('Modificado correctamente')
+            }
+        })
+    })
+}
+
+
+module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album){
     return new Promise(function(resolve, reject){
         $query = 'SELECT socios.usuario '
                 + 'FROM socios, albumes '
                 + 'INNER JOIN colecciones ON albumes.coleccion = colecciones.nombre '
                 + 'WHERE socios.usuario = ? AND albumes.id = ? AND socios.saldo >= colecciones.precio_album';
 
-        connection.query($query, [usuario, album], function (err, rows, fields) {
+        connection.query($query, [socio, album], function (err, rows, fields) {
             if (rows[0] == null) {
                 console.log("No tiene saldo necesario para comprar ese cromo");
                 reject('NO hay saldo suficiente');
@@ -172,6 +224,9 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
         });
     });
 }
+
+
+
 
 
 module.exports.generarCopiasCromos = function generarCopiasCromos(cromo, numCopias) {
