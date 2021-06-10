@@ -5,6 +5,7 @@ const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
+
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
@@ -42,13 +43,16 @@ router.get('/tienda', (req, res) => {
 
     let nombre = req.nombre;
     let saldoUsuario;
+    let portadas;
     require('../DBHandler.js').getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
             //Obtengo de la base de datos una lista con las colecciones que tienen cromos para comprar
             require('../DBHandler.js').getColeccionesActivas()
                 .then(function (result) {
-                    let portadas = getPortadasColecciones(result)
+                    //TODO la lectura del directorio debe ser asincrona por lo que se ve,
+                    //gestionar eso para que no pete
+                    portadas = getPortadasColecciones(result)
                     console.log(result)
                     res.render('coleccion', {portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario})
                 })
@@ -65,20 +69,22 @@ router.get('/tienda', (req, res) => {
 
 function getPortadasColecciones(colecciones){
     let path;
-    let portadas;
+    let portadas = new Array();
+    let fotos;
     colecciones.forEach(coleccion => {
         path = 'public/cromos/'+coleccion.nombre
-        fs.readdir(path, function(err, list){
+        fotos = fs.readdirSync(path, { withFileTypes: true });
+        portadas.push(fotos[0].name)
+        /*fs.readdirSync(path, function(err, list){
             if (err){
                 console.log(err);
             } else{
                 console.log(list[0])
-                portadas.append(list[0])
+                portadas.push(list[0])
             }
-        })
+        })*/
     });
-
-    return portadas
+    return portadas;
 }
 
 router.get('/tiendaCromos', (req, res) => {
