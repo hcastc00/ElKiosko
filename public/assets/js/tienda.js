@@ -1,8 +1,7 @@
 
-function comprarAlbum(){
-
+function comprarAlbum(event){
     //TODO mirar como sacar desde el ejs el id de cada album, el precio ya
-    let idAlbum = 37;
+    let idAlbum = event.target.id.split('_')[1];
     let precioAlbum = document.getElementById('precioAlbum_albumQueSea').innerText;
     console.log(precioAlbum)
     

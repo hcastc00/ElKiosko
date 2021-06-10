@@ -5,34 +5,54 @@ const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
 router.use((req, res, next) => {
-        try {
-            let token = isSocio(req)
-            //Refresco el token para ampliar el tiempo
-            req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
-            req.nombre = token.usuario.nombre
-            next()
-        }catch (e) {
-            if (e.message === 'No tienes los permisos') {
-                //Seria redirigir a vista de usuario
-                res.redirect('/admin')
-            }else if(e.name === 'TokenExpiredError'){
-                res.redirect('/?err=caducado#loginForm')
-            }else if(e.message === 'Necesitas iniciar sesion'){
-                res.redirect('/?error=noSesion#loginForm')
-            }
+    try {
+        let token = isSocio(req)
+        //Refresco el token para ampliar el tiempo
+        req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
+        req.nombre = token.usuario.nombre
+        next()
+    } catch (e) {
+        if (e.message === 'No tienes los permisos') {
+            //Seria redirigir a vista de usuario
+            res.redirect('/admin')
+        } else if (e.name === 'TokenExpiredError') {
+            res.redirect('/?err=caducado#loginForm')
+        } else if (e.message === 'Necesitas iniciar sesion') {
+            res.redirect('/?error=noSesion#loginForm')
         }
     }
+}
 )
 
 router.get('/', (req, res) => {
-    res.render("socio", {nombre: req.nombre, saldo: 2})
+    res.render("socio", { nombre: req.nombre, saldo: 2 })
 })
 
 router.get('/tienda', (req, res) => {
-    res.render("coleccion")
+
+    let nombre = req.nombre;
+    let saldoUsuario;
+    require('../DBHandler.js').getSaldo(nombre)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            //Obtengo de la base de datos una lista con las colecciones que tienen cromos para comprar
+            require('../DBHandler.js').getColeccionesActivas()
+                .then(function (result) {
+                    console.log(result)
+                    res.render('coleccion', { colecciones: result, usuario: nombre, saldo: saldoUsuario})
+                })
+
+                .catch(function (err) {
+                    console.log('Se ha producido un error en la query', err)
+                })
+        })
+
+        .then(function (err) {
+            console.log(err)
+        })
 })
 
-router.get('/tiendaCromos', (req, res) =>{
+router.get('/tiendaCromos', (req, res) => {
     res.render("tienda")
 })
 
@@ -46,11 +66,8 @@ router.post('/comprarCromo', (req, res) => {
     const rutaCromo = cromo.ruta;
     const precioCromo = -cromo.precio;
     const coleccion = cromo.coleccion;
-    const usuario = 'bayon';
     let album;
-    //TODO Descomentar esto para que se coja el usuario del token
-    //const token = req.cookies.token_acceso;
-    //const usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
+    const usuario = req.nombre;
 
 
 
@@ -95,7 +112,7 @@ router.post('/comprarCromo', (req, res) => {
                 })
         })
 
-        .catch(function(err){
+        .catch(function (err) {
             console.log(err)
             res.status(500)
             res.send('Sin_Album')

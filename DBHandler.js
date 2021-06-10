@@ -172,6 +172,22 @@ module.exports.modificaSaldo = function modificaSaldo(socio, dinero){
 }
 
 
+module.exports.getSaldo = function getSaldo(socio){
+    return new Promise(function(resolve, reject){
+        $query = 'SELECT saldo FROM socios WHERE usuario = ?'
+
+        connection.query($query, [socio], function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                resolve(rows[0])
+            }
+        })
+    })
+}
+
+
 module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album){
     return new Promise(function(resolve, reject){
         $query = 'SELECT socios.usuario '
@@ -279,17 +295,23 @@ module.exports.getColeccionesActivas = function getColeccionesActivas() {
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'SELECT nombre FROM colecciones WHERE estado="activa"';
+        $query = 'SELECT colecciones.nombre, colecciones.precio_album, albumes.id '
+                + 'FROM colecciones '
+                + 'INNER JOIN albumes ON colecciones.nombre=albumes.coleccion '
+                + 'WHERE colecciones.estado="activa" '
+                + 'GROUP BY colecciones.nombre';
 
         connection.query($query, function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
                 reject(err);
+            }else{
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows);
             }
 
-            console.log("Query succesfully executed: ", rows);
-            resolve(rows);
+            
         });
     });
 }
