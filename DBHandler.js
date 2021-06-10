@@ -100,7 +100,7 @@ module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'SELECT cromos.id, cromos.ruta_imagen, COUNT(cromos.id) AS reps FROM cromos '
+        $query = 'SELECT cromos.id, cromos.nombre, cromos.ruta_imagen, cromos.precio, COUNT(cromos.id) AS reps FROM cromos '
             + 'INNER JOIN albumes ON cromos.album = albumes.id '
             + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
             + 'WHERE usuarios.tipo = "admin" AND cromos.coleccion = ? '

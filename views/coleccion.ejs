@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/Responsive-Image-File-Input.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/jquery.toast.css">
 </head>
 
 <body>
@@ -62,7 +63,7 @@
                             style="width: 100%;height: 230px;background: url(&quot;../assets/img/Mariana%20Souza%20Reis.jpeg&quot;) center / cover;border-top-left-radius: 20px;border-top-right-radius: 20px;position: relative;">
                             <div class="d-flex flex-row justify-content-center align-items-center"
                                 style=" border-radius: 39px;width: 60px;height: 60px;position: absolute;bottom: -31px;right: 20px;">
-                                <a data-bss-hover-animate="pulse" class="row" type="button" style="align-items: center;border-style: none;background: #b86868;width: 60px;height: 60px;border-radius: 39px;box-shadow: 2px 2px 20px -1px #757575;" href="/socio/tiendaCromos"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="color: rgb(255,255,255);font-size: 20px;">
+                                <a data-bss-hover-animate="pulse" class="row" type="button" style="align-items: center;border-style: none;background: #b86868;width: 60px;height: 60px;border-radius: 39px;box-shadow: 2px 2px 20px -1px #757575;" href="/socio/tiendaCromos?coleccion=<%=coleccion.nombre%> "><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="color: rgb(255,255,255);font-size: 20px;">
                                     <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor"></path>
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C6.40848 3 1.71018 6.82432 0.378052 12C1.71018 17.1757 6.40848 21 12 21C17.5915 21 22.2898 17.1757 23.6219 12C22.2898 6.82432 17.5915 3 12 3ZM16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" fill="currentColor"></path>
                                 </svg></a></div>
@@ -72,14 +73,14 @@
                             <div>
                                 <h6 class="text-muted d-inline mb-2"
                                     style="color: #757575;font-size: 20px;font-family: 'Source Sans Pro', sans-serif;font-weight: 600;border-bottom-right-radius: 10px;border-top-right-radius: 10px;margin-left: -20px;padding-left: 20px;padding-right: 8px;padding-bottom: 2px;background: #cdcf66;padding-top: 2px;">
-                                    Precio Álbum: <label id="precioAlbum_albumQueSea"><%=coleccion.precio_album%></label></h6>
+                                    Precio Álbum: <label id="precioAlbum_<%=coleccion.id%>"><%=coleccion.precio_album%></label></h6>
                                 <h4
                                     style="font-family: 'Source Sans Pro', sans-serif;font-weight: 700;color: rgb(255,160,0);margin-bottom: 8px;margin-top: 22px;">
                                     <%=coleccion.nombre%></h4>
                                 <p style="font-family: 'Source Sans Pro', sans-serif;color: #212121;">Pulsa en el ojo para
                                     ver los cromos!<br></p>
                             </div>
-                                <a id="comprarAlbum_<%=coleccion.id%>"
+                                <a id="comprarAlbum_<%=coleccion.id%>_<%=coleccion.nombre%>"
                                 class="btn btn-primary d-flex d-xl-flex justify-content-center align-items-center justify-content-xl-center align-items-xl-center action-button"
                                 role="button" data-bss-hover-animate="pulse" onclick="comprarAlbum(event)"
                                 style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);"><i
@@ -129,6 +130,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/tienda.js"></script>
+    <script src="../assets/js/jquery.toast.js"></script>
+    
 </body>
 
 </html>

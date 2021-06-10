@@ -1,6 +1,7 @@
 express = require('express')
 router = express.Router()
 
+const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
@@ -25,7 +26,16 @@ router.use((req, res, next) => {
 )
 
 router.get('/', (req, res) => {
-    res.render("socio", { nombre: req.nombre, saldo: 2 })
+    let saldoUsuario;
+    let nombre = req.nombre;
+    require('../DBHandler.js').getSaldo(nombre)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            res.render("socio", { nombre: nombre, saldo: saldoUsuario })
+        })
+        .catch(function(err){
+            console.log(err)
+        })
 })
 
 router.get('/tienda', (req, res) => {
@@ -38,8 +48,9 @@ router.get('/tienda', (req, res) => {
             //Obtengo de la base de datos una lista con las colecciones que tienen cromos para comprar
             require('../DBHandler.js').getColeccionesActivas()
                 .then(function (result) {
+                    let portadas = getPortadasColecciones(result)
                     console.log(result)
-                    res.render('coleccion', { colecciones: result, usuario: nombre, saldo: saldoUsuario})
+                    res.render('coleccion', {portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario})
                 })
 
                 .catch(function (err) {
@@ -47,13 +58,50 @@ router.get('/tienda', (req, res) => {
                 })
         })
 
-        .then(function (err) {
+        .catch(function (err) {
             console.log(err)
         })
 })
 
+function getPortadasColecciones(colecciones){
+    let path;
+    let portadas;
+    colecciones.forEach(coleccion => {
+        path = 'public/cromos/'+coleccion.nombre
+        fs.readdir(path, function(err, list){
+            if (err){
+                console.log(err);
+            } else{
+                console.log(list[0])
+                portadas.append(list[0])
+            }
+        })
+    });
+
+    return portadas
+}
+
 router.get('/tiendaCromos', (req, res) => {
-    res.render("tienda")
+
+    let coleccion = req.query.coleccion;
+    let usuario = req.nombre;
+    let saldoUsuario;
+    require('../DBHandler.js').getSaldo(usuario)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            require('../DBHandler.js').getCromosAlaVenta(coleccion)
+            .then(function(result){
+                console.log(result)
+                res.render("tienda", {usuario: usuario, saldo:saldoUsuario, coleccion: coleccion, cromos: result})
+            })
+
+            .catch(function(err){
+                console.log(err)
+            })
+        .catch(function(err){
+            console.log(err)
+        })
+    })
 })
 
 router.get('/juegos', (req, res) => {
