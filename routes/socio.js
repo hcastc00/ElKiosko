@@ -29,6 +29,10 @@ router.get('/', (req, res) => {
 })
 
 router.get('/tienda', (req, res) => {
+    res.render("coleccion")
+})
+
+router.get('/tiendaCromos', (req, res) =>{
     res.render("tienda")
 })
 
@@ -77,7 +81,7 @@ router.post('/comprarCromo', (req, res) => {
                         .catch(function (err) {
                             console.log(err)
                             res.status(500)
-                            res.send(err)
+                            res.send("Ya_Comprado")
                         })
 
 
@@ -87,14 +91,14 @@ router.post('/comprarCromo', (req, res) => {
                 .catch(function (err) {
                     console.log('El socio NO TIENE SALDO SUFICIENTE para comprar el cromo');
                     res.status(500)
-                    res.send('El socio NO TIENE SALDO SUFICIENTE para comprar el cromo')
+                    res.send('Sin_Saldo')
                 })
         })
 
         .catch(function(err){
             console.log(err)
             res.status(500)
-            res.send('El socio NO TIENE el album correspondiente a la coleccion de ese cromo')
+            res.send('Sin_Album')
         })
 
 });
@@ -106,8 +110,7 @@ router.post('/comprarAlbum', (req, res) => {
     const album = req.body.album;
     const albumID = album.id;
     const precioAlbum = -album.precio;
-    const usuario = 'bayon';
-    //TODO Descomentar esto para que se coja el usuario del token
+    const usuario = req.nombre;
     //const token = req.cookies.token_acceso;
     //const usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
 
@@ -124,14 +127,14 @@ router.post('/comprarAlbum', (req, res) => {
                 .catch(function (err) {
                     console.log('Se ha producido un error:', err)
                     res.status(500)
-                    res.send(err)
+                    res.send('Ya_Comprado')
                 })
         })
 
         .catch(function (err) {
             console.log('NO tiene saldo suficiente para el album')
             res.status(500)
-            res.send(err)
+            res.send('Sin_Saldo')
         })
 
 })
