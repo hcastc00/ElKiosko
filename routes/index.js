@@ -14,28 +14,15 @@ router.get('/registro',  (req, res) => {
     res.render('registro')
 })
 
-// router.get('/login', (req,  res) => {
-//
-//     res.render('registro')
-// })
-
 router.post('/login',  (req, res) => {
     require('../DBHandler.js').login(req.body.usuario, req.body.contrasenya)
         .then(function (result) {
             if (result !== "null") {
 
-                const tokenacceso = crearTokenAcceso({'nombre': result['nombre'], 'tipo': result['tipo']})
-
-                //Revisar
-                // require('../DBHandler.js').guardar_tokenrefresco(tokenrefresco, req.body.usuario)
-                //     .then(function (result) {
-                //     }).catch(function (error) {
-                //     console.log(error)
-                // });
+                const tokenacceso = crearTokenAcceso({'nombre': result.nombre, 'tipo': result.tipo})
 
                 enviarTokenAcceso(req, res, tokenacceso, result.tipo)
                 res.send({tipo: result.tipo})
-
             }
         })
         .catch(function (error) {

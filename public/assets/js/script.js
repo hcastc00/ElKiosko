@@ -140,3 +140,13 @@ function registrar() {
 function imagenIntroducida() {
     console.log("Ha cambiado la imagen del formulario");
 }
+
+const queryString = window.location.search;
+console.log(queryString)
+const urlParams = new URLSearchParams(queryString);
+console.log(urlParams)
+const error = urlParams.get('err')
+console.log(error)
+if(error === 'caducado'){
+    //TODO: HACER QUE EL MODAL SE MUESTRE
+}

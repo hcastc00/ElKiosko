@@ -7,7 +7,9 @@ const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 router.use((req, res, next) => {
         try {
             let token = isSocio(req)
-            enviarTokenAcceso(req, res, crearTokenAcceso(token.usuario, token.tipo))
+            //Refresco el token para ampliar el tiempo
+            req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
+            req.nombre = token.usuario.nombre
             next()
         }catch (e) {
             if (e.message === 'No tienes los permisos') {
@@ -23,14 +25,16 @@ router.use((req, res, next) => {
 )
 
 router.get('/', (req, res) => {
-    res.render("socio", {nombre: "pepe", saldo: 2})
+    res.render("socio", {nombre: req.nombre, saldo: 2})
 })
 
 router.get('/tienda', (req, res) => {
-    res.send("Norabuena, llegaste a la tienda")
+    res.render("tienda")
 })
 
-
+router.get('/juegos', (req, res) => {
+    res.render("tetris")
+})
 
 router.post('/comprarCromo', (req, res) => {
     const cromo = req.body.cromo;

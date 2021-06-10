@@ -7,7 +7,9 @@ const {crearTokenAcceso, enviarTokenAcceso} = require('../tokens.js')
 router.use((req, res, next) => {
         try {
             let token = isAdmin(req)
-            enviarTokenAcceso(req, res, crearTokenAcceso(token.usuario, token.tipo))
+            //Refresco el token para ampliar el tiempo
+            req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
+            req.nombre = token.usuario.nombre
             next()
         } catch (e) {
             if (e.message === 'No tienes los permisos') {
@@ -23,7 +25,7 @@ router.use((req, res, next) => {
 )
 
 router.get('/', (req, res) => {
-    res.render("admin")
+    res.render("admin", {nombre: req.nombre})
 })
 
 router.get('/crearColeccion', (req, res) => {
