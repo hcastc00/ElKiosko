@@ -11,19 +11,17 @@ var connection = mysql.createConnection({
     database: 'lishoweb_kiosko'
 });
 
-
 module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
 
     $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
 
     connection.query($query, [usuario, coleccion, estado], function (err, rows, fields) {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
+        if(err){
+            reject(err);
+        }else{
+            console.log('Query succesfully executed');
+            resolve(rows);
         }
-
-        console.log("Query succesfully executed: ", rows);
     });
 }
 
@@ -69,13 +67,12 @@ module.exports.insertarColeccion = function insertarColeccion(nombre, precio_alb
     $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES (?, ?, ?)';
 
     connection.query($query, [nombre, precio_album, estado], function (err, rows, fields) {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
+        if(err){
+            reject(err);
+        }else{
+            console.log('Query succesfully executed');
+            resolve(rows);
         }
-
-        console.log("Query succesfully executed: ", rows);
     });
 }
 
@@ -85,13 +82,12 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
     $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
 
     connection.query($query, [nombre, ruta, precio, album, nombreColeccion], function (err, rows, fields) {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
+        if(err){
+            reject(err);
+        }else{
+            console.log('Query succesfully executed');
+            resolve(rows);
         }
-
-        console.log("Query succesfully executed: ", rows);
     });
 }
 
