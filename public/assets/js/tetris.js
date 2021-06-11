@@ -287,7 +287,6 @@ const GM = {
     }
 
     this.IsAlive = false;
-    sendScore();
   }
 };
 Page.Game = new DrawAreaObj(0,0,10,20,function(){
