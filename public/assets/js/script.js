@@ -156,5 +156,7 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const error = urlParams.get('error')
 if (error == 'noSesion') {
-    $('modal_caducado').modal('show');
+    $(document).ready(function (){
+        $(".modal").modal("toggle")
+    })
 }
