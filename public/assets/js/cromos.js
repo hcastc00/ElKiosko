@@ -54,8 +54,8 @@ function crearColeccion() {
       hideAfter: 8000               
     })
 
-    $.get('/admin')
-
+    //TODO mirar a ver como se hace esto
+    location.href = '/admin'
   }
 }
 

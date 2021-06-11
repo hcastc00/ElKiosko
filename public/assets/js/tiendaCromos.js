@@ -10,7 +10,7 @@ function comprarCromo(event){
         .done(function(result){
             console.log(result)
             $.toast({
-                text: 'El cromo  se ha añadido a su inventario correctamente',
+                text: 'Vendido!',
                 title: 'VENDIDO',
                 icon: "success",
                 position: "top-right",
