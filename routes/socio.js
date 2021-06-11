@@ -5,7 +5,7 @@ const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
-
+/*
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
@@ -25,6 +25,8 @@ router.use((req, res, next) => {
     }
 }
 )
+
+ */
 
 router.get('/', (req, res) => {
     let saldoUsuario;
@@ -113,6 +115,23 @@ router.get('/tiendaCromos', (req, res) => {
 router.get('/juegos', (req, res) => {
     res.render("tetris")
 })
+
+router.post('/juegos/tetris', (req, res) => {
+    let monedas = req.body.score;
+    console.log("probando")
+    require('../DBHandler.js').modificaSaldo('bayon', monedas)
+        .then(function (result){
+            res.send(monedas);
+            console.log("he entrado en el post de las monedas");
+        })
+        .catch(function (err){
+            console.log('Se ha producido un error', err);
+            res.status(500);
+            res.send(err);
+    })
+
+})
+
 
 router.post('/comprarCromo', (req, res) => {
     const cromo = req.body.cromo;

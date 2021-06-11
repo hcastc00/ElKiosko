@@ -287,6 +287,7 @@ const GM = {
     }
 
     this.IsAlive = false;
+    sendScore();
   }
 };
 Page.Game = new DrawAreaObj(0,0,10,20,function(){
@@ -1025,4 +1026,15 @@ function ColorWithAlpha(color, alpha){
 
 function sendScore(){
     //TODO
+    $.post('/socio/juegos/tetris', {score: GM.ScoreCur})
+        .done(function(result){
+            console.log(result)
+            $.toast({
+                text: 'Se han añadido '+result+' monedas a tu saldo',
+                title: 'Enhorabuena!',
+                icon: "success",
+                position: "top-right",
+                hideAfter: 8000
+            })
+        })
 }
