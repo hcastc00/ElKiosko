@@ -16,7 +16,7 @@ function submitForm() {
         }
 
         let dir = 'modificaColeccion?nombreColeccion=' + nombreColeccion;
-        fetch("/upload_things", {
+        fetch("/admin/upload_things", {
             method: 'post',
             body: datosFormulario
         })
