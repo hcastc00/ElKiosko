@@ -1025,7 +1025,7 @@ function ColorWithAlpha(color, alpha){
 }
 
 function sendScore(){
-    //TODO
+
     $.post('/socio/juegos/tetris', {score: GM.ScoreCur})
         .done(function(result){
             console.log(result)

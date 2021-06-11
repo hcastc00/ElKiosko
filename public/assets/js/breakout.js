@@ -227,5 +227,15 @@ drawPaddle();
 drawBall();
 
 function sendScore(){
-    //TODO
+    $.post('/socio/juegos/breakout', {score: score})
+        .done(function(result){
+            console.log(result)
+            $.toast({
+                text: 'Se han añadido '+result+' monedas a tu saldo',
+                title: 'Enhorabuena!',
+                icon: "success",
+                position: "top-right",
+                hideAfter: 8000
+            })
+        })
 }

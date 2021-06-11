@@ -5,7 +5,7 @@ const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
-
+/*
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
@@ -24,6 +24,8 @@ router.use((req, res, next) => {
         }
     }
 })
+
+*/
 
 router.get('/', (req, res) => {
     let saldoUsuario;
@@ -104,12 +106,29 @@ router.get('/juegos', (req, res) => {
 })
 
 router.post('/juegos/tetris', (req, res) => {
-    let monedas = req.body.score;
-    console.log("probando")
-    require('../DBHandler.js').modificaSaldo('bayon', monedas)
+
+    let monedas = Math.floor(req.body.score/1000);
+    let username = req.nombre;
+    console.log("probando"+monedas)
+    require('../DBHandler.js').modificaSaldo(username, monedas)
         .then(function (result) {
             res.send(monedas);
-            console.log("he entrado en el post de las monedas");
+        })
+        .catch(function (err) {
+            console.log('Se ha producido un error', err);
+            res.status(500);
+            res.send(err);
+        })
+
+})
+
+router.post('/juegos/breakout', (req, res) => {
+
+    let monedas = req.body.score;
+    let username = req.nombre;
+    require('../DBHandler.js').modificaSaldo(username, monedas)
+        .then(function (result) {
+            res.send(monedas);
         })
         .catch(function (err) {
             console.log('Se ha producido un error', err);
