@@ -7,7 +7,11 @@ const {
 } = require('../tokens.js')
 
 router.get('/', (req, res) => {
-    res.render('index', {error: req.query.err})
+    if (req.cookies['token_acceso'] !== undefined){
+        res.redirect('/socio')
+    }else {
+        res.render('index', {error: req.query.err})
+    }
 })
 
 router.get('/registro',  (req, res) => {

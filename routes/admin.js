@@ -34,9 +34,10 @@ router.use((req, res, next) => {
             if (e.message === 'No tienes los permisos') {
                 res.redirect('/socio')
             } else if (e.name === 'TokenExpiredError') {
-                res.redirect('/?err=caducado#loginForm')
+                res.clearCookie('token_acceso')
+                res.redirect('/?error=caducado')
             } else if (e.message === 'Necesitas iniciar sesion') {
-                res.redirect('/?error=noSesion#loginForm')
+                res.redirect('/?error=noSesion')
             }
         }
     }
