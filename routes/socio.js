@@ -9,18 +9,22 @@ const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
+
         //Refresco el token para ampliar el tiempo
-        req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
+        let nuevoToken = crearTokenAcceso({'nombre': token.usuario.nombre, 'tipo': token.usuario.tipo})
+        enviarTokenAcceso(req, res, nuevoToken)
+
         req.nombre = token.usuario.nombre
         next()
     } catch (e) {
         if (e.message === 'No tienes los permisos') {
-            //Seria redirigir a vista de usuario
             res.redirect('/admin')
         } else if (e.name === 'TokenExpiredError') {
             res.redirect('/?err=caducado#loginForm')
         } else if (e.message === 'Necesitas iniciar sesion') {
             res.redirect('/?error=noSesion#loginForm')
+        }else {
+            res.redirect('/')
         }
     }
 })

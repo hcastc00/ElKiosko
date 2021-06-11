@@ -6,27 +6,6 @@ const {isAdmin} = require('../isAuth.js')
 const {crearTokenAcceso, enviarTokenAcceso} = require('../tokens.js')
 const multer = require("multer");
 
-router.use((req, res, next) => {
-        try {
-            let token = isAdmin(req)
-            //Refresco el token para ampliar el tiempo
-            req.cookies.token_acceso = crearTokenAcceso(token.usuario.nombre, token.usuario.tipo)
-            req.nombre = token.usuario.nombre
-            next()
-        } catch (e) {
-            if (e.message === 'No tienes los permisos') {
-                //Seria redirigir a vista de usuario
-                res.redirect('/socio')
-            } else if (e.name === 'TokenExpiredError') {
-                res.redirect('/?err=caducado#loginForm')
-            } else if (e.message === 'Necesitas iniciar sesion') {
-                res.redirect('/?error=noSesion#loginForm')
-            }
-        }
-    }
-)
-
-
 
 //Storage con multer
 var storage = multer.diskStorage({
@@ -41,7 +20,27 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+router.use((req, res, next) => {
+        try {
+            let token = isAdmin(req)
 
+            //Refresco el token para ampliar el tiempo
+            let nuevoToken = crearTokenAcceso({'nombre': token.usuario.nombre, 'tipo': token.usuario.tipo})
+            enviarTokenAcceso(req, res, nuevoToken)
+
+            req.nombre = token.usuario.nombre
+            next()
+        } catch (e) {
+            if (e.message === 'No tienes los permisos') {
+                res.redirect('/socio')
+            } else if (e.name === 'TokenExpiredError') {
+                res.redirect('/?err=caducado#loginForm')
+            } else if (e.message === 'Necesitas iniciar sesion') {
+                res.redirect('/?error=noSesion#loginForm')
+            }
+        }
+    }
+)
 
 router.get('/', (req, res) => {
     res.render("admin", {nombre: req.nombre})

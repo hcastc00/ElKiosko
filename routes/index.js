@@ -21,7 +21,8 @@ router.post('/login',  (req, res) => {
 
                 const tokenacceso = crearTokenAcceso({'nombre': result.nombre, 'tipo': result.tipo})
 
-                enviarTokenAcceso(req, res, tokenacceso, result.tipo)
+                enviarTokenAcceso(req, res, tokenacceso
+                )
                 res.send({tipo: result.tipo})
             }else{
                 res.send({error: 'combinacionErronea'})
