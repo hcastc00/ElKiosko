@@ -5,7 +5,7 @@ const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
-/*
+
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
@@ -25,7 +25,6 @@ router.use((req, res, next) => {
     }
 })
 
-*/
 
 router.get('/', (req, res) => {
     let saldoUsuario;
@@ -101,8 +100,21 @@ router.get('/tiendaCromos', (req, res) => {
         })
 })
 
-router.get('/juegos', (req, res) => {
-    res.render("tetris")
+router.get('/inventario', (req, res) => {
+    res.render("inventario")
+})
+
+router.get('/juegos/tetris', (req, res) => {
+    let saldoUsuario;
+    let nombre = req.nombre;
+    require('../DBHandler.js').getSaldo(nombre)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            res.render("tetris", { usuario: nombre, saldo: saldoUsuario })
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
 })
 
 router.post('/juegos/tetris', (req, res) => {
@@ -119,7 +131,19 @@ router.post('/juegos/tetris', (req, res) => {
             res.status(500);
             res.send(err);
         })
+})
 
+router.get('/juegos/breakout', (req, res) => {
+    let saldoUsuario;
+    let nombre = req.nombre;
+    require('../DBHandler.js').getSaldo(nombre)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            res.render("breakout", { usuario: nombre, saldo: saldoUsuario })
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
 })
 
 router.post('/juegos/breakout', (req, res) => {
