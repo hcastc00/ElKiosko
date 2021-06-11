@@ -9,7 +9,13 @@ function comprarCromo(event){
     $.post('/socio/comprarCromo', {cromo: {id: id, ruta: ruta, precio: precio, coleccion: coleccion} })
         .done(function(result){
             console.log(result)
-            alert('CROMO VENDIDO SATISFACTORIAMENTE')
+            $.toast({
+                text: 'El cromo  se ha añadido a su inventario correctamente',
+                title: 'VENDIDO',
+                icon: "success",
+                position: "top-right",
+                hideAfter: 8000               
+            })
             location.reload()
         })
 
@@ -17,13 +23,31 @@ function comprarCromo(event){
             console.log(xhr.responseText)
             switch(xhr.responseText){
                 case 'Ya_Comprado':
-                    $("#yaComprado").modal("toggle");
+                    $.toast({
+                        text: 'Ya tiene el cromo en su inventario',
+                        title: 'REPETIDO',
+                        icon: "error",
+                        position: "top-right",
+                        hideAfter: 8000               
+                    })
                     break;
                 case 'Sin_Saldo':
-                    $("#sinSaldo").modal("toggle");
+                    $.toast({
+                        text: 'No tiene saldo suficiente para comprar el cromo',
+                        title: 'BANCARROTA',
+                        icon: "error",
+                        position: "top-right",
+                        hideAfter: 8000               
+                    })
                     break;
                 case 'Sin_Album':
-                    $("#sinAlbum").modal("toggle");
+                    $.toast({
+                        text: 'No tiene el álbum de la colección ' + coleccion + ', por lo que no puede comprar sus cromos.',
+                        title: 'BANCARROTA',
+                        icon: "error",
+                        position: "top-right",
+                        hideAfter: 8000               
+                    })
                     break;    
             }            
         })

@@ -5,7 +5,7 @@ const fs = require('fs')
 const { isSocio } = require('../isAuth.js')
 const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
 
-/*
+
 router.use((req, res, next) => {
     try {
         let token = isSocio(req)
@@ -23,10 +23,7 @@ router.use((req, res, next) => {
             res.redirect('/?error=noSesion#loginForm')
         }
     }
-}
-)
-
- */
+})
 
 router.get('/', (req, res) => {
     let saldoUsuario;
@@ -36,7 +33,7 @@ router.get('/', (req, res) => {
             saldoUsuario = result.saldo;
             res.render("socio", { nombre: nombre, saldo: saldoUsuario })
         })
-        .catch(function(err){
+        .catch(function (err) {
             console.log(err)
         })
 })
@@ -52,11 +49,9 @@ router.get('/tienda', (req, res) => {
             //Obtengo de la base de datos una lista con las colecciones que tienen cromos para comprar
             require('../DBHandler.js').getColeccionesActivas()
                 .then(function (result) {
-                    //TODO la lectura del directorio debe ser asincrona por lo que se ve,
-                    //gestionar eso para que no pete
                     portadas = getPortadasColecciones(result)
                     console.log(result)
-                    res.render('coleccion', {portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario})
+                    res.render('coleccion', { portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario })
                 })
 
                 .catch(function (err) {
@@ -69,22 +64,14 @@ router.get('/tienda', (req, res) => {
         })
 })
 
-function getPortadasColecciones(colecciones){
+function getPortadasColecciones(colecciones) {
     let path;
     let portadas = new Array();
     let fotos;
     colecciones.forEach(coleccion => {
-        path = 'public/cromos/'+coleccion.nombre
+        path = 'public/cromos/' + coleccion.nombre
         fotos = fs.readdirSync(path, { withFileTypes: true });
         portadas.push(fotos[0].name)
-        /*fs.readdirSync(path, function(err, list){
-            if (err){
-                console.log(err);
-            } else{
-                console.log(list[0])
-                portadas.push(list[0])
-            }
-        })*/
     });
     return portadas;
 }
@@ -98,18 +85,18 @@ router.get('/tiendaCromos', (req, res) => {
         .then(function (result) {
             saldoUsuario = result.saldo;
             require('../DBHandler.js').getCromosAlaVenta(coleccion)
-            .then(function(result){
-                console.log(result)
-                res.render("tienda", {usuario: usuario, saldo:saldoUsuario, coleccion: coleccion, cromos: result})
-            })
+                .then(function (result) {
+                    console.log(result)
+                    res.render("tienda", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
+                })
 
-            .catch(function(err){
-                console.log(err)
-            })
-        .catch(function(err){
-            console.log(err)
+                .catch(function (err) {
+                    console.log(err)
+                })
+                .catch(function (err) {
+                    console.log(err)
+                })
         })
-    })
 })
 
 router.get('/juegos', (req, res) => {
@@ -120,15 +107,15 @@ router.post('/juegos/tetris', (req, res) => {
     let monedas = req.body.score;
     console.log("probando")
     require('../DBHandler.js').modificaSaldo('bayon', monedas)
-        .then(function (result){
+        .then(function (result) {
             res.send(monedas);
             console.log("he entrado en el post de las monedas");
         })
-        .catch(function (err){
+        .catch(function (err) {
             console.log('Se ha producido un error', err);
             res.status(500);
             res.send(err);
-    })
+        })
 
 })
 
@@ -201,8 +188,6 @@ router.post('/comprarAlbum', (req, res) => {
     const albumID = album.id;
     const precioAlbum = -album.precio;
     const usuario = req.nombre;
-    //const token = req.cookies.token_acceso;
-    //const usuario = jwt.decode(token, process.env.TOKEN_SECRET).usuario.nombre;
 
     //Primero se comprueba si tiene el saldo necesario para comprarlo y si tiene se compra
     require('../DBHandler.js').tieneDineroParaAlbum(usuario, albumID)
