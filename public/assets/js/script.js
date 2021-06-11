@@ -32,42 +32,53 @@ function submitForm() {
 function login() {
     const datosFormulario = new FormData();
 
-    let usuario = document.getElementById('usuario_login').value
-    let contrasenya = document.getElementById('contrasenya_login').value
+    let campoUsuario = document.getElementById('usuario_login')
+    let campoContrasenya = document.getElementById('contrasenya_login')
+    let usuario = campoUsuario.value
+    let contrasenya = campoContrasenya.value
 
     if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null) {
         console.log("hago el post")
         $.post("/login", {usuario: usuario, contrasenya: contrasenya},
-            function (data) {
-                console.log("Realizo el get")
-                location.href = '/' + data.tipo
-                // $.get("/admin", {}, function (res) {
+            function (res) {
+                if (!res.error) {
+                    location.href = '/' + res.tipo
+                } else if (res.error === 'combinacionErronea') {
+                    campoUsuario.style.borderColor = 'red'
+                    campoUsuario.style.borderWidth = '2px'
+                    campoContrasenya.style.borderColor = 'red'
+                    campoContrasenya.style.borderWidth = '2px'
+                    campoContrasenya.value = ''
 
-                //
-                // if (data != "null") {
-                //     //TODO: crear cookie
-                //
-                //     $.get("/admin")
-                //         .dome( (data)=>{
-                //             console.log(data)
-                //         })
-
-                // if (data['tipo'] == 'socio') {
-                //     console.log("Es socio", data['usuario'])
-                //     //TODO: cargar vista socio
-                // } else {
-                //     console.log("Es admin", data['usuario'])
-                //     //TODO: cargar vista admin
-                // }
-                // } else {
-                //     console.log("Combinacion erronea")
-                //     //mostrar alerta datos incorrectos
-                // }
-                // })
+                    $.toast({
+                        text: 'La combinación introducida es incorrecta.',
+                        title: 'Combinacion erronea',
+                        icon: "error",
+                        position: "top-right",
+                        hideAfter: 8000
+                    })
+                }
             })
     } else {
-        //TODO: mostrar alerta datos vacios
+        if (usuario == '' || usuario == null){
+            campoUsuario.style.borderColor = 'red'
+            campoUsuario.style.borderWidth = '2px'
+        }
+        if (contrasenya == '' || contrasenya == null){
+            campoContrasenya.style.borderColor = 'red'
+            campoContrasenya.style.borderWidth = '2px'
+        }
+        let modalString = "Porfavor, rellene los campos en rojo."
+        $.toast({
+            text: 'Porfavor, rellene los campos en rojo.',
+            title: 'Campos vacios',
+            icon: "error",
+            position: "top-right",
+            hideAfter: 8000
+        })
     }
+
+    console.log(document.getElementById('loginForm').children)
 
 }
 
@@ -142,11 +153,8 @@ function imagenIntroducida() {
 }
 
 const queryString = window.location.search;
-console.log(queryString)
 const urlParams = new URLSearchParams(queryString);
-console.log(urlParams)
-const error = urlParams.get('err')
-console.log(error)
-if(error === 'caducado'){
-    //TODO: HACER QUE EL MODAL SE MUESTRE
+const error = urlParams.get('error')
+if (error == 'noSesion') {
+    $('modal_caducado').modal('show');
 }

@@ -23,7 +23,10 @@ router.post('/login',  (req, res) => {
 
                 enviarTokenAcceso(req, res, tokenacceso, result.tipo)
                 res.send({tipo: result.tipo})
+            }else{
+                res.send({error: 'combinacionErronea'})
             }
+
         })
         .catch(function (error) {
             console.log(error)

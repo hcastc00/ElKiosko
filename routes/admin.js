@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/crearColeccion', (req, res) => {
-    res.redirect('/#loginForm')
+    res.render('crearColeccion')
 })
 
 module.exports = router
