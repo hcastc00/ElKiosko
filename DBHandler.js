@@ -63,7 +63,7 @@ module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario){
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'SELECT coleccion FROM albumes WHERE usuario = ?';
+        $query = 'SELECT coleccion AS nombre FROM albumes WHERE usuario = ?';
         connection.query($query, [usuario], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene albumes");
