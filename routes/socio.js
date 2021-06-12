@@ -106,8 +106,59 @@ router.get('/tiendaCromos', (req, res) => {
 })
 
 router.get('/inventario', (req, res) => {
-    res.render("inventario")
+
+    let nombre = req.nombre;
+    let saldoUsuario;
+    let albumes = [];
+    let estados = [];
+    let numeroCromosColeccion = [];
+    let numeroCromosAlbum;
+    require('../DBHandler.js').getSaldo(nombre)
+        .then(function (result) {
+            saldoUsuario = result.saldo;
+            require('../DBHandler.js').getAlbumesUsuario(nombre)
+                .then(function (result) {
+                    albumes = result;
+
+                    albumes.forEach(function(album, index){
+
+                        let coleccion = album.coleccion;
+                        let path = 'public/cromos/' +coleccion;
+                        numeroCromosColeccion.push(fs.readdirSync(path));
+                        require('../DBHandler.js').getNumeroCromosAlbum(nombre, coleccion)
+                            .then(function (result) {
+                                numeroCromosAlbum = result;
+                                estados.push(estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum))
+                                res.render("inventario", {nombre: nombre, saldo: saldoUsuario, albumes: albumes, estados: estados})
+                            })
+
+                            .catch(function (err) {
+                                console.log(err)
+                            })
+
+                    })
+                })
+                .catch(function (err) {
+                    console.log(err)
+                })
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
+
+
 })
+
+function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum){
+    if (numeroCromosAlbum == numeroCromosColeccion){
+        return 'Finalizado';
+    }else if(numeroCromosAlbum == 0){
+        return 'No iniciado';
+    }else{
+        return 'Completado parcialmente'
+    }
+
+}
 
 router.get('/juegos/tetris', (req, res) => {
     let saldoUsuario;

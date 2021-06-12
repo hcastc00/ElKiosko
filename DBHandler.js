@@ -59,6 +59,48 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
     });
 }
 
+module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario){
+
+    return new Promise(function (resolve, reject) {
+
+        $query = 'SELECT coleccion FROM albumes WHERE usuario = ?';
+        connection.query($query, [usuario], function (err, rows, fields) {
+            if (err || rows[0] == null) {
+                console.log("Este usuario no tiene albumes");
+                //console.log(err);
+                reject('Este usuario no tiene albumes');
+            } else {
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows);
+            }
+        });
+    });
+
+}
+
+module.exports.getNumeroCromosAlbum = function getAlbumesUsuario(usuario, coleccion){
+
+    return new Promise(function (resolve, reject) {
+
+        $query = 'select count(distinct ruta_imagen) from cromos '+
+        'inner join colecciones on cromos.coleccion = colecciones.nombre '+
+        'inner join albumes  on cromos.album = albumes.id '+
+        'inner join socios  on albumes.usuario = socios.usuario '+
+        'where socios.usuario = ? and colecciones.nombre = ?';
+        connection.query($query, [usuario, coleccion], function (err, rows, fields) {
+            if (err || rows[0] == null) {
+                console.log("Este usuario no tiene cromos de ese album");
+                //console.log(err);
+                reject('Este usuario no tiene cromos de ese album');
+            } else {
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows[0]);
+            }
+        });
+    });
+
+}
+
 
 module.exports.getCromosAlbum = function getCromosAlbum(album) {
     return new Promise(function (resolve, reject) {
@@ -66,7 +108,7 @@ module.exports.getCromosAlbum = function getCromosAlbum(album) {
             + 'FROM albumes, cromos '
             + 'WHERE albumes.id = ? AND cromos.album = albumes.id';
 
-        connection.query($query, [], function (err, rows, fields) {
+        connection.query($query, [album], function (err, rows, fields) {
             if (err) {
                 reject(err);
             } else {
