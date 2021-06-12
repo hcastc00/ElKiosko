@@ -179,14 +179,7 @@ router.post('/juegos/tetris', (req, res) => {
     let username = req.nombre;
     console.log("probando"+monedas)
     require('../DBHandler.js').modificaSaldo(username, monedas)
-        .then(function (result) {
-            res.send(monedas);
-        })
-        .catch(function (err) {
-            console.log('Se ha producido un error', err);
-            res.status(500);
-            res.send(err);
-        })
+    res.send({monedas : monedas});
 })
 
 router.get('/juegos/breakout', (req, res) => {
@@ -203,19 +196,10 @@ router.get('/juegos/breakout', (req, res) => {
 })
 
 router.post('/juegos/breakout', (req, res) => {
-
     let monedas = req.body.score;
-    let username = req.nombre;
-    require('../DBHandler.js').modificaSaldo(username, monedas)
-        .then(function (result) {
-            res.send(monedas);
-        })
-        .catch(function (err) {
-            console.log('Se ha producido un error', err);
-            res.status(500);
-            res.send(err);
-        })
-
+    let nombre = req.nombre;
+    require('../DBHandler.js').modificaSaldo(nombre,monedas)
+    res.send({monedas : monedas});
 })
 
 
