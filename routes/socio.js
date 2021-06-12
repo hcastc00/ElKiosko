@@ -108,9 +108,9 @@ router.get('/inventario', (req, res) => {
     let nombre = req.nombre;
     let saldoUsuario;
     let albumes = [];
-    let estados = [];
     let numeroCromosColeccion = [];
     let numeroCromosAlbum;
+    let portadas
     require('../DBHandler.js').getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
@@ -118,16 +118,18 @@ router.get('/inventario', (req, res) => {
                 .then(function (result) {
                     albumes = result;
 
+                    portadas = getPortadasColecciones(albumes)
+
                     albumes.forEach(function(album, index){
 
-                        let coleccion = album.coleccion;
-                        let path = 'public/cromos/' +coleccion;
+                        let coleccion = album.nombre;
+                        let path = 'public/cromos/' + coleccion;
                         numeroCromosColeccion.push(fs.readdirSync(path));
                         require('../DBHandler.js').getNumeroCromosAlbum(nombre, coleccion)
                             .then(function (result) {
                                 numeroCromosAlbum = result;
-                                estados.push(estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum))
-                                res.render("inventario", {nombre: nombre, saldo: saldoUsuario, albumes: albumes, estados: estados})
+                                album.estado = estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum)
+                                res.render("inventario", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
                             })
 
                             .catch(function (err) {
@@ -175,7 +177,6 @@ router.post('/juegos/tetris', (req, res) => {
 
     let monedas = Math.floor(req.body.score/1000);
     let username = req.nombre;
-    console.log("probando"+monedas)
     require('../DBHandler.js').modificaSaldo(username, monedas)
     res.send({monedas : monedas});
 })
