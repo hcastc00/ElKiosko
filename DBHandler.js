@@ -348,7 +348,6 @@ module.exports.registrar_usuario = function registrar_usuario(usuario, contrasen
 
         connection.query($query, [usuario, contrasenya, tipo], function (err, rows, fields) {
             if (err) {
-                console.log(err)
                 reject(err)
             } else {
                 resolve(usuario, tipo)

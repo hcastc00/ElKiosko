@@ -2,10 +2,6 @@ const express = require("express");
 const app = express();
 const multer = require("multer");
 
-//Constantes para encriptar con bcrypt
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 const dotenv = require('dotenv');
 // get config vars
 dotenv.config();
@@ -17,7 +13,6 @@ const fs = require("fs");
 const fsPro = fs.promises;
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
 
 //Para usar ejs en los renders
 app.set('views', './views');
@@ -60,25 +55,3 @@ app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
     res.end(200);
 });
 */
-
-
-
-app.post('/registar_usuario', registrar_usuario)
-function registrar_usuario(req, res) {
-
-    bcrypt.hash(req.body.contrasenya, saltRounds, function (err, hash) {
-        console.log("Tenemos este hash!", hash)
-        require('../DFBHandler.js').registrar_usuario(req.body.usuario, hash, req.body.tipo)
-            .then(function () {
-                res.json({ error: 'no' })
-            })
-            .catch(function (error) {
-                if (error['code'] === 'ER_DUP_ENTRY') {
-                    // Error de que la primary key este duplicada
-                    res.json({ error: 'duplicado' })
-                } else {
-                    console.log(error)
-                }
-            });
-    })
-}
