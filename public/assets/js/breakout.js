@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
-const rulesBtn = document.getElementById("rules-btn");
-const closeBtn = document.getElementById("close-btn");
-const rules = document.getElementById("rules");
+const rulesBtn = document.getElementById('rules-btn');
+const closeBtn = document.getElementById('close-btn');
+const rules = document.getElementById('rules');
 const ctx = canvas.getContext("2d");
 
 const ballRadius = 10;
@@ -23,13 +23,13 @@ const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 let score = 0;
 let lives = 3;
-let pause = false;
+let pause = true;
 
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 3 };
+        bricks[c][r] = {x: 0, y: 0, status: 3};
     }
 }
 
@@ -70,17 +70,21 @@ function collisionDetection() {
         for (let r = 0; r < brickRowCount; r++) {
             const b = bricks[c][r];
             if (b.status > 0) {
-                if (
-                    x > b.x &&
-                    x < b.x + brickWidth &&
-                    y > b.y &&
-                    y < b.y + brickHeight
-                ) {
+                if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
                     b.status--;
-                    if (b.status === 0) score++;
+                    if (b.status === 0)
+                        score++;
                     if (score === brickRowCount * brickColumnCount) {
                         sendScore();
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        lives = 3;
+                        score = 0;
+                        drawBackground();
+                        reDrawBricks();
+                        drawLives();
+                        drawPaddle();
+                        drawBall();
                     }
                 }
             }
@@ -120,20 +124,38 @@ function drawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
             if (bricks[c][r].status > 0) {
-                const brickX =
-                    r * (brickWidth + brickPadding) + brickOffsetLeft;
-                const brickY =
-                    c * (brickHeight + brickPadding) + brickOffsetTop;
+                const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
+                const brickY = (c * (brickHeight + brickPadding)) + brickOffsetTop;
                 bricks[c][r].x = brickX;
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth - 5, brickHeight);
-                if (bricks[c][r].status === 1) ctx.fillStyle = "#FF0000";
-                else if (bricks[c][r].status === 2) ctx.fillStyle = "#b12b38";
-                else ctx.fillStyle = "#32373c";
+                if (bricks[c][r].status === 1)
+                    ctx.fillStyle = "#FF0000";
+                else if (bricks[c][r].status === 2)
+                    ctx.fillStyle = "#b12b38";
+                else
+                   ctx.fillStyle = "#32373c";
                 ctx.fill();
                 ctx.closePath();
             }
+        }
+    }
+}
+
+function reDrawBricks(){
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
+            const brickY = (c * (brickHeight + brickPadding)) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            bricks[c][r].status = 3;
+            ctx.fillStyle = "#32373c";
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth - 5, brickHeight);
+            ctx.fill();
+            ctx.closePath();
         }
     }
 }
@@ -157,7 +179,8 @@ function pausecomp(millis) {
     let curDate = null;
     do {
         curDate = new Date();
-    } while (curDate - date < millis);
+    }
+    while (curDate - date < millis);
 }
 //Game run
 function draw() {
@@ -181,7 +204,15 @@ function draw() {
             } else {
                 lives--;
                 if (!lives) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                     sendScore();
+                    lives = 4;
+                    score = 0;
+                    drawBackground();
+                    reDrawBricks();
+                    drawLives();
+                    drawPaddle();
+                    drawBall();
                 } else {
                     x = canvas.width / 2;
                     y = canvas.height - 30;
@@ -203,18 +234,20 @@ function draw() {
         y += dy;
     }
     requestAnimationFrame(draw);
+
 }
 
 //Handler to start the game
 function start() {
-    if (event.keyCode === 32) {
+    if (event.keyCode === 32 && pause === true) {
+        pause = false;
         draw();
     }
 }
 
 //Help list
-rulesBtn.addEventListener("click", () => rules.classList.add("show"));
-closeBtn.addEventListener("click", () => rules.classList.remove("show"));
+rulesBtn.addEventListener('click', () => rules.classList.add('show'));
+closeBtn.addEventListener('click', () => rules.classList.remove('show'));
 
 //Draw the pre-game
 drawBackground();
@@ -223,17 +256,16 @@ drawLives();
 drawPaddle();
 drawBall();
 
-function sendScore() {
-    draw();
-    $.post("/socio/juegos/breakout", { score: score }).done(function (result) {
-        $.toast({
-            text: "Has conseguido " + result.monedas + " créditos",
-            title: "ENHORABUNA!",
-            icon: "success",
-            position: "top-right",
-            hideAfter: 8000,
-        });
-    });
-
-   
+function sendScore(){
+    $.post('/socio/juegos/breakout', {score: score})
+        .done(function(result){
+            console.log(result)
+            $.toast({
+                text: 'Se han añadido '+result+' monedas a tu saldo',
+                title: 'Enhorabuena!',
+                icon: "success",
+                position: "top-right",
+                hideAfter: 8000
+            })
+        })
 }
