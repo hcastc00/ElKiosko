@@ -87,17 +87,15 @@ router.get('/tiendaCromos', (req, res) => {
     let coleccion = req.query.coleccion;
     let usuario = req.nombre;
     let saldoUsuario;
+
+    //TODO comprobar que la tienda tiene colecciones activas otra vez, por si es el último cromo vendido. Sino sacar un toast que te diga que ya no está disponible y redireccionar
     require('../DBHandler.js').getSaldo(usuario)
         .then(function (result) {
             saldoUsuario = result.saldo;
             require('../DBHandler.js').getCromosAlaVenta(coleccion)
                 .then(function (result) {
-                    console.log(result)
+                    console.log( result.length);
                     res.render("tienda", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
-                })
-
-                .catch(function (err) {
-                    console.log(err)
                 })
                 .catch(function (err) {
                     console.log(err)
@@ -213,7 +211,6 @@ router.post('/comprarCromo', (req, res) => {
     const usuario = req.nombre;
 
 
-
     require('../DBHandler.js').getAlbum(usuario, coleccion)
 
         .then(function (result) {
@@ -228,6 +225,13 @@ router.post('/comprarCromo', (req, res) => {
                                 .then(function (result) {
                                     console.log('El cromo se ha comprado de manera satisfactoria')
                                     require('../DBHandler.js').modificaSaldo(usuario, precioCromo)
+
+                                    //TODO Esto no acaba de ir, pero creo que está fino filipino y quedá na de ná
+                                    let estado = estadoColeccion(coleccion)
+                                    if(estado === 'agotada'){
+                                        require('../DBHandler.js').setEstadoColeccion(estado, coleccion)
+                                        res.send({agotada: estado})
+                                    }
                                     res.sendStatus(200);
                                 })
 
@@ -297,6 +301,24 @@ router.post('/comprarAlbum', (req, res) => {
 
 })
 
+function estadoColeccion(coleccion){
+
+    let estado;
+    require('../DBHandler.js').getCromosAlaVenta(coleccion)
+        .then(function (result) {
+            estado = result.length;
+            if (estado == 0){
+                return 'agotada';
+            }else {
+                return 'activa';
+            }
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
+
+
+}
 
 
 module.exports = router

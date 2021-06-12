@@ -16,6 +16,16 @@ function comprarCromo(event){
                 position: "top-right",
                 hideAfter: 6000         
             })
+
+            if(result.agotada){
+                $.toast({
+                    text: 'Ya no quedan cromos!',
+                    title: 'Sin cromos',
+                    icon: "error",
+                    position: "top-right",
+                    hideAfter: 6000
+                })
+            }
             //TODO mirar como hacer pa que esto se muestre despues de que se acabe el toast, o por lo menos que espere un poco
             location.reload()
         })
