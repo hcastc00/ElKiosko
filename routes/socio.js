@@ -149,6 +149,37 @@ router.get('/inventario', (req, res) => {
 
 })
 
+router.get('/inventarioCromos', (req, res) => {
+
+    let coleccion = req.query.coleccion;
+    let usuario = req.nombre;
+    let saldoUsuario, album;
+
+    require('../DBHandler.js').getAlbum(usuario, coleccion)
+        .then(function(result){
+            album = result
+            require('../DBHandler.js').getSaldo(usuario)
+            .then(function (result) {
+                saldoUsuario = result.saldo;
+                require('../DBHandler.js').getCromosAlbum(album)
+                    .then(function (result) {
+                        console.log( result.length);
+                        res.render("inventarioCromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
+                    })
+                    .catch(function (err) {
+                        console.log(err)
+                    })
+            })
+        })
+
+        .catch(function(err){
+            res.status(500)
+            res.send(err)
+        })
+})
+
+
+
 function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum){
     if (numeroCromosAlbum == numeroCromosColeccion){
         return 'Finalizado';
