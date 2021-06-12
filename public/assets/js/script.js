@@ -16,7 +16,7 @@ function submitForm() {
         }
 
         let dir = 'modificaColeccion?nombreColeccion=' + nombreColeccion;
-        fetch("/admin/upload_things", {
+        fetch("/upload_things", {
             method: 'post',
             body: datosFormulario
         })
@@ -155,7 +155,7 @@ function imagenIntroducida() {
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const error = urlParams.get('error')
-if (error == 'noSesion') {
+if (error == 'caducado') {
     $(document).ready(function (){
         $(".modal").modal("toggle")
     })
