@@ -78,7 +78,7 @@ module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario){
 
 }
 
-module.exports.getNumeroCromosAlbum = function getAlbumesUsuario(usuario, coleccion){
+module.exports.getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion){
 
     return new Promise(function (resolve, reject) {
 
@@ -364,6 +364,44 @@ module.exports.getColeccionesActivas = function getColeccionesActivas() {
 
         });
     });
+}
+
+module.exports.getEstadoColeccion = function getEstadoColeccion(coleccion) {
+
+    return new Promise(function (resolve, reject) {
+
+        $query = 'SELECT estado FROM colecciones WHERE nombre = ?';
+
+        connection.query($query,[coleccion], function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                //console.log(err);
+                reject(err);
+            } else {
+                console.log("Query succesfully executed: ", rows);
+                resolve(rows);
+            }
+
+
+        });
+    });
+}
+
+module.exports.setEstadoColeccion = function setEstadoColeccion(estado, coleccion) {
+
+    $query = 'UPDATE colecciones SET estado = ? WHERE nombre = ?'
+
+    return new Promise(function (resolve, reject) {
+        connection.query($query, [estado, coleccion], function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                reject(err);
+            }
+            resolve()
+            console.log("Query succesfully executed: ", rows);
+        });
+    })
 }
 
 
