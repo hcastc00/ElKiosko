@@ -10,6 +10,8 @@ function duplicarCromos(){
                 position: "top-right",
                 hideAfter: 8000
             })
+        }else{
+            location.href = '/admin/colecciones_creadas'
         }
     })
 }

@@ -119,6 +119,24 @@ module.exports.getCromosAlbum = function getCromosAlbum(album) {
     })
 }
 
+module.exports.getCromosColeccion = function getCromosColeccion(coleccion) {
+    return new Promise(function (resolve, reject) {
+        $query = 'SELECT * ' +
+            'FROM cromos WHERE ' +
+            'coleccion = ? GROUP ' +
+            'BY ruta_imagen';
+
+        connection.query($query, [coleccion], function (err, rows, fields) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Query succesfully executed');
+                resolve(rows);
+            }
+        })
+    })
+}
+
 
 module.exports.insertarColeccion = function insertarColeccion(nombre, precio_album, estado) {
     // Perform a query

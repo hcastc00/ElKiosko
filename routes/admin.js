@@ -148,15 +148,9 @@ router.get('/colecciones_creadas', (req, res) => {
                 let coleccion = album.nombre;
                 let path = 'public/cromos/' + coleccion;
                 numeroCromosColeccion.push(fs.readdirSync(path));
-                require('../DBHandler.js').getNumeroCromosAlbum(nombre, coleccion)
-                    .then(function (result) {
-                        numeroCromosAlbum = result;
-                        res.render("inventario_admin", {nombre: nombre, portadas: portadas, albumes: albumes})
-                    })
 
-                    .catch(function (err) {
-                        console.log(err)
-                    })
+                numeroCromosAlbum = result;
+                res.render("inventario_admin", {nombre: nombre, portadas: portadas, albumes: albumes})
 
             })
         })
@@ -171,7 +165,7 @@ router.get('/inventarioCromos', (req, res) => {
 
     require('../DBHandler.js').getAlbum(usuario, coleccion)
         .then(function (result) {
-            album = result
+            let album = result
             require('../DBHandler.js').getCromosColeccion(coleccion)
                 .then(function (result) {
                     console.log(result.length);
