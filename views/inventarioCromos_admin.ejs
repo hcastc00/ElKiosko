@@ -51,6 +51,9 @@
                         <div class="card-body d-flex flex-column justify-content-between" style="padding-bottom: 20px;height: 290px;">
                             <div>
                                 <h6 class="text-muted d-inline mb-2" style="color: #757575;font-size: 20px;font-family: 'Source Sans Pro', sans-serif;font-weight: 600;border-bottom-right-radius: 10px;border-top-right-radius: 10px;margin-left: -20px;padding-left: 20px;padding-right: 8px;padding-bottom: 2px;background: #cdcf66;padding-top: 2px;"> <label id="precio_<%= cromo.id %>"><%= cromo.precio %></label> Créditos</h6>
+                                <label><input type="number" id="<%=cromo.ruta_imagen%>_copias"></label>
+                                <p><b id="rep_en_bd"><%=cromo.repeticiones%></b></p>
+                                <button onclick="anyadir_copias('<%=coleccion%>', '<%=cromo.ruta_imagen%>', '<%=album%>')">Añadir</button>
                                 <h4 style="font-family: 'Source Sans Pro', sans-serif;font-weight: 700;color: rgb(255,160,0);margin-bottom: 8px;margin-top: 22px;"> <%= cromo.nombre %> </h4>
                             </div>
                         </div>
@@ -65,7 +68,7 @@
     <script src="../assets/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/inventarioCromos_admin.js"></script>
     <script src="../assets/js/jquery.toast.js"></script>
 </body>
 

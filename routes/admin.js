@@ -169,7 +169,7 @@ router.get('/inventarioCromos', (req, res) => {
             require('../DBHandler.js').getCromosColeccion(coleccion)
                 .then(function (result) {
                     console.log(result.length);
-                    res.render("inventarioCromos_admin", {usuario: usuario, coleccion: coleccion, cromos: result})
+                    res.render("inventarioCromos_admin", {usuario: usuario, coleccion: coleccion, cromos: result, album: album})
                 })
                 .catch(function (err) {
                     console.log(err)
@@ -179,6 +179,23 @@ router.get('/inventarioCromos', (req, res) => {
             res.status(500)
             res.send(err)
         })
+})
+
+router.post('/inventarioCromos', (req, res) => {
+
+    if (req.body.copias >= 1) {
+        require('../DBHandler.js').duplicarCromo(req.body.ruta, req.body.album, req.body.coleccion, req.body.copias)
+            .then((result) => {
+                require('../DBHandler.js').setEstadoColeccion('activa', req.body.coleccion)
+                res.end()
+            })
+            .catch((error) => {
+                console.log(error)
+                res.send({error: error})
+            })
+    }else {
+        res.send({error: 'CopiasErroneas'})
+    }
 })
 
 function moverAColeccion(coleccion) {

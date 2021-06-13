@@ -121,7 +121,7 @@ module.exports.getCromosAlbum = function getCromosAlbum(album) {
 
 module.exports.getCromosColeccion = function getCromosColeccion(coleccion) {
     return new Promise(function (resolve, reject) {
-        $query = 'SELECT * ' +
+        $query = 'SELECT *, COUNT(ruta_imagen) as repeticiones ' +
             'FROM cromos WHERE ' +
             'coleccion = ? GROUP ' +
             'BY ruta_imagen';
@@ -169,33 +169,38 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
 
 module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
 
-    let datos_cromo
+    let datos_cromo = []
     let datos_cromos = []
+    return new Promise(function (resolve, reject) {
+        $query = 'SELECT nombre, ruta_imagen, precio, coleccion FROM cromos WHERE ruta_imagen = ? AND coleccion = ?'
+        connection.query($query, [ruta, coleccion], function (err, rows, fields) {
+            if (err) {
+                reject(err);
+            } else {
 
-    $query = 'SELECT * FROM cromos WHERE ruta_imagen = ? AND album = ? AND coleccion = ?'
-    connection.query($query, [ruta, album, coleccion], function (err, rows, fields) {
-        if (err) {
-            reject(err);
-        } else {
-            datos_cromo = rows[0];
-            datos_cromos = datos_cromo
-        }
-    });
+                for(let i in rows[0])
+                    datos_cromo.push(rows[0][i]);
+                datos_cromo.push(album)
 
-    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
-    for (let i = 1; i < n_repeticiones; i++) {
-        $query += ', VALUES (?, ?, ?, ?, ?)'
-        datos_cromos.append(datos_cromo)
-    }
+                datos_cromos = datos_cromo
 
-    connection.query($query, datos_cromos, function (err, rows, fields) {
-        if (err) {
-            reject(err);
-        } else {
-            console.log('Query succesfully executed');
-            resolve(rows);
-        }
-    });
+                $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, coleccion, album) VALUES (?, ?, ?, ?, ?)';
+                for (let i = 1; i < n_repeticiones; i++) {
+                    $query += ', (?, ?, ?, ?, ?)'
+                    datos_cromos = datos_cromos.concat(datos_cromo)
+                }
+
+                connection.query($query, datos_cromos, function (err, rows, fields) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log('Query succesfully executed');
+                        resolve(rows);
+                    }
+                });
+            }
+        });
+    })
 }
 
 
