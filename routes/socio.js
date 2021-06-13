@@ -206,7 +206,7 @@ router.get('/juegos/tetris', (req, res) => {
 
 router.post('/juegos/tetris', (req, res) => {
 
-    let monedas = Math.floor(req.body.score/1000);
+    let monedas = Math.floor(req.body.score/300);
     let username = req.nombre;
     require('../DBHandler.js').modificaSaldo(username, monedas)
     res.send({monedas : monedas});
