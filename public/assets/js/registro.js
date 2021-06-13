@@ -8,19 +8,6 @@ function registrar() {
     let contrasenya_r = contrasenya_r_campo.value
     let terminos = terminos_campo.checked
     let formulario_correcto = true
-    let tipo;
-
-    if (document.getElementById('socio').checked) {
-        tipo = 'socio';
-        console.log('ES SOCIO');
-    } else if (document.getElementById('administrador').checked) {
-        tipo = 'admin';
-        console.log('ES ADMINSITRADOR');
-    } else {
-        //TODO: alertar de que no se ha escogido nignuno
-        console.log('NO HAY TIPO ESPECIFICADO');
-        formulario_correcto = false;
-    }
 
     if (usuario === '' || usuario == null) {
         console.log("Usuario vacio")
@@ -48,7 +35,7 @@ function registrar() {
     }
 
     if (formulario_correcto) {
-        $.post("/registro", {usuario: usuario, contrasenya: contrasenya, tipo: tipo}, function (res) {
+        $.post("/registro", {usuario: usuario, contrasenya: contrasenya, tipo: socio}, function (res) {
             if (res.tipo === 'socio') {
                 location.href = '/socio'
             } else if (res.tipo === 'admin') {

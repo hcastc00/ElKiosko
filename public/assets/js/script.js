@@ -30,7 +30,6 @@ function submitForm() {
 }
 
 function login() {
-    const datosFormulario = new FormData();
 
     let campoUsuario = document.getElementById('usuario_login')
     let campoContrasenya = document.getElementById('contrasenya_login')
