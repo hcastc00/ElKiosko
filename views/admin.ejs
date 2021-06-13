@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/Responsive-Image-File-Input.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/jquery.toast.css">
 </head>
 
 <body>
@@ -55,7 +56,7 @@
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
-                    <a href="/admin/colecciones_creadas" style="text-decoration: none;color: black;">
+                    <a onclick="duplicarCromos()" style="text-decoration: none;color: black; cursor: pointer">
                     <div data-bss-hover-animate="pulse" class="box w-100 h-100" style="border-radius: 15px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" class="icon">
                             <path d="M9 13H15M12 10L12 16M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
@@ -71,7 +72,8 @@
     <script src="assets/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="/assets/js/jquery.toast.js"></script>
+    <script src="assets/js/indexadmin.js"></script>
 </body>
 
 </html>

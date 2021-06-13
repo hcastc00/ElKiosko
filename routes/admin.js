@@ -140,9 +140,7 @@ router.get('/colecciones_creadas', (req, res) => {
     require('../DBHandler.js').getAlbumesUsuario(nombre)
         .then(function (result) {
             albumes = result;
-            if (result.length === 0){
-                res.send({error: 'No hay colecciones'})
-            }
+
             portadas = getPortadasColecciones(albumes)
 
             albumes.forEach(function (album, index) {
@@ -163,7 +161,7 @@ router.get('/colecciones_creadas', (req, res) => {
             })
         })
         .catch(function (err) {
-            console.log(err)
+            res.send('No hay colecciones')
         })
 })
 
