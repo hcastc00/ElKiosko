@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
     },
 });
 
-var upload = multer({ storage: storage });
+var upload = multer({storage: storage});
 
 router.use((req, res, next) => {
         try {
@@ -54,9 +54,9 @@ router.get('/crearColeccion', (req, res) => {
 router.get('/modificaColeccion', (req, res) => {
     let coleccion = req.query.nombreColeccion;
     let dir = 'public/cromos/' + coleccion;
-    let leidos = fs.readdirSync(dir, { withFileTypes: true });
+    let leidos = fs.readdirSync(dir, {withFileTypes: true});
     let archivos = new Array();
-    leidos.forEach(leido =>{
+    leidos.forEach(leido => {
         archivos.push(leido.name)
     })
     /*fs.readdirSync(dir, (err, archivos) => {
@@ -66,7 +66,7 @@ router.get('/modificaColeccion', (req, res) => {
         }
     });*/
     console.log(archivos);
-    res.render('cromos', { nombreColeccion: coleccion, fotos: archivos });
+    res.render('cromos', {nombreColeccion: coleccion, fotos: archivos});
 })
 
 
@@ -74,20 +74,20 @@ router.post("/upload_things", upload.array("files"), uploadThings);
 
 function uploadThings(req, res) {
     let coleccion = req.body.name;
-    if(moverAColeccion(coleccion) == 1){
+    if (moverAColeccion(coleccion) == 1) {
         res.send(200);
-    }else{
+    } else {
         res.sendStatus(500);
         //send('El nombre de coleccion introducido ya esta utilizado')
     }
-    
+
 }
 
 
 router.post("/upload_cromo", uploadCromos);
 
 function uploadCromos(req, res) {
-    
+
     let usuario = req.nombre;
     let nombre = req.body.nombre;
     let ruta = req.body.ruta;
@@ -96,14 +96,14 @@ function uploadCromos(req, res) {
     let coleccion = req.body.nombreColeccion;
     let album;
     require('../DBHandler.js').getAlbum(usuario, coleccion)
-        .then(function(id){
+        .then(function (id) {
             album = id;
-            for(let i = 0; i < cantidad; i++){
+            for (let i = 0; i < cantidad; i++) {
                 require('../DBHandler.js').insertarCromo(nombre, ruta, precio, album, coleccion);
             }
             res.sendStatus(200);
         })
-        .catch(function(err){
+        .catch(function (err) {
             console.log(err);
         })
 }
@@ -122,12 +122,48 @@ function crearAlbum(req, res) {
 
 router.post('/crear_coleccion', crearColeccion);
 
-function crearColeccion(req, res){
+function crearColeccion(req, res) {
     let nombre = req.body.nombreColeccion;
     let precioAlbum = req.body.precio;
     let estado = 'activa';
     require('../DBHandler.js').insertarColeccion(nombre, precioAlbum, estado)
 }
+
+router.get('/colecciones_creadas', (req, res) => {
+
+    let nombre = req.nombre;
+    let albumes = [];
+    let numeroCromosColeccion = [];
+    let numeroCromosAlbum;
+    let portadas
+
+    require('../DBHandler.js').getAlbumesUsuario(nombre)
+        .then(function (result) {
+            albumes = result;
+
+            portadas = getPortadasColecciones(albumes)
+
+            albumes.forEach(function (album, index) {
+
+                let coleccion = album.nombre;
+                let path = 'public/cromos/' + coleccion;
+                numeroCromosColeccion.push(fs.readdirSync(path));
+                require('../DBHandler.js').getNumeroCromosAlbum(nombre, coleccion)
+                    .then(function (result) {
+                        numeroCromosAlbum = result;
+                        res.render("inventario_admin", {nombre: nombre, portadas: portadas, albumes: albumes})
+                    })
+
+                    .catch(function (err) {
+                        console.log(err)
+                    })
+
+            })
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
+})
 
 function moverAColeccion(coleccion) {
     let newDir = 'public/cromos/' + coleccion;
@@ -158,11 +194,23 @@ function moverAColeccion(coleccion) {
 
                 return Promise.all(unlinkPromises)
             }).catch(err => {
-                console.error(`Something wrong happened removing files of tmp/`)
-            })
+            console.error(`Something wrong happened removing files of tmp/`)
+        })
 
         return -1;
     }
+}
+
+function getPortadasColecciones(colecciones) {
+    let path;
+    let portadas = new Array();
+    let fotos;
+    colecciones.forEach(coleccion => {
+        path = 'public/cromos/' + coleccion.nombre
+        fotos = fs.readdirSync(path, { withFileTypes: true });
+        portadas.push(fotos[0].name)
+    });
+    return portadas;
 }
 
 module.exports = router

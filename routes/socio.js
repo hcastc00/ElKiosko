@@ -70,18 +70,6 @@ router.get('/tienda', (req, res) => {
         })
 })
 
-function getPortadasColecciones(colecciones) {
-    let path;
-    let portadas = new Array();
-    let fotos;
-    colecciones.forEach(coleccion => {
-        path = 'public/cromos/' + coleccion.nombre
-        fotos = fs.readdirSync(path, { withFileTypes: true });
-        portadas.push(fotos[0].name)
-    });
-    return portadas;
-}
-
 router.get('/tiendaCromos', (req, res) => {
 
     let coleccion = req.query.coleccion;
@@ -177,19 +165,6 @@ router.get('/inventarioCromos', (req, res) => {
             res.send(err)
         })
 })
-
-
-
-function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum){
-    if (numeroCromosAlbum == numeroCromosColeccion){
-        return 'Finalizado';
-    }else if(numeroCromosAlbum == 0){
-        return 'No iniciado';
-    }else{
-        return 'Completado parcialmente'
-    }
-
-}
 
 router.get('/juegos/tetris', (req, res) => {
     let saldoUsuario;
@@ -338,6 +313,28 @@ router.post('/comprarAlbum', (req, res) => {
 
 })
 
+function getPortadasColecciones(colecciones) {
+    let path;
+    let portadas = new Array();
+    let fotos;
+    colecciones.forEach(coleccion => {
+        path = 'public/cromos/' + coleccion.nombre
+        fotos = fs.readdirSync(path, { withFileTypes: true });
+        portadas.push(fotos[0].name)
+    });
+    return portadas;
+}
+
+function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum){
+    if (numeroCromosAlbum == numeroCromosColeccion){
+        return 'Finalizado';
+    }else if(numeroCromosAlbum == 0){
+        return 'No iniciado';
+    }else{
+        return 'Completado parcialmente'
+    }
+
+}
 
 function estadoColeccion(coleccion, result){
 

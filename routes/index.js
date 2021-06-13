@@ -27,8 +27,7 @@ function registrar_usuario(req, res) {
 
     bcrypt.hash(req.body.contrasenya, saltRounds, function (err, hash) {
 
-        require('../D' +
-            'BHandler.js').registrar_usuario(req.body.usuario, hash, req.body.tipo)
+        require('../DBHandler.js').registrar_usuario(req.body.usuario, hash, req.body.tipo)
             .then(function () {
                 const tokenacceso = crearTokenAcceso({'nombre': req.body.usuario, 'tipo': req.body.tipo})
                 enviarTokenAcceso(req, res, tokenacceso)

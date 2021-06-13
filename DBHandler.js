@@ -149,6 +149,37 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
     });
 }
 
+module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
+
+    let datos_cromo
+    let datos_cromos = []
+
+    $query = 'SELECT * FROM cromos WHERE ruta_imagen = ? AND album = ? AND coleccion = ?'
+    connection.query($query, [ruta, album, coleccion], function (err, rows, fields) {
+        if (err) {
+            reject(err);
+        } else {
+            datos_cromo = rows[0];
+            datos_cromos = datos_cromo
+        }
+    });
+
+    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
+    for (let i = 1; i < n_repeticiones; i++) {
+        $query += ', VALUES (?, ?, ?, ?, ?)'
+        datos_cromos.append(datos_cromo)
+    }
+
+    connection.query($query, datos_cromos, function (err, rows, fields) {
+        if (err) {
+            reject(err);
+        } else {
+            console.log('Query succesfully executed');
+            resolve(rows);
+        }
+    });
+}
+
 
 module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
 
@@ -473,24 +504,6 @@ module.exports.registrar_usuario = function registrar_usuario(usuario, contrasen
 
     });
 }
-
-//Para importar el token de refresco
-module.exports.guardar_tokenrefresco = function importar_tokenrefresco(token, nombre) {
-    $query = 'UPDATE usuarios SET token_refresco = ? Where nombre = ?'
-
-    return new Promise(function (resolve, reject) {
-        connection.query($query, [token, nombre], function (err, rows, fields) {
-            if (err) {
-                console.log("An error ocurred performing the query.");
-                console.log(err);
-                reject(err);
-            }
-            resolve()
-            console.log("Query succesfully executed: ", rows);
-        });
-    })
-}
-
 
 //Revisar el resolve que no se como va
 module.exports.get_usuario = function get_usuario(nombre) {
