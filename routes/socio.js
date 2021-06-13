@@ -257,14 +257,19 @@ router.post('/comprarCromo', (req, res) => {
                                 .then(function (result) {
                                     console.log('El cromo se ha comprado de manera satisfactoria')
                                     require('../DBHandler.js').modificaSaldo(usuario, precioCromo)
-
-                                    //TODO Esto no acaba de ir, pero creo que está fino filipino y quedá na de ná
-                                    let estado = estadoColeccion(coleccion)
-                                    if(estado === 'agotada'){
-                                        require('../DBHandler.js').setEstadoColeccion(estado, coleccion)
-                                        res.send({agotada: estado})
-                                    }
-                                    res.sendStatus(200);
+                                    require('../DBHandler.js').getCromosAlaVenta(coleccion)
+                                        .then(function (result){
+                                            let estado = estadoColeccion(coleccion, result)
+                                            if(estado === 'agotada'){
+                                                require('../DBHandler.js').setEstadoColeccion(estado, coleccion)
+                                                res.send({agotada: estado})
+                                        }
+                                        res.sendStatus(200);
+                                    }).catch(function (err){
+                                        console.log('Se ha producido un error', err)
+                                        res.status(500)
+                                        res.send(err)
+                                    });
                                 })
 
                                 .catch(function (err) {
@@ -333,22 +338,18 @@ router.post('/comprarAlbum', (req, res) => {
 
 })
 
-function estadoColeccion(coleccion){
 
+function estadoColeccion(coleccion, result){
+
+    let cantidadCromos;
     let estado;
-    require('../DBHandler.js').getCromosAlaVenta(coleccion)
-        .then(function (result) {
-            estado = result.length;
-            if (estado == 0){
-                return 'agotada';
-            }else {
-                return 'activa';
-            }
-        })
-        .catch(function (err) {
-            console.log(err)
-        })
-
+    cantidadCromos = result.length;
+    if (cantidadCromos == 0){
+         estado = 'agotada';
+    }else {
+        estado = 'activa';
+    }
+    return estado;
 
 }
 
