@@ -59,11 +59,11 @@ function login() {
                 }
             })
     } else {
-        if (usuario == '' || usuario == null){
+        if (usuario == '' || usuario == null) {
             campoUsuario.style.borderColor = 'red'
             campoUsuario.style.borderWidth = '2px'
         }
-        if (contrasenya == '' || contrasenya == null){
+        if (contrasenya == '' || contrasenya == null) {
             campoContrasenya.style.borderColor = 'red'
             campoContrasenya.style.borderWidth = '2px'
         }
@@ -89,7 +89,13 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const error = urlParams.get('error')
 if (error == 'caducado') {
-    $(document).ready(function (){
+    $(document).ready(function () {
         $(".modal").modal("toggle")
     })
 }
+
+$(document).ready(function () {
+    document.getElementById("loginForm").addEventListener("keydown", function (e) {
+        if (e.key === 'Enter') login()
+    }, false);
+})
