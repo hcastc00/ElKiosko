@@ -140,7 +140,9 @@ router.get('/colecciones_creadas', (req, res) => {
     require('../DBHandler.js').getAlbumesUsuario(nombre)
         .then(function (result) {
             albumes = result;
-
+            if (result.length === 0){
+                res.send({error: 'No hay colecciones'})
+            }
             portadas = getPortadasColecciones(albumes)
 
             albumes.forEach(function (album, index) {
@@ -162,6 +164,28 @@ router.get('/colecciones_creadas', (req, res) => {
         })
         .catch(function (err) {
             console.log(err)
+        })
+})
+
+router.get('/inventarioCromos', (req, res) => {
+    let coleccion = req.query.coleccion;
+    let usuario = req.nombre;
+
+    require('../DBHandler.js').getAlbum(usuario, coleccion)
+        .then(function (result) {
+            album = result
+            require('../DBHandler.js').getCromosColeccion(coleccion)
+                .then(function (result) {
+                    console.log(result.length);
+                    res.render("inventarioCromos_admin", {usuario: usuario, coleccion: coleccion, cromos: result})
+                })
+                .catch(function (err) {
+                    console.log(err)
+                })
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.send(err)
         })
 })
 
@@ -207,7 +231,7 @@ function getPortadasColecciones(colecciones) {
     let fotos;
     colecciones.forEach(coleccion => {
         path = 'public/cromos/' + coleccion.nombre
-        fotos = fs.readdirSync(path, { withFileTypes: true });
+        fotos = fs.readdirSync(path, {withFileTypes: true});
         portadas.push(fotos[0].name)
     });
     return portadas;
