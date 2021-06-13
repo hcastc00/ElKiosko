@@ -1030,8 +1030,8 @@ function ColorWithAlpha(color, alpha) {
 }
 
 function sendScore() {
-  console.log(GM.ScoreHigh);
-    $.post("/socio/juegos/tetris", { score: GM.ScoreCur })
+    let creditos_obtenidos = GM.ScoreCur
+    $.post("/socio/juegos/tetris", { score: creditos_obtenidos })
     .done(function(result){
       $.toast({
           text: 'Has conseguido '+ result.monedas + " créditos",
