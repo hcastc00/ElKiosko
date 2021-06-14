@@ -44,7 +44,9 @@ function crearColeccion() {
             cromosJSON : cromosJSON,
             nombreColeccion: nombreColeccion
           }
-      );
+      ,function (res){
+            location.href = res.ruta;
+          });
 
 
     });

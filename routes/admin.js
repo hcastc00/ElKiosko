@@ -96,7 +96,7 @@ function uploadCromos(req, res) {
     let cromoJSON = req.body.cromosJSON;
     require('../DBHandler.js').getAlbum(usuario, coleccion)
         .then(function (id) {
-            album = id;
+            album = id
             for (let i = 0; i < cromoJSON.length; i++) {
                 require('../DBHandler.js').insertarCromo(cromoJSON[i].nombre, cromoJSON[i].ruta, cromoJSON[i].precio, album, coleccion)
                     .then(function (result) {
@@ -112,9 +112,9 @@ function uploadCromos(req, res) {
                     console.log(err);
                 });
             };
-
             //Revisar esto que falla aquí
-            res.redirect("/?coleccionCreada=true");
+            let path = "/admin?coleccionCreada=true"
+            res.send({ruta: path});
         })
         .catch(function (err) {
             console.log(err);
