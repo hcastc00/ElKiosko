@@ -81,10 +81,6 @@ function login() {
 
 }
 
-function imagenIntroducida() {
-    console.log("Ha cambiado la imagen del formulario");
-}
-
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const error = urlParams.get('error')
