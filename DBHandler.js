@@ -28,17 +28,18 @@ function handleDisconnect() {
 handleDisconnect()
 
 module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
+    return new Promise((resolve, reject) => {
+        $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
 
-    $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
-
-    connection.query($query, [usuario, coleccion, estado], function (err, rows, fields) {
-        if (err) {
-            reject(err);
-        } else {
-            console.log('Query succesfully executed');
-            resolve(rows);
-        }
-    });
+        connection.query($query, [usuario, coleccion, estado], function (err, rows, fields) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Query succesfully executed');
+                resolve(rows);
+            }
+        });
+    })
 }
 
 module.exports.getAlbum = function getAlbum(usuario, coleccion) {
@@ -59,7 +60,7 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
     });
 }
 
-module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario){
+module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 
     return new Promise(function (resolve, reject) {
 
@@ -78,15 +79,15 @@ module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario){
 
 }
 
-module.exports.getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion){
+module.exports.getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'select count(distinct ruta_imagen) from cromos '+
-        'inner join colecciones on cromos.coleccion = colecciones.nombre '+
-        'inner join albumes  on cromos.album = albumes.id '+
-        'inner join socios  on albumes.usuario = socios.usuario '+
-        'where socios.usuario = ? and colecciones.nombre = ?';
+        $query = 'select count(distinct ruta_imagen) from cromos ' +
+            'inner join colecciones on cromos.coleccion = colecciones.nombre ' +
+            'inner join albumes  on cromos.album = albumes.id ' +
+            'inner join socios  on albumes.usuario = socios.usuario ' +
+            'where socios.usuario = ? and colecciones.nombre = ?';
         connection.query($query, [usuario, coleccion], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene cromos de ese album");
@@ -139,32 +140,36 @@ module.exports.getCromosColeccion = function getCromosColeccion(coleccion) {
 
 
 module.exports.insertarColeccion = function insertarColeccion(nombre, precio_album, estado) {
-    // Perform a query
-    $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES (?, ?, ?)';
+    return new Promise((resolve, reject) => {
 
-    connection.query($query, [nombre, precio_album, estado], function (err, rows, fields) {
-        if (err) {
-            reject(err);
-        } else {
-            console.log('Query succesfully executed');
-            resolve(rows);
+            $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES (?, ?, ?)';
+
+            connection.query($query, [nombre, precio_album, estado], function (err, rows, fields) {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log('Query succesfully executed');
+                    resolve(rows);
+                }
+            })
         }
-    });
+    )
 }
 
 
 module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, album, nombreColeccion) {
-    // Perform a query
-    $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
+    return new Promise((resolve, reject) => {
+        $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
 
-    connection.query($query, [nombre, ruta, precio, album, nombreColeccion], function (err, rows, fields) {
-        if (err) {
-            reject(err);
-        } else {
-            console.log('Query succesfully executed');
-            resolve(rows);
-        }
-    });
+        connection.query($query, [nombre, ruta, precio, album, nombreColeccion], function (err, rows, fields) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Query succesfully executed');
+                resolve(rows);
+            }
+        });
+    })
 }
 
 module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
@@ -178,7 +183,7 @@ module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_
                 reject(err);
             } else {
 
-                for(let i in rows[0])
+                for (let i in rows[0])
                     datos_cromo.push(rows[0][i]);
                 datos_cromo.push(album)
 
@@ -316,8 +321,6 @@ module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album
 
 
 module.exports.venderCromo = function venderCromo(cromo, usuario) {
-
-
     return new Promise(function (resolve, reject) {
         $query = 'SELECT albumes.id FROM albumes '
             + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
@@ -426,7 +429,7 @@ module.exports.getEstadoColeccion = function getEstadoColeccion(coleccion) {
 
         $query = 'SELECT estado FROM colecciones WHERE nombre = ?';
 
-        connection.query($query,[coleccion], function (err, rows, fields) {
+        connection.query($query, [coleccion], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 //console.log(err);
