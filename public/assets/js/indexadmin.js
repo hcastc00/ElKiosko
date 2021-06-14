@@ -15,3 +15,19 @@ function duplicarCromos(){
         }
     })
 }
+
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const creada = urlParams.get('coleccionCreada')
+if (creada) {
+    $(document).ready(function () {
+        $.toast({
+            text: 'La colección se ha creado satisfactoriamente',
+            title: 'CREADA',
+            icon: "success",
+            position: "top-right",
+            hideAfter: 8000
+        })
+    })
+}

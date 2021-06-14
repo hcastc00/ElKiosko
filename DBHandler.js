@@ -172,6 +172,21 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
     })
 }
 
+module.exports.insertarCromos = function insertarCromos(nombre, ruta, precio, album, nombreColeccion) {
+    return new Promise((resolve, reject) => {
+        $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
+
+        connection.query($query, [nombre, ruta, precio, album, nombreColeccion], function (err, rows, fields) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Query succesfully executed');
+                resolve(rows);
+            }
+        });
+    })
+}
+
 module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
 
     let datos_cromo = []
@@ -183,10 +198,10 @@ module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_
                 reject(err);
             } else {
 
-                for (let i in rows[0])
+                for (let i in rows[0]){
                     datos_cromo.push(rows[0][i]);
+                }
                 datos_cromo.push(album)
-
                 datos_cromos = datos_cromo
 
                 $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, coleccion, album) VALUES (?, ?, ?, ?, ?)';

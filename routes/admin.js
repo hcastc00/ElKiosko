@@ -44,6 +44,7 @@ router.use((req, res, next) => {
 )
 
 router.get('/', (req, res) => {
+
     res.render("admin", {nombre: req.nombre})
 })
 
@@ -56,6 +57,7 @@ router.get('/modificaColeccion', (req, res) => {
     let dir = 'public/cromos/' + coleccion;
     let leidos = fs.readdirSync(dir, {withFileTypes: true});
     let archivos = new Array();
+    let nombre = req.nombre;
     leidos.forEach(leido => {
         archivos.push(leido.name)
     })
@@ -66,7 +68,7 @@ router.get('/modificaColeccion', (req, res) => {
         }
     });*/
     console.log(archivos);
-    res.render('cromos', {nombreColeccion: coleccion, fotos: archivos});
+    res.render('cromos', {nombreColeccion: coleccion, fotos: archivos, nombre: nombre});
 })
 
 
@@ -84,28 +86,39 @@ function uploadThings(req, res) {
 }
 
 
-router.post("/upload_cromo", uploadCromos);
+router.post("/upload_cromos", uploadCromos);
 
 function uploadCromos(req, res) {
 
-    let usuario = req.nombre;
-    let nombre = req.body.nombre;
-    let ruta = req.body.ruta;
-    let precio = req.body.precio;
-    let cantidad = req.body.cantidad;
-    let coleccion = req.body.nombreColeccion;
     let album;
+    let usuario = req.nombre;
+    let coleccion = req.body.nombreColeccion;
+    let cromoJSON = req.body.cromosJSON;
     require('../DBHandler.js').getAlbum(usuario, coleccion)
         .then(function (id) {
             album = id;
-            for (let i = 0; i < cantidad; i++) {
-                require('../DBHandler.js').insertarCromo(nombre, ruta, precio, album, coleccion);
-            }
-            res.sendStatus(200);
+            for (let i = 0; i < cromoJSON.length; i++) {
+                require('../DBHandler.js').insertarCromo(cromoJSON[i].nombre, cromoJSON[i].ruta, cromoJSON[i].precio, album, coleccion)
+                    .then(function (result) {
+                        if (cromoJSON[i].cantidad > 1) {
+                            require('../DBHandler.js').duplicarCromo(cromoJSON[i].ruta, album, coleccion, cromoJSON[i].cantidad)
+                                .then(function (result) {
+                                }).catch(function (err) {
+                                console.log(err);
+                            });
+                        } else {
+                        }
+                    }).catch(function (err) {
+                    console.log(err);
+                });
+            };
+
+            //Revisar esto que falla aquí
+            res.redirect("/?coleccionCreada=true");
         })
         .catch(function (err) {
             console.log(err);
-        })
+        });
 }
 
 router.post("/crear_album", crearAlbum);
@@ -113,11 +126,11 @@ router.post("/crear_album", crearAlbum);
 function crearAlbum(req, res) {
     let coleccion = req.body.nombreColeccion;
     let usuario = req.nombre
-    //TODO lo del estado pues ni idea, supongo que de igual
     let estado = 'finalizada'
-    require('../DBHandler.js').insertarAlbum(usuario, coleccion, estado);
-    //console.log(req)
-    res.sendStatus(200);
+    require('../DBHandler.js').insertarAlbum(usuario, coleccion, estado)
+        .then(function (result) {
+            res.sendStatus(200);
+        });
 }
 
 router.post('/crear_coleccion', crearColeccion);
@@ -169,7 +182,12 @@ router.get('/inventarioCromos', (req, res) => {
             require('../DBHandler.js').getCromosColeccion(coleccion)
                 .then(function (result) {
                     console.log(result.length);
-                    res.render("inventarioCromos_admin", {usuario: usuario, coleccion: coleccion, cromos: result, album: album})
+                    res.render("inventarioCromos_admin", {
+                        usuario: usuario,
+                        coleccion: coleccion,
+                        cromos: result,
+                        album: album
+                    })
                 })
                 .catch(function (err) {
                     console.log(err)
@@ -193,7 +211,7 @@ router.post('/inventarioCromos', (req, res) => {
                 console.log(error)
                 res.send({error: error})
             })
-    }else {
+    } else {
         res.send({error: 'CopiasErroneas'})
     }
 })

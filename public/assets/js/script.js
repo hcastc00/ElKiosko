@@ -94,6 +94,7 @@ if (error == 'caducado') {
     })
 }
 
+
 $(document).ready(function () {
     document.getElementById("loginForm").addEventListener("keydown", function (e) {
         if (e.key === 'Enter') login()
