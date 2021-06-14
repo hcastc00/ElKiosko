@@ -22,16 +22,17 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-        <div class="container"><a class="navbar-brand" href="index.html" style="font-size: 40px;">El Kiosko</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                </ul><span class="navbar-text actions"> <a class="login" href="index.html#loginForm" style="font-size: 20px;color: rgb(70, 87, 101);">Iniciar sesión</a><a class="btn btn-light action-button" role="button" href="registro.html" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);">Regístrate!</a></span>
-            </div>
+<nav class="navbar navbar-light navbar-expand-md bounce animated navigation-clean-button">
+    <div class="container">
+        <div><a class="navbar-brand d-table-row" href="/" style="font-size: 40px;">El Kiosko</a><label class="form-label d-table-row" style="font-size: 1.5em;">Panel de Administrador</label></div><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navcol-1">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"></li>
+                <li class="nav-item"></li>
+            </ul><label class="form-label" style="font-size: 1.5em;"><%=nombre%></label><i class="fas fa-user-cog fa-3x" style="padding: 0 1em 0 1em;"></i><span class="navbar-text actions"> <a class="btn btn-light action-button" role="button" href="/logout" style="font-size: 20px;background: rgb(179,236,236);color: rgb(34,34,34);">Cerrar Sesión</a></span>
         </div>
-    </nav>
+    </div>
+</nav>
     <h1 style="margin-left: 40px;margin-bottom: 1em;">Creando colección&nbsp;</h1>
     <input type="number" min="1" id="precioAlbum" style=" margin-left: 40px ;border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio del Album" placeholder="Precio del Album" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
     <div>
@@ -41,14 +42,19 @@
             </div>
             <div class="row">
                 <% fotos.forEach(function(foto) { %>
-                    <div class="col-md-4 cust_blogteaser" style="padding-bottom: 20px;margin-bottom: 32px;"><a href="#">
-                        <img class="img-fluid" style="height:auto;" src="../cromos/<%=nombreColeccion%>/<%=foto%>"></a>
-                        <h3 style="text-align:left;margin-top:20px;font-family:'Open Sans', sans-serif;font-size:18px;margin-right:0;margin-left:24px;line-height:34px;letter-spacing:0px;font-style:normal;font-weight:bold;">Cromo<br></h3>
-                        <form id="formulario_<%= foto %>">
-                            <input class="form-control-sm" type="text" id="nombre_<%= foto %>" style="text-align:left;margin-top:20px;font-family:'Open Sans', sans-serif;font-size:18px;margin-right:0;margin-left:24px;line-height:34px;letter-spacing:0px;font-style:normal;font-weight:bold;" name="Nombre" placeholder="Nombre"><a class="h4" href="#"></a>
-                            <input type="number" min="1" id="precio_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio" placeholder="Precio" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
-                            <input type="number" min="1" id="cantidad_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0px;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Cantidad" placeholder="Cantidad" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
-                        </form>
+                    <div class="col-md-4 col-xl-4 offset-xl-0">
+                        <div class="card table" data-bss-hover-animate="pulse" style="width: 21rem;border-top-left-radius: 20px;border-top-right-radius: 20px;border-bottom-right-radius: 20px;border-bottom-left-radius: 20px;box-shadow: 2px 2px 16px 8px rgba(0,0,0,0.1);min-width: 300px;border-style: none;max-width: 100%;margin: 16px;">
+                            <div style="width: 100%;height: 230px;background: url(../cromos/<%=nombreColeccion%>/<%=foto%>) center / cover;border-top-left-radius: 20px;border-top-right-radius: 20px;position: relative;"></div>
+                            <div class="card-body d-flex flex-column justify-content-between" style="padding-bottom: 20px;height: 290px;">
+                                <div>
+                                    <form id="formulario_<%= foto %>">
+                                        <input class="form-control-sm" type="text" id="nombre_<%= foto %>" style="text-align:left;margin-top:20px;font-family:'Open Sans', sans-serif;font-size:18px;margin-right:0;margin-left:24px;line-height:34px;letter-spacing:0;font-style:normal;font-weight:bold;" name="Nombre" placeholder="Nombre"><a class="h6" href="#"></a>
+                                        <input type="number" min="1" id="precio_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Precio" placeholder="Precio" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
+                                        <input type="number" min="1" id="cantidad_<%= foto %>" style="border-width: 2px;border-radius: .2em;padding-left: 10px;text-align: left;margin-top: 20px;font-family: 'Open Sans', sans-serif;font-size: 18px;margin-right: 0;margin-left: 24px;line-height: 34px;letter-spacing: 0;font-style: normal;font-weight: bold;height: 46px;width: 223px;" name="Cantidad" placeholder="Cantidad" inputmode="numeric" autocomplete="off" required="" pattern="\d*">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 <% }); %>
                 <button onclick="crearColeccion()" class="btn btn-primary" type="button" style="color: rgb(34,34,34);;border: 0;background: rgb(179,236,236);padding-bottom: 25px;padding-top: 25px ; margin-bottom: 10px; font-size: 50px;">ENVIAR</button>
