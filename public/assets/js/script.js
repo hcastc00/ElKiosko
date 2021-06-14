@@ -21,9 +21,18 @@ function submitForm() {
             body: datosFormulario
         })
             .then(function (res) {
-                console.log('Si que entra');
-                $.get(dir);
-                location.href = dir;
+                if (res.status === 500){
+                    $.toast({
+                        text: 'El nombre de coleccion introducido ya esta utilizado',
+                        title: 'Coleccion repetida',
+                        icon: "error",
+                        position: "top-right",
+                        hideAfter: 8000
+                    })
+                }else{
+                    $.get(dir);
+                    location.href = dir;
+                }
             })
             .catch((err) => ("Error occured", err));
     }
@@ -67,7 +76,6 @@ function login() {
             campoContrasenya.style.borderColor = 'red'
             campoContrasenya.style.borderWidth = '2px'
         }
-        let modalString = "Porfavor, rellene los campos en rojo."
         $.toast({
             text: 'Porfavor, rellene los campos en rojo.',
             title: 'Campos vacios',
