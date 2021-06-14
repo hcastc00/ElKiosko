@@ -51,10 +51,6 @@ function crearColeccion() {
   }
 }
 
-function toastCorrecto(){
-
-}
-
 function hayVacios() {
   let vacio = false;
   $("[id^=formulario_]").each(function () {
@@ -75,8 +71,4 @@ function hayVacios() {
 
   //Este es el verdadero retorno de la funcion
   return vacio;
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
