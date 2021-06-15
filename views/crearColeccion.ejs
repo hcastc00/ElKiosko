@@ -57,7 +57,10 @@
             <p><label class="form-label" for="form-files"><a class="btn btn-secondary btn-sm" role="button">Selecciona</a></label>&nbsp;o arrastra aqui tus archivos<br></p>
             <p id="filecount"><br></p>
             <div id="list"></div>
-            <input class="form-control invisible" type="file" id="form-files" name="files" multiple="" accept="image/*"><input class="form-control" type="text" id="nombreColeccion" placeholder="Nombre de la coleccion" style="margin-bottom: 15px;margin-top: 15px;" name="nombreColeccion"><button class="btn btn-outline-primary d-block w-100" type="button" onclick="submitForm()">Enviar</button><button class="btn btn-danger mt-5" type="reset" onclick="clearFiles()">Resetear</button>
+            <img id="gifCargando" src="../assets/img/loading.gif" style="display: none;" width="65">
+            <input class="form-control invisible" type="file" id="form-files" name="files" multiple="" accept="image/*">
+            <input class="form-control" type="text" id="nombreColeccion" placeholder="Nombre de la coleccion" style="margin-bottom: 15px;margin-top: 15px;" name="nombreColeccion">            
+            <button class="btn btn-outline-primary d-block w-100" type="button" onclick="submitForm()">Enviar</button><button class="btn btn-danger mt-5" type="reset" onclick="clearFiles()">Resetear</button>
         </div>
         <div class="text-center bg-light border rounded border-dark shadow-lg p-3"><img id="image_preview" width="100">
             <div><button class="btn btn-warning btn-sm m-3" onclick="previewClose()">Cerrar</button></div>

@@ -6,6 +6,9 @@ function submitForm() {
     } else if (nombreColeccion == "") {
         notify_msg('Porfavor, introduzca el nombre de la colección.');
     } else {
+
+        document.getElementById("gifCargando").style.display = "inline";
+
         console.log('SE ENVIA AHORA BRO');
 
         const files = document.getElementById("form-files");
@@ -22,6 +25,9 @@ function submitForm() {
         })
             .then(function (res) {
                 if (res.status === 500){
+
+                    document.getElementById("gifCargando").style.display = "none";
+
                     $.toast({
                         text: 'El nombre de coleccion introducido ya esta utilizado',
                         title: 'Coleccion repetida',

@@ -61,12 +61,7 @@ router.get('/modificaColeccion', (req, res) => {
     leidos.forEach(leido => {
         archivos.push(leido.name)
     })
-    /*fs.readdirSync(dir, (err, archivos) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-    });*/
+
     console.log(archivos);
     res.render('cromos', {nombreColeccion: coleccion, fotos: archivos, nombre: nombre});
 })
@@ -221,17 +216,13 @@ function moverAColeccion(coleccion) {
     if (!fs.existsSync(newDir)) {
         fs.mkdirSync(newDir);
 
-        fs.readdir('tmp', function (err, list) {
-            if (err) return done(err);
-            let old = '';
-            let newPath = '';
-            for (let i = 0; i < list.length; i++) {
-                old = 'tmp/' + list[i];
-                newPath = newDir + '/' + list[i];
-                fs.rename(old, newPath, function (err) {
-                    if (err) throw err;
-                });
-            }
+        let fotos = fs.readdirSync('tmp');
+
+        fotos.forEach(foto => {
+            let old = 'tmp/' + foto;
+            let newPath = newDir + '/' + foto;
+            fs.renameSync(old, newPath);
+
         });
         return 1;
     } else {
@@ -245,7 +236,7 @@ function moverAColeccion(coleccion) {
 
                 return Promise.all(unlinkPromises)
             }).catch(err => {
-            console.error(`Something wrong happened removing files of tmp/`)
+            console.error('Ya existe coleccion con ese nombre')
         })
 
         return -1;
