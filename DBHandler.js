@@ -15,19 +15,17 @@ function handleDisconnect() {
     })
 
     connection.on('error', function (err) {
-        console.log('db error', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            console.log("Se ha manejado el cierre de conexion con la base de datos")                               // Connection to the MySQL server is usually
-            handleDisconnect();                         // lost due to either server restart, or a
-        } else {                                      // connnection idle timeout (the wait_timeout
-            throw err;                                  // server variable configures this)
+            handleDisconnect();
+        } else {
+            console.log(err);
         }
     })
 }
 
 handleDisconnect()
 
-module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
+const insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
     return new Promise((resolve, reject) => {
         $query = 'INSERT INTO albumes (usuario, coleccion, estado) VALUES (?, ?, ?)';
 
@@ -42,7 +40,7 @@ module.exports.insertarAlbum = function insertarAlbum(usuario, coleccion, estado
     })
 }
 
-module.exports.getAlbum = function getAlbum(usuario, coleccion) {
+const getAlbum = function getAlbum(usuario, coleccion) {
 
     return new Promise(function (resolve, reject) {
 
@@ -60,7 +58,7 @@ module.exports.getAlbum = function getAlbum(usuario, coleccion) {
     });
 }
 
-module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario) {
+const getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 
     return new Promise(function (resolve, reject) {
 
@@ -79,7 +77,7 @@ module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 
 }
 
-module.exports.getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
+const getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
 
     return new Promise(function (resolve, reject) {
 
@@ -102,8 +100,7 @@ module.exports.getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, col
 
 }
 
-
-module.exports.getCromosAlbum = function getCromosAlbum(album) {
+const getCromosAlbum = function getCromosAlbum(album) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT * '
             + 'FROM albumes, cromos '
@@ -120,7 +117,7 @@ module.exports.getCromosAlbum = function getCromosAlbum(album) {
     })
 }
 
-module.exports.getCromosColeccion = function getCromosColeccion(coleccion) {
+const getCromosColeccion = function getCromosColeccion(coleccion) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT *, COUNT(ruta_imagen) as repeticiones ' +
             'FROM cromos WHERE ' +
@@ -138,8 +135,7 @@ module.exports.getCromosColeccion = function getCromosColeccion(coleccion) {
     })
 }
 
-
-module.exports.insertarColeccion = function insertarColeccion(nombre, precio_album, estado) {
+const insertarColeccion = function insertarColeccion(nombre, precio_album, estado) {
     return new Promise((resolve, reject) => {
 
             $query = 'INSERT INTO colecciones (nombre, precio_album, estado) VALUES (?, ?, ?)';
@@ -156,8 +152,7 @@ module.exports.insertarColeccion = function insertarColeccion(nombre, precio_alb
     )
 }
 
-
-module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, album, nombreColeccion) {
+const insertarCromo = function insertarCromo(nombre, ruta, precio, album, nombreColeccion) {
     return new Promise((resolve, reject) => {
         $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
 
@@ -172,7 +167,7 @@ module.exports.insertarCromo = function insertarCromo(nombre, ruta, precio, albu
     })
 }
 
-module.exports.insertarCromos = function insertarCromos(nombre, ruta, precio, album, nombreColeccion) {
+const insertarCromos = function insertarCromos(nombre, ruta, precio, album, nombreColeccion) {
     return new Promise((resolve, reject) => {
         $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) VALUES (?, ?, ?, ?, ?)';
 
@@ -187,7 +182,7 @@ module.exports.insertarCromos = function insertarCromos(nombre, ruta, precio, al
     })
 }
 
-module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
+const duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticiones) {
 
     let datos_cromo = []
     let datos_cromos = []
@@ -223,8 +218,7 @@ module.exports.duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_
     })
 }
 
-
-module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
+const getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
 
     return new Promise(function (resolve, reject) {
 
@@ -247,7 +241,7 @@ module.exports.getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
     });
 }
 
-module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio) {
+const tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT socios.usuario '
             + 'FROM socios, cromos '
@@ -264,8 +258,7 @@ module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio
     })
 }
 
-
-module.exports.tieneCromoEnAlbum = function tieneCromoEnAlbum(rutaCromo, album) {
+const tieneCromoEnAlbum = function tieneCromoEnAlbum(rutaCromo, album) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT COUNT(cromos.ruta_imagen) as num '
             + 'FROM cromos '
@@ -283,8 +276,7 @@ module.exports.tieneCromoEnAlbum = function tieneCromoEnAlbum(rutaCromo, album) 
     })
 }
 
-
-module.exports.modificaSaldo = function modificaSaldo(socio, dinero) {
+const modificaSaldo = function modificaSaldo(socio, dinero) {
     return new Promise(function (resolve, reject) {
         $query = 'UPDATE socios SET saldo = saldo + ? WHERE usuario = ?'
 
@@ -299,8 +291,7 @@ module.exports.modificaSaldo = function modificaSaldo(socio, dinero) {
     })
 }
 
-
-module.exports.getSaldo = function getSaldo(socio) {
+const getSaldo = function getSaldo(socio) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT saldo FROM socios WHERE usuario = ?'
 
@@ -315,8 +306,7 @@ module.exports.getSaldo = function getSaldo(socio) {
     })
 }
 
-
-module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album) {
+const tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT socios.usuario '
             + 'FROM socios, albumes '
@@ -334,8 +324,7 @@ module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album
     })
 }
 
-
-module.exports.venderCromo = function venderCromo(cromo, album) {
+const venderCromo = function venderCromo(cromo, album) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT COUNT(id) as num FROM albumes WHERE id = ?'
 
@@ -362,30 +351,7 @@ module.exports.venderCromo = function venderCromo(cromo, album) {
     });
 }
 
-
-module.exports.generarCopiasCromos = function generarCopiasCromos(cromo, numCopias) {
-
-    //TODO o hacer un for marronero o una PROCEDURE en SQL para meter las copias de los cromos especificadas
-    //O que el usuario vaya de uno en uno
-
-    return new Promise(function (resolve, reject) {
-        $query = 'INSERT INTO cromos (nombre, ruta_imagen, precio, album, coleccion) '
-            + 'SELECT nombre, ruta_imagen, precio, album, coleccion '
-            + 'FROM cromos '
-            + 'WHERE id = ?;';
-
-        connection.query($query, [cromo], function (err, rows, fields) {
-            if (err) {
-                reject(err)
-            } else {
-                resolve()
-            }
-        })
-    });
-}
-
-
-module.exports.venderAlbum = function venderAlbum(usuario, album) {
+const venderAlbum = function venderAlbum(usuario, album) {
 
     return new Promise(function (resolve, reject) {
 
@@ -407,8 +373,7 @@ module.exports.venderAlbum = function venderAlbum(usuario, album) {
     });
 }
 
-
-module.exports.getColeccionesActivas = function getColeccionesActivas() {
+const getColeccionesActivas = function getColeccionesActivas() {
 
     return new Promise(function (resolve, reject) {
 
@@ -433,7 +398,7 @@ module.exports.getColeccionesActivas = function getColeccionesActivas() {
     });
 }
 
-module.exports.getEstadoColeccion = function getEstadoColeccion(coleccion) {
+const getEstadoColeccion = function getEstadoColeccion(coleccion) {
 
     return new Promise(function (resolve, reject) {
 
@@ -454,7 +419,7 @@ module.exports.getEstadoColeccion = function getEstadoColeccion(coleccion) {
     });
 }
 
-module.exports.setEstadoColeccion = function setEstadoColeccion(estado, coleccion) {
+const setEstadoColeccion = function setEstadoColeccion(estado, coleccion) {
 
     $query = 'UPDATE colecciones SET estado = ? WHERE nombre = ?'
 
@@ -471,7 +436,7 @@ module.exports.setEstadoColeccion = function setEstadoColeccion(estado, coleccio
     })
 }
 
-module.exports.setEstadoAlbum = function setEstadoAlbum(estado, album) {
+const setEstadoAlbum = function setEstadoAlbum(estado, album) {
 
     $query = 'UPDATE albumes SET estado = ? WHERE id = ?'
 
@@ -488,8 +453,7 @@ module.exports.setEstadoAlbum = function setEstadoAlbum(estado, album) {
     })
 }
 
-
-module.exports.login = function login(usuario, contrasenya) {
+const login = function login(usuario, contrasenya) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT nombre, tipo, contrasenya FROM usuarios WHERE usuarios.nombre = ?';
 
@@ -517,8 +481,7 @@ module.exports.login = function login(usuario, contrasenya) {
     });
 }
 
-
-module.exports.registrar_usuario = function registrar_usuario(usuario, contrasenya, tipo) {
+const registrar_usuario = function registrar_usuario(usuario, contrasenya, tipo) {
     return new Promise(function (resolve, reject) {
         $query = 'INSERT INTO usuarios (nombre, contrasenya, tipo) VALUES (?, ?, ?)';
 
@@ -558,8 +521,7 @@ module.exports.registrar_usuario = function registrar_usuario(usuario, contrasen
     });
 }
 
-//Revisar el resolve que no se como va
-module.exports.get_usuario = function get_usuario(nombre) {
+const get_usuario = function get_usuario(nombre) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT * FROM usuarios WHERE usuarios.nombre = ?';
 
@@ -578,4 +540,32 @@ module.exports.get_usuario = function get_usuario(nombre) {
             }
         });
     });
+}
+
+module.exports = {
+    insertarAlbum,
+    getAlbum,
+    getAlbumesUsuario,
+    getNumeroCromosAlbum,
+    getCromosAlbum,
+    getCromosColeccion,
+    insertarColeccion,
+    insertarCromo,
+    insertarCromos,
+    duplicarCromo,
+    getCromosAlaVenta,
+    tieneDineroParaCromo,
+    tieneCromoEnAlbum,
+    modificaSaldo,
+    getSaldo,
+    tieneDineroParaAlbum,
+    venderCromo,
+    venderAlbum,
+    getColeccionesActivas,
+    getEstadoColeccion,
+    setEstadoColeccion,
+    setEstadoAlbum,
+    login,
+    registrar_usuario,
+    get_usuario
 }
