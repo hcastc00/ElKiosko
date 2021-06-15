@@ -222,6 +222,28 @@ const getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
     });
 }
 
+
+const getNumCromosAlaVenta = function getNumCromosAlaVenta(coleccion){
+    return new Promise(function (resolve, reject) {
+
+        $query = 'SELECT cromos.ruta_imagen, COUNT(cromos.id) AS reps FROM cromos '
+            + 'INNER JOIN albumes ON cromos.album = albumes.id '
+            + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
+            + 'WHERE usuarios.tipo = "admin" AND cromos.coleccion = ? '
+            + 'GROUP BY cromos.ruta_imagen';
+
+        connection.query($query, [coleccion], function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+
 const tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio) {
     return new Promise(function (resolve, reject) {
         $query = 'SELECT socios.usuario '
@@ -519,6 +541,7 @@ module.exports = {
     insertarCromos,
     duplicarCromo,
     getCromosAlaVenta,
+    getNumCromosAlaVenta,
     tieneDineroParaCromo,
     tieneCromoEnAlbum,
     modificaSaldo,
