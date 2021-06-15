@@ -117,13 +117,18 @@ router.get('/inventario', (req, res) => {
                             .then(function (result) {
                                 numeroCromosAlbum = result;
                                 album.estado = estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum)
-                                res.render("inventario", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
+                                require('../DBHandler.js').setEstadoAlbum(album.estado, album.id)
+                                    .then(function (result){
+                                        if (index==albumes.length-1){
+                                            res.render("inventario", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
+                                        }
+                                    })
+
                             })
 
                             .catch(function (err) {
                                 console.log(err)
                             })
-
                     })
                 })
                 .catch(function (err) {

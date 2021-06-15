@@ -64,7 +64,7 @@ module.exports.getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 
     return new Promise(function (resolve, reject) {
 
-        $query = 'SELECT coleccion AS nombre FROM albumes WHERE usuario = ?';
+        $query = 'SELECT coleccion AS nombre, id FROM albumes WHERE usuario = ?';
         connection.query($query, [usuario], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene albumes");
@@ -460,6 +460,23 @@ module.exports.setEstadoColeccion = function setEstadoColeccion(estado, coleccio
 
     return new Promise(function (resolve, reject) {
         connection.query($query, [estado, coleccion], function (err, rows, fields) {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                reject(err);
+            }
+            resolve()
+            console.log("Query succesfully executed: ", rows);
+        });
+    })
+}
+
+module.exports.setEstadoAlbum = function setEstadoAlbum(estado, album) {
+
+    $query = 'UPDATE albumes SET estado = ? WHERE id = ?'
+
+    return new Promise(function (resolve, reject) {
+        connection.query($query, [estado, album], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
                 console.log(err);
