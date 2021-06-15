@@ -1,8 +1,7 @@
-function comprarCromo(event){
-    let id = event.target.id.split('_')[1]
-    let ruta = event.target.id.split('_')[2]
-    let coleccion = event.target.id.split('_')[3]
-    console.log(id)
+function comprarCromo(id, ruta, coleccion){
+    //let id = event.target.id.split('_')[1]
+    //let ruta = event.target.id.split('_')[2]
+    //let coleccion = event.target.id.split('_')[3]
     let precio = document.getElementById("precio_"+id).innerText;
     console.log(precio)
 

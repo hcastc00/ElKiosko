@@ -98,7 +98,7 @@ function uploadCromos(req, res) {
                 require('../DBHandler.js').insertarCromo(cromoJSON[i].nombre, cromoJSON[i].ruta, cromoJSON[i].precio, album, coleccion)
                     .then(function (result) {
                         if (cromoJSON[i].cantidad > 1) {
-                            require('../DBHandler.js').duplicarCromo(cromoJSON[i].ruta, album, coleccion, cromoJSON[i].cantidad)
+                            require('../DBHandler.js').duplicarCromo(cromoJSON[i].ruta, album, coleccion, (cromoJSON[i].cantidad-1))
                                 .then(function (result) {
                                 }).catch(function (err) {
                                 console.log(err);
