@@ -35,7 +35,7 @@ function registrar() {
     }
 
     if (formulario_correcto) {
-        $.post("/registro", {usuario: usuario, contrasenya: contrasenya, tipo: socio}, function (res) {
+        $.post("/registro", {usuario: usuario, contrasenya: contrasenya, tipo: 'socio'}, function (res) {
             if (res.tipo === 'socio') {
                 location.href = '/socio'
             } else if (res.tipo === 'admin') {

@@ -11,8 +11,9 @@ function anyadir_copias(coleccion, ruta, album) {
                     hideAfter: 8000
                 })
 
-                let suma = parseInt($("#rep_en_bd").text()) + parseInt(copias);
-                $("#rep_en_bd").text(suma);
+                let repeticiones = parseInt(document.getElementById("rep_en_bd_"+ruta).innerHTML)
+                document.getElementById("rep_en_bd_"+ruta).innerHTML = (repeticiones + parseInt(copias)).toString();
+                document.getElementById(ruta + "_copias").value = ""
             }
     })
 
