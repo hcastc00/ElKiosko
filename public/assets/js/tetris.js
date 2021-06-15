@@ -389,7 +389,7 @@ Page.UpcomingA = new DrawAreaObj(10.5, 2.6, 2.5, 2.5, function () {
         // now draw the upcoming piece, using avg vars to center
         for (let j = 0; j < pcA.UO.arr.length; j++) {
             const drawL = Math.floor(
-                    offsetL - avgL + pcA.UO.arr[j].x * uDrawSize
+                offsetL - avgL + pcA.UO.arr[j].x * uDrawSize
                 ),
                 drawT = Math.floor(
                     offsetT - avgT + pcA.UO.arr[j].y * uDrawSize
@@ -441,7 +441,7 @@ Page.UpcomingB = new DrawAreaObj(10.5, 5.2, 2.5, 2.5, function () {
         // now draw the upcoming piece, using avg vars to center
         for (let j = 0; j < pcB.UO.arr.length; j++) {
             const drawL = Math.floor(
-                    offsetL - avgL + pcB.UO.arr[j].x * uDrawSize
+                offsetL - avgL + pcB.UO.arr[j].x * uDrawSize
                 ),
                 drawT = Math.floor(
                     offsetT - avgT + pcB.UO.arr[j].y * uDrawSize
@@ -493,7 +493,7 @@ Page.UpcomingC = new DrawAreaObj(10.5, 7.8, 2.5, 2.5, function () {
         // now draw the upcoming piece, using avg vars to center
         for (let j = 0; j < pcC.UO.arr.length; j++) {
             const drawL = Math.floor(
-                    offsetL - avgL + pcC.UO.arr[j].x * uDrawSize
+                offsetL - avgL + pcC.UO.arr[j].x * uDrawSize
                 ),
                 drawT = Math.floor(
                     offsetT - avgT + pcC.UO.arr[j].y * uDrawSize
@@ -592,12 +592,12 @@ GM.PcObj = function (color, rotCount, units) {
     this.SetUO = function (rotCount, units) {
         const linkedListUO = [];
 
-        linkedListUO[0] = { nextUO: 0, arr: [] };
+        linkedListUO[0] = {nextUO: 0, arr: []};
         linkedListUO[0].arr = units;
 
         for (let i = 0; i < rotCount; i++) {
             const nextI = i + 1 < rotCount ? i + 1 : 0;
-            linkedListUO[i] = { nextUO: 0, arr: [] };
+            linkedListUO[i] = {nextUO: 0, arr: []};
 
             if (i > 0) {
                 linkedListUO[i - 1].nextUO = linkedListUO[i];
@@ -614,7 +614,7 @@ GM.PcObj = function (color, rotCount, units) {
                     unY = linkedListUO[i - 1].arr[j].x;
                 }
 
-                linkedListUO[i].arr[j] = { x: unX, y: unY };
+                linkedListUO[i].arr[j] = {x: unX, y: unY};
             }
         }
 
@@ -634,70 +634,70 @@ GM.PcObj = function (color, rotCount, units) {
 // O - Square piece definition
 GM.O = function () {
     return new GM.PcObj("rgb(255,232,51)", 1, [
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: -1, y: 1 },
-        { x: 0, y: 1 },
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: -1, y: 1},
+        {x: 0, y: 1},
     ]);
 };
 
 // I - Line piece definition
 GM.I = function () {
     return new GM.PcObj("rgb(51,255,209)", 2, [
-        { x: -2, y: 0 },
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
+        {x: -2, y: 0},
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: 1, y: 0},
     ]);
 };
 
 // S - Right facing zigzag piece definition
 GM.S = function () {
     return new GM.PcObj("rgb(106,255,51)", 2, [
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
-        { x: -1, y: 1 },
-        { x: 0, y: 1 },
+        {x: 0, y: 0},
+        {x: 1, y: 0},
+        {x: -1, y: 1},
+        {x: 0, y: 1},
     ]);
 };
 
 // Z - Left facing zigzag piece definition
 GM.Z = function () {
     return new GM.PcObj("rgb(255,51,83)", 2, [
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        { x: 1, y: 1 },
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: 0, y: 1},
+        {x: 1, y: 1},
     ]);
 };
 
 // L - Right facing angle piece definition
 GM.L = function () {
     return new GM.PcObj("rgb(255,129,51)", 4, [
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
-        { x: -1, y: -1 },
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: 1, y: 0},
+        {x: -1, y: -1},
     ]);
 };
 
 // J - Left facing angle piece definition
 GM.J = function () {
     return new GM.PcObj("rgb(64,100,255)", 4, [
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
-        { x: 1, y: -1 },
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: 1, y: 0},
+        {x: 1, y: -1},
     ]);
 };
 
 // T - Hat shaped piece definition
 GM.T = function () {
     return new GM.PcObj("rgb(160,62,255)", 4, [
-        { x: -1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 1, y: 0 },
-        { x: 0, y: -1 },
+        {x: -1, y: 0},
+        {x: 0, y: 0},
+        {x: 1, y: 0},
+        {x: 0, y: -1},
     ]);
 };
 
@@ -774,8 +774,8 @@ GM.Pc = {
 
             Page.UpcomingA.IsDirty =
                 Page.UpcomingB.IsDirty =
-                Page.UpcomingC.IsDirty =
-                    true;
+                    Page.UpcomingC.IsDirty =
+                        true;
         }
     },
 
@@ -875,7 +875,7 @@ GM.Pc = {
             while (
                 this.CheckCollisions(0, 0, squaresDropped) === 0 &&
                 squaresDropped < 22
-            ) {
+                ) {
                 squaresDropped++;
             }
         }
@@ -994,6 +994,7 @@ function Init() {
     // initialize the GM object
     GM.Initialize();
 }
+
 Init();
 
 // Main game loop. Updates GM object to check if tick can be
@@ -1010,6 +1011,7 @@ function Loop() {
 
     window.requestAnimationFrame(Loop);
 }
+
 Loop();
 
 //--------------------------------------------------//
@@ -1031,14 +1033,18 @@ function ColorWithAlpha(color, alpha) {
 
 function sendScore() {
     let creditos_obtenidos = GM.ScoreCur
-    $.post("/socio/juegos/tetris", { score: creditos_obtenidos })
-    .done(function(result){
-      $.toast({
-          text: 'Has conseguido '+ result.monedas + " créditos",
-          title: 'ENHORABUNA!',
-          icon: "success",
-          position: "top-right",
-          hideAfter: 8000               
-      })
-  })
+    $.post("/socio/juegos/tetris", {score: creditos_obtenidos})
+        .done(function (result) {
+            $.toast({
+                text: 'Has conseguido ' + result.monedas + " créditos",
+                title: 'ENHORABUNA!',
+                icon: "success",
+                position: "top-right",
+                hideAfter: 8000
+            })
+        })
 }
+
+musica = new Audio('../../assets/audio/tetris.mp3')
+musica.play().then(r =>
+    musica.volume = 0.05)

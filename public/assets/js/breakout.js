@@ -256,6 +256,10 @@ drawLives();
 drawPaddle();
 drawBall();
 
+musica = new Audio('../../assets/audio/breakout.mp3')
+musica.play().then(r =>
+    musica.volume = 0.05)
+
 function sendScore(){
     $.post('/socio/juegos/breakout', {score: score})
         .done(function(result){
