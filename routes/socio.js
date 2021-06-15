@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
     require('../DBHandler.js').getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            res.render("socio", { nombre: nombre, saldo: saldoUsuario })
+            res.render("socio/index", { nombre: nombre, saldo: saldoUsuario })
         })
         .catch(function (err) {
             console.log(err)
@@ -57,7 +57,7 @@ router.get('/tienda', (req, res) => {
                 .then(function (result) {
                     portadas = getPortadasColecciones(result)
                     console.log(result)
-                    res.render('coleccion', { portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario })
+                    res.render('socio/tienda_albumes', { portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario })
                 })
 
                 .catch(function (err) {
@@ -76,14 +76,13 @@ router.get('/tiendaCromos', (req, res) => {
     let usuario = req.nombre;
     let saldoUsuario;
 
-    //TODO comprobar que la tienda tiene colecciones activas otra vez, por si es el último cromo vendido. Sino sacar un toast que te diga que ya no está disponible y redireccionar
     require('../DBHandler.js').getSaldo(usuario)
         .then(function (result) {
             saldoUsuario = result.saldo;
             require('../DBHandler.js').getCromosAlaVenta(coleccion)
                 .then(function (result) {
                     console.log( result.length);
-                    res.render("tienda", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
+                    res.render("socio/tienda_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
                 })
                 .catch(function (err) {
                     console.log(err)
@@ -120,7 +119,7 @@ router.get('/inventario', (req, res) => {
                                 require('../DBHandler.js').setEstadoAlbum(album.estado, album.id)
                                     .then(function (result){
                                         if (index==albumes.length-1){
-                                            res.render("inventario", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
+                                            res.render("socio/inventario_albumes", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
                                         }
                                     })
 
@@ -157,7 +156,7 @@ router.get('/inventarioCromos', (req, res) => {
                 require('../DBHandler.js').getCromosAlbum(album)
                     .then(function (result) {
                         console.log( result.length);
-                        res.render("inventarioCromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
+                        res.render("socio/inventario_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
                     })
                     .catch(function (err) {
                         console.log(err)
@@ -177,7 +176,7 @@ router.get('/juegos/tetris', (req, res) => {
     require('../DBHandler.js').getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            res.render("tetris", { usuario: nombre, saldo: saldoUsuario })
+            res.render("socio/tetris", { usuario: nombre, saldo: saldoUsuario })
         })
         .catch(function (err) {
             console.log(err)
@@ -198,7 +197,7 @@ router.get('/juegos/breakout', (req, res) => {
     require('../DBHandler.js').getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            res.render("breakout", { usuario: nombre, saldo: saldoUsuario })
+            res.render("socio/breakout", { usuario: nombre, saldo: saldoUsuario })
         })
         .catch(function (err) {
             console.log(err)

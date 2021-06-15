@@ -47,11 +47,11 @@ router.use((req, res, next) => {
 
 router.get('/', (req, res) => {
 
-    res.render("admin", {nombre: req.nombre})
+    res.render("admin/", {nombre: req.nombre})
 })
 
 router.get('/crearColeccion', (req, res) => {
-    res.render('crearColeccion')
+    res.render('admin/subir_cromos')
 })
 
 router.get('/modificaColeccion', (req, res) => {
@@ -65,7 +65,7 @@ router.get('/modificaColeccion', (req, res) => {
     })
 
     console.log(archivos);
-    res.render('cromos', {nombreColeccion: coleccion, fotos: archivos, nombre: nombre});
+    res.render('admin/crear_cromos', {nombreColeccion: coleccion, fotos: archivos, nombre: nombre});
 })
 
 
@@ -110,7 +110,7 @@ function uploadCromos(req, res) {
                 });
             };
             //Revisar esto que falla aquí
-            let path = "/admin?coleccionCreada=true"
+            let path = "/?coleccionCreada=true"
             res.send({ruta: path});
         })
         .catch(function (err) {
@@ -160,7 +160,7 @@ router.get('/colecciones_creadas', (req, res) => {
                 numeroCromosColeccion.push(fs.readdirSync(path));
 
                 numeroCromosAlbum = result;
-                res.render("inventario_admin", {nombre: nombre, portadas: portadas, albumes: albumes})
+                res.render("admin/inventario_albumes", {nombre: nombre, portadas: portadas, albumes: albumes})
 
             })
         })
@@ -179,7 +179,7 @@ router.get('/inventarioCromos', (req, res) => {
             require('../DBHandler.js').getCromosColeccion(coleccion)
                 .then(function (result) {
                     console.log(result.length);
-                    res.render("inventarioCromos_admin", {
+                    res.render("admin/inventario_cromos", {
                         usuario: usuario,
                         coleccion: coleccion,
                         cromos: result,
