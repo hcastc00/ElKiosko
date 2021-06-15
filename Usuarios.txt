@@ -1,0 +1,14 @@
+SOCIOS
+
+    PRIMER USUARIO 
+        Usuario: socio 
+        Contraseña: socio
+
+    SEGUNDO USUARIO 
+        Usuario: gandalf
+        Contraseña: eloscuro
+
+ADMIN
+
+    Usuario: admin
+    Contraseña: admin

@@ -1,6 +1,12 @@
 const express = require("express");
 const app = express();
 const multer = require("multer");
+const fs = require('fs')
+
+
+//Si no existe, se crea la carpeta tmp para la subida de archivos
+if (!fs.existsSync('tmp')) 
+    fs.mkdirSync('tmp');
 
 const dotenv = require('dotenv');
 // get config vars
@@ -34,5 +40,6 @@ app.use('/socio/juegos', require('./routes/socio/juegos'))
 
 
 app.listen(80, () => {
+
     console.log("El Kiosko ha abierto! 😈 Escuchando en http://localhost:80");
 });

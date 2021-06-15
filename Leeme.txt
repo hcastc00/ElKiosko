@@ -1,0 +1,23 @@
+INTEGRANTES DEL GRUPO 
+Hector Castro Casado - 71479513K
+Pablo Bayon Gutierrez - 71466465Z
+Ruben Gonzalez Gonzalez - 71481329C
+Diego Gonzalez Lopez - 71476728L
+Segio Casado Fernandez - 71477483S
+
+
+REQUISITOS NECESARIOS PARA DESPLIEGUE DEL SERVIDOR
+Esta aplicación web se ha desarrollado utilizando la tecnología del lado de servidor node.js. Para desplegarla,
+es necesario tener esta tecnología instalada. Si no se tiene, se puede descargar de su sitio web oficial:
+https://nodejs.org/es/download/
+
+
+DESPLIEGUE DEL SERVIDOR
+Se lanzará la página ejecutando el siguiente comando en el directorio raíz del proyecto:
+$node server.js 
+
+
+CONTROL DE VERSIONES CON GITHUB
+En el desarrollo de la práctica, los integrantes del grupo han utilizado la herramienta Git a través de Github para 
+organizar suj trabajo. El repositorio correspondiente a este proyecto puede encontrarse en la siguiente dirección:
+https://github.com/hcastc00/ElKiosko.git
