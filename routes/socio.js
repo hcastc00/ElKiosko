@@ -228,7 +228,7 @@ router.post('/comprarCromo', (req, res) => {
 
                     require('../DBHandler.js').tieneCromoEnAlbum(rutaCromo, album)
                         .then(function (result) {
-                            require('../DBHandler.js').venderCromo(cromoID, usuario)
+                            require('../DBHandler.js').venderCromo(cromoID, album)
                                 .then(function (result) {
                                     console.log('El cromo se ha comprado de manera satisfactoria')
                                     require('../DBHandler.js').modificaSaldo(usuario, precioCromo)

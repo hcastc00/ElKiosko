@@ -267,7 +267,7 @@ module.exports.tieneDineroParaCromo = function tieneDineroParaCromo(cromo, socio
 
 module.exports.tieneCromoEnAlbum = function tieneCromoEnAlbum(rutaCromo, album) {
     return new Promise(function (resolve, reject) {
-        $query = 'SELECT COUNT(cromos.id) as num '
+        $query = 'SELECT COUNT(cromos.ruta_imagen) as num '
             + 'FROM cromos '
             + 'INNER JOIN albumes ON cromos.album = albumes.id '
             + 'WHERE cromos.ruta_imagen = ? AND albumes.id = ?'
@@ -335,17 +335,12 @@ module.exports.tieneDineroParaAlbum = function tieneDineroParaAlbum(socio, album
 }
 
 
-module.exports.venderCromo = function venderCromo(cromo, usuario) {
+module.exports.venderCromo = function venderCromo(cromo, album) {
     return new Promise(function (resolve, reject) {
-        $query = 'SELECT albumes.id FROM albumes '
-            + 'INNER JOIN usuarios ON albumes.usuario = usuarios.nombre '
-            + 'INNER JOIN colecciones ON albumes.coleccion = colecciones.nombre '
-            + 'INNER JOIN cromos ON albumes.coleccion = cromos.coleccion '
-            + 'WHERE usuarios.nombre = ? AND colecciones.nombre = cromos.coleccion '
-            + 'GROUP BY albumes.id;'
+        $query = 'SELECT COUNT(id) as num FROM albumes WHERE id = ?'
 
-        connection.query($query, [usuario], function (err, rows, fields) {
-            if (err || rows[0] == null) {
+        connection.query($query, [album], function (err, rows, fields) {
+            if (err || rows[0].num === 0) {
                 console.log("No tiene el album necesario para comprar ese cromo");
                 reject("No tiene el album necesario para comprar ese cromo");
             } else {
@@ -353,7 +348,7 @@ module.exports.venderCromo = function venderCromo(cromo, usuario) {
 
                 $query = 'UPDATE cromos SET cromos.album = ? WHERE cromos.id = ?'
 
-                connection.query($query, [rows[0].id, cromo], function (err, filas, fields) {
+                connection.query($query, [album, cromo], function (err, filas, fields) {
                     if (err) {
                         console.log("An error ocurred performing the query.");
                         reject(err);
