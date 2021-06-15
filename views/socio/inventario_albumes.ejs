@@ -40,6 +40,10 @@
             </div>
         </div>
     </nav>
+    <% if(albumes.length == 0){ %>
+        <h1>No hay álbumes comprados todavía.</h1>      
+    <% } %>
+
     <div class="container">
         <div class="row">
             <% albumes.forEach(function(album, index){ %>

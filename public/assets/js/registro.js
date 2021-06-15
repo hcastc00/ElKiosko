@@ -10,22 +10,18 @@ function registrar() {
     let formulario_correcto = true
 
     if (usuario === '' || usuario == null) {
-        console.log("Usuario vacio")
         formulario_correcto = false
         crear_toast("Terminos", "Porfavor, especifique un nombre de usuario")
     }
     if (contrasenya === '' || contrasenya == null) {
-        console.log("contrasenya vacio")
         formulario_correcto = false
         crear_toast("Contraseña", "Porfavor, especifique una contraseña")
     }
     if (contrasenya_r === '' || contrasenya_r == null) {
-        console.log("Contrasenya_r vacia")
         formulario_correcto = false
         crear_toast("Contraseña", "Porfavor, confirme la contraseña")
     }
     if (contrasenya !== contrasenya_r) {
-        console.log("Contrasenyas distintas")
         formulario_correcto = false
         crear_toast("Contraseña", "La contraseña no coincide con la repetición.")
     }

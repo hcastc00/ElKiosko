@@ -34,7 +34,6 @@ function crearColeccion() {
         let ruta = this.id.replace("formulario_", "");
         cromoJSONBase = {nombre: nombre, precio: precio, cantidad: cantidad, ruta: ruta, nombreColeccion: nombreColeccion};
         cromosJSON = cromosJSON.concat(cromoJSONBase);
-        console.log(cromosJSON);
       });
 
       //Se sube la informacion de los cromos uno a uno

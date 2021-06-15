@@ -65,7 +65,6 @@ router.get('/modificaColeccion', (req, res) => {
         archivos.push(leido.name)
     })
 
-    console.log(archivos);
     res.render('admin/crear_cromos', { nombreColeccion: coleccion, fotos: archivos, nombre: nombre });
 })
 
@@ -181,21 +180,15 @@ router.get('/inventarioCromos', (req, res) => {
 
             db.getNumCromosAlaVenta(coleccion)
                 .then(function (result) {
-                    console.log('La de las reps' + result)
                     listareps = result;
                     db.getCromosColeccion(coleccion)
                         .then(function (result) {
-                            console.log('La query tocha ' , result)
 
                             result.forEach(elem =>{
                                 if(!listareps.some(item => item.ruta_imagen == elem.ruta_imagen)){
                                     elem.repeticiones = 0;                              
                                 }
                             })
-
-                            console.log(result)
-
-                            console.log(result.length);
                             res.render("admin/inventario_cromos", {
                                 usuario: usuario,
                                 coleccion: coleccion,

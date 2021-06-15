@@ -5,12 +5,9 @@ function comprarAlbum(event){
     let coleccion = event.target.id.split('_')[2];
     let identificadorPrecio = 'precioAlbum_' + idAlbum;
     let precioAlbum = document.getElementById(identificadorPrecio).innerText;
-
-    console.log(precioAlbum)
     
     $.post('/socio/comprarAlbum', {album: {id: idAlbum, precio: precioAlbum}})
         .done(function(result){
-            console.log(result)
             $.toast({
                 text: 'El album de la colección '+ coleccion + ' se ha añadido a su inventario correctamente',
                 title: 'VENDIDO',
@@ -21,7 +18,6 @@ function comprarAlbum(event){
         })
 
         .fail(function(xhr, status, error){
-            console.log(xhr.responseText)
             switch(xhr.responseText){
                 case 'Ya_Comprado':
                     $.toast({

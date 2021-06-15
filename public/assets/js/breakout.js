@@ -261,7 +261,6 @@ drawBall();
 function sendScore() {
     $.post('/socio/juegos/breakout', {score: score})
         .done(function (result) {
-            console.log(result)
             $.toast({
                 text: 'Se han añadido ' + result.monedas + ' monedas a tu saldo',
                 title: 'Enhorabuena!',

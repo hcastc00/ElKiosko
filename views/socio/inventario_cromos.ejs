@@ -44,6 +44,9 @@
     </nav>
     <div class="container">
         <div class="row">
+            <% if(cromos.length == 0){ %>
+                <h1>No hay cromos comprados todavía.</h1>      
+            <% } %>     
             <% cromos.forEach(cromo =>{ %>
                 <div class="col-md-6 col-xl-4 offset-xl-0">
                     <div class="card table" data-bss-hover-animate="pulse" style="width: 21rem;border-top-left-radius: 20px;border-top-right-radius: 20px;border-bottom-right-radius: 20px;border-bottom-left-radius: 20px;box-shadow: 2px 2px 16px 8px rgba(0,0,0,0.1);min-width: 300px;border-style: none;max-width: 100%;margin: 16px; height: auto;">

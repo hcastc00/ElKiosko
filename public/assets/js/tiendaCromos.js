@@ -1,13 +1,10 @@
 function comprarCromo(id, ruta, coleccion){
-    //let id = event.target.id.split('_')[1]
-    //let ruta = event.target.id.split('_')[2]
-    //let coleccion = event.target.id.split('_')[3]
+
     let precio = document.getElementById("precio_"+id).innerText;
-    console.log(precio)
 
     $.post('/socio/comprarCromo', {cromo: {id: id, ruta: ruta, precio: precio, coleccion: coleccion} })
         .done(function(result){
-            console.log(result)
+            
             $.toast({
                 text: 'Vendido!',
                 title: 'VENDIDO',
@@ -25,11 +22,10 @@ function comprarCromo(id, ruta, coleccion){
                     hideAfter: 6000
                 })
             }
-            sleep(2500).then(() => {  location.reload(); });
+            sleep(750).then(() => {  location.reload(); });
         })
 
         .fail(function(xhr, status, error){
-            console.log(xhr.responseText)
             switch(xhr.responseText){
                 case 'Ya_Comprado':
                     $.toast({

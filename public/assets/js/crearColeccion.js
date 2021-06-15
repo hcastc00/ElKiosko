@@ -9,7 +9,6 @@ function submitForm() {
 
         document.getElementById("gifCargando").style.display = "inline";
 
-        console.log('SE ENVIA AHORA BRO');
 
         const files = document.getElementById("form-files");
         const datosFormulario = new FormData();

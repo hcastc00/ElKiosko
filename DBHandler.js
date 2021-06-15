@@ -73,7 +73,7 @@ const getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 const getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
     return new Promise(function (resolve, reject) {
 
-        $query = 'select count(distinct ruta_imagen) from cromos ' +
+        $query = 'select count(distinct ruta_imagen) as num from cromos ' +
             'inner join colecciones on cromos.coleccion = colecciones.nombre ' +
             'inner join albumes  on cromos.album = albumes.id ' +
             'inner join socios  on albumes.usuario = socios.usuario ' +

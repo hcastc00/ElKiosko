@@ -119,12 +119,12 @@ router.get('/inventario', (req, res) => {
 
                     albumes.forEach(function (album, index) {
 
-                        let coleccion = album.nombre;
-                        let path = 'public/cromos/' + coleccion;
-                        numeroCromosColeccion.push(fs.readdirSync(path));
+                        let coleccion = album.nombre;                                    
                         db.getNumeroCromosAlbum(nombre, coleccion)
                             .then(function (result) {
-                                numeroCromosAlbum = result;
+                                numeroCromosAlbum = result.num; 
+                                let path = 'public/cromos/' + coleccion;
+                                numeroCromosColeccion = fs.readdirSync(path);
                                 album.estado = estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum)
                                 db.setEstadoAlbum(album.estado, album.id)
                                     .then(function (result) {
@@ -170,7 +170,6 @@ router.get('/inventarioCromos', (req, res) => {
                     saldoUsuario = result.saldo;
                     db.getCromosAlbum(album)
                         .then(function (result) {
-                            console.log(result.length);
                             res.render("socio/inventario_cromos", {
                                 usuario: usuario,
                                 saldo: saldoUsuario,
@@ -206,13 +205,11 @@ router.post('/comprarCromo', (req, res) => {
             album = result
             db.tieneDineroParaCromo(cromoID, usuario)
                 .then(function (result) {
-                    console.log('Se puede comprar el cromo sin problema')
 
                     db.tieneCromoEnAlbum(rutaCromo, album)
                         .then(function (result) {
                             db.venderCromo(cromoID, album)
                                 .then(function (result) {
-                                    console.log('El cromo se ha comprado de manera satisfactoria')
                                     db.modificaSaldo(usuario, precioCromo)
                                     db.getCromosAlaVenta(coleccion)
                                         .then(function (result) {

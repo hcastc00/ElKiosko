@@ -6,7 +6,6 @@ function login() {
     let contrasenya = campoContrasenya.value
 
     if (usuario != '' && usuario != null && contrasenya != '' && contrasenya != null) {
-        console.log("hago el post")
         $.post("/login", {usuario: usuario, contrasenya: contrasenya},
             function (res) {
                 if (!res.error) {
@@ -45,7 +44,6 @@ function login() {
         })
     }
 
-    console.log(document.getElementById('loginForm').children)
 
 }
 
