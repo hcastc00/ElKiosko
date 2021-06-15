@@ -1,4 +1,3 @@
-
 function login() {
 
     let campoUsuario = document.getElementById('usuario_login')
@@ -50,17 +49,14 @@ function login() {
 
 }
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const error = urlParams.get('error')
-if (error == 'caducado') {
-    $(document).ready(function () {
-        $(".modal").modal("toggle")
-    })
-}
-
-
 $(document).ready(function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const error = urlParams.get('error')
+    if (error === 'caducado') {
+        $(".modal").modal("toggle")
+    }
+
     document.getElementById("loginForm").addEventListener("keydown", function (e) {
         if (e.key === 'Enter') login()
     }, false);

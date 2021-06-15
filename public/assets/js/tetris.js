@@ -1,3 +1,5 @@
+const musica = new Audio('../../assets/audio/tetris.mp3')
+
 const Page = {
     IsSetup: false,
 
@@ -1045,6 +1047,11 @@ function sendScore() {
         })
 }
 
-musica = new Audio('../../assets/audio/tetris.mp3')
-musica.play().then(r =>
-    musica.volume = 0.05)
+    document.body.addEventListener("keydown", () => {
+        if (musica.paused) {
+            musica.play().then(() => {
+                musica.volume = 0.05
+                musica.loop = true
+            })
+        }
+    }, false);

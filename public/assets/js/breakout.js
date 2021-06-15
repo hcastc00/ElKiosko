@@ -1,3 +1,4 @@
+const musica = new Audio('../../assets/audio/breakout.mp3')
 const canvas = document.getElementById("canvas");
 const rulesBtn = document.getElementById('rules-btn');
 const closeBtn = document.getElementById('close-btn');
@@ -135,7 +136,7 @@ function drawBricks() {
                 else if (bricks[c][r].status === 2)
                     ctx.fillStyle = "#b12b38";
                 else
-                   ctx.fillStyle = "#32373c";
+                    ctx.fillStyle = "#32373c";
                 ctx.fill();
                 ctx.closePath();
             }
@@ -143,7 +144,7 @@ function drawBricks() {
     }
 }
 
-function reDrawBricks(){
+function reDrawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
             const brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
@@ -182,6 +183,7 @@ function pausecomp(millis) {
     }
     while (curDate - date < millis);
 }
+
 //Game run
 function draw() {
     if (pause === false) {
@@ -256,13 +258,9 @@ drawLives();
 drawPaddle();
 drawBall();
 
-musica = new Audio('../../assets/audio/breakout.mp3')
-musica.play().then(r =>
-    musica.volume = 0.05)
-
-function sendScore(){
+function sendScore() {
     $.post('/socio/juegos/breakout', {score: score})
-        .done(function(result){
+        .done(function (result) {
             console.log(result)
             $.toast({
                 text: 'Se han añadido ' + result.monedas + ' monedas a tu saldo',
@@ -273,3 +271,12 @@ function sendScore(){
             })
         })
 }
+
+    document.body.addEventListener("keydown", () => {
+        if (musica.paused) {
+            musica.play().then(() => {
+                musica.volume = 0.05
+                musica.loop = true
+            })
+        }
+    }, false);
