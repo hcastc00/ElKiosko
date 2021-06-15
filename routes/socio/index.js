@@ -3,8 +3,8 @@ router = express.Router()
 
 const fs = require('fs')
 const db = require('../../DBHandler.js')
-const { isSocio } = require('../../isAuth.js')
-const { crearTokenAcceso, enviarTokenAcceso } = require('../../tokens.js')
+const {isSocio} = require('../../isAuth.js')
+const {crearTokenAcceso, enviarTokenAcceso} = require('../../tokens.js')
 
 
 router.use((req, res, next) => {
@@ -25,7 +25,7 @@ router.use((req, res, next) => {
             res.redirect('/?error=caducado')
         } else if (e.message === 'Necesitas iniciar sesion') {
             res.redirect('/?error=noSesion')
-        }else {
+        } else {
             res.redirect('/')
         }
     }
@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
     db.getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            res.render("socio/index", { nombre: nombre, saldo: saldoUsuario })
+            res.render("socio/index", {nombre: nombre, saldo: saldoUsuario})
         })
         .catch(function (err) {
             console.log(err)
@@ -58,14 +58,18 @@ router.get('/tienda', (req, res) => {
                 .then(function (result) {
                     portadas = getPortadasColecciones(result)
                     console.log(result)
-                    res.render('socio/tienda_albumes', { portadas: portadas, colecciones: result, usuario: nombre, saldo: saldoUsuario })
+                    res.render('socio/tienda_albumes', {
+                        portadas: portadas,
+                        colecciones: result,
+                        usuario: nombre,
+                        saldo: saldoUsuario
+                    })
                 })
 
                 .catch(function (err) {
                     console.log('Se ha producido un error en la query', err)
                 })
         })
-
         .catch(function (err) {
             console.log(err)
         })
@@ -82,8 +86,13 @@ router.get('/tiendaCromos', (req, res) => {
             saldoUsuario = result.saldo;
             db.getCromosAlaVenta(coleccion)
                 .then(function (result) {
-                    console.log( result.length);
-                    res.render("socio/tienda_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
+                    console.log(result.length);
+                    res.render("socio/tienda_cromos", {
+                        usuario: usuario,
+                        saldo: saldoUsuario,
+                        coleccion: coleccion,
+                        cromos: result
+                    })
                 })
                 .catch(function (err) {
                     console.log(err)
@@ -108,7 +117,7 @@ router.get('/inventario', (req, res) => {
 
                     portadas = getPortadasColecciones(albumes)
 
-                    albumes.forEach(function(album, index){
+                    albumes.forEach(function (album, index) {
 
                         let coleccion = album.nombre;
                         let path = 'public/cromos/' + coleccion;
@@ -118,9 +127,14 @@ router.get('/inventario', (req, res) => {
                                 numeroCromosAlbum = result;
                                 album.estado = estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum)
                                 db.setEstadoAlbum(album.estado, album.id)
-                                    .then(function (result){
-                                        if (index==albumes.length-1){
-                                            res.render("socio/inventario_albumes", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
+                                    .then(function (result) {
+                                        if (index === albumes.length - 1) {
+                                            res.render("socio/inventario_albumes", {
+                                                nombre: nombre,
+                                                saldo: saldoUsuario,
+                                                portadas: portadas,
+                                                albumes: albumes
+                                            })
                                         }
                                     })
 
@@ -149,23 +163,28 @@ router.get('/inventarioCromos', (req, res) => {
     let saldoUsuario, album;
 
     db.getAlbum(usuario, coleccion)
-        .then(function(result){
+        .then(function (result) {
             album = result
             db.getSaldo(usuario)
-            .then(function (result) {
-                saldoUsuario = result.saldo;
-                db.getCromosAlbum(album)
-                    .then(function (result) {
-                        console.log( result.length);
-                        res.render("socio/inventario_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
-                    })
-                    .catch(function (err) {
-                        console.log(err)
-                    })
-            })
+                .then(function (result) {
+                    saldoUsuario = result.saldo;
+                    db.getCromosAlbum(album)
+                        .then(function (result) {
+                            console.log(result.length);
+                            res.render("socio/inventario_cromos", {
+                                usuario: usuario,
+                                saldo: saldoUsuario,
+                                coleccion: coleccion,
+                                cromos: result
+                            })
+                        })
+                        .catch(function (err) {
+                            console.log(err)
+                        })
+                })
         })
 
-        .catch(function(err){
+        .catch(function (err) {
             res.status(500)
             res.send(err)
         })
@@ -196,14 +215,14 @@ router.post('/comprarCromo', (req, res) => {
                                     console.log('El cromo se ha comprado de manera satisfactoria')
                                     db.modificaSaldo(usuario, precioCromo)
                                     db.getCromosAlaVenta(coleccion)
-                                        .then(function (result){
+                                        .then(function (result) {
                                             let estado = estadoColeccion(coleccion, result)
-                                            if(estado === 'agotada'){
+                                            if (estado === 'agotada') {
                                                 db.setEstadoColeccion(estado, coleccion)
                                                 res.send({agotada: estado})
-                                        }
-                                        res.sendStatus(200);
-                                    }).catch(function (err){
+                                            }
+                                            res.sendStatus(200);
+                                        }).catch(function (err) {
                                         console.log('Se ha producido un error', err)
                                         res.status(500)
                                         res.send(err)
@@ -224,7 +243,6 @@ router.post('/comprarCromo', (req, res) => {
                         })
 
 
-
                 })
 
                 .catch(function (err) {
@@ -241,7 +259,6 @@ router.post('/comprarCromo', (req, res) => {
         })
 
 });
-
 
 
 router.post('/comprarAlbum', (req, res) => {
@@ -282,31 +299,31 @@ function getPortadasColecciones(colecciones) {
     let fotos;
     colecciones.forEach(coleccion => {
         path = 'public/cromos/' + coleccion.nombre
-        fotos = fs.readdirSync(path, { withFileTypes: true });
+        fotos = fs.readdirSync(path, {withFileTypes: true});
         portadas.push(fotos[0].name)
     });
     return portadas;
 }
 
-function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum){
-    if (numeroCromosAlbum == numeroCromosColeccion){
+function estadoAlbum(numeroCromosColeccion, numeroCromosAlbum) {
+    if (numeroCromosAlbum == numeroCromosColeccion) {
         return 'Finalizado';
-    }else if(numeroCromosAlbum == 0){
+    } else if (numeroCromosAlbum == 0) {
         return 'No iniciado';
-    }else{
+    } else {
         return 'Completado parcialmente'
     }
 
 }
 
-function estadoColeccion(coleccion, result){
+function estadoColeccion(coleccion, result) {
 
     let cantidadCromos;
     let estado;
     cantidadCromos = result.length;
-    if (cantidadCromos == 0){
-         estado = 'agotada';
-    }else {
+    if (cantidadCromos == 0) {
+        estado = 'agotada';
+    } else {
         estado = 'activa';
     }
     return estado;

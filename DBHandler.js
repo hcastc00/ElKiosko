@@ -33,7 +33,6 @@ const insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
             if (err) {
                 reject(err);
             } else {
-                console.log('Query succesfully executed');
                 resolve(rows);
             }
         });
@@ -41,17 +40,14 @@ const insertarAlbum = function insertarAlbum(usuario, coleccion, estado) {
 }
 
 const getAlbum = function getAlbum(usuario, coleccion) {
-
     return new Promise(function (resolve, reject) {
 
         $query = 'SELECT id FROM albumes WHERE usuario = ? AND coleccion = ?';
         connection.query($query, [usuario, coleccion], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene ese album");
-                //console.log(err);
                 reject('Este usuario no tiene ese album');
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows[0].id);
             }
         });
@@ -59,17 +55,14 @@ const getAlbum = function getAlbum(usuario, coleccion) {
 }
 
 const getAlbumesUsuario = function getAlbumesUsuario(usuario) {
-
     return new Promise(function (resolve, reject) {
 
         $query = 'SELECT coleccion AS nombre, id FROM albumes WHERE usuario = ?';
         connection.query($query, [usuario], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene albumes");
-                //console.log(err);
                 reject('Este usuario no tiene albumes');
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows);
             }
         });
@@ -78,7 +71,6 @@ const getAlbumesUsuario = function getAlbumesUsuario(usuario) {
 }
 
 const getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
-
     return new Promise(function (resolve, reject) {
 
         $query = 'select count(distinct ruta_imagen) from cromos ' +
@@ -89,10 +81,8 @@ const getNumeroCromosAlbum = function getNumeroCromosAlbum(usuario, coleccion) {
         connection.query($query, [usuario, coleccion], function (err, rows, fields) {
             if (err || rows[0] == null) {
                 console.log("Este usuario no tiene cromos de ese album");
-                //console.log(err);
                 reject('Este usuario no tiene cromos de ese album');
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows[0]);
             }
         });
@@ -110,7 +100,6 @@ const getCromosAlbum = function getCromosAlbum(album) {
             if (err) {
                 reject(err);
             } else {
-                console.log('Query succesfully executed');
                 resolve(rows);
             }
         })
@@ -128,7 +117,6 @@ const getCromosColeccion = function getCromosColeccion(coleccion) {
             if (err) {
                 reject(err);
             } else {
-                console.log('Query succesfully executed');
                 resolve(rows);
             }
         })
@@ -144,7 +132,6 @@ const insertarColeccion = function insertarColeccion(nombre, precio_album, estad
                 if (err) {
                     reject(err);
                 } else {
-                    console.log('Query succesfully executed');
                     resolve(rows);
                 }
             })
@@ -160,7 +147,6 @@ const insertarCromo = function insertarCromo(nombre, ruta, precio, album, nombre
             if (err) {
                 reject(err);
             } else {
-                console.log('Query succesfully executed');
                 resolve(rows);
             }
         });
@@ -175,7 +161,6 @@ const insertarCromos = function insertarCromos(nombre, ruta, precio, album, nomb
             if (err) {
                 reject(err);
             } else {
-                console.log('Query succesfully executed');
                 resolve(rows);
             }
         });
@@ -193,7 +178,7 @@ const duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticio
                 reject(err);
             } else {
 
-                for (let i in rows[0]){
+                for (let i in rows[0]) {
                     datos_cromo.push(rows[0][i]);
                 }
                 datos_cromo.push(album)
@@ -209,7 +194,6 @@ const duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticio
                     if (err) {
                         reject(err);
                     } else {
-                        console.log('Query succesfully executed');
                         resolve(rows);
                     }
                 });
@@ -219,7 +203,6 @@ const duplicarCromo = function duplicarCromo(ruta, album, coleccion, n_repeticio
 }
 
 const getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
-
     return new Promise(function (resolve, reject) {
 
         $query = 'SELECT cromos.id, cromos.nombre, cromos.ruta_imagen, cromos.precio, COUNT(cromos.id) AS reps FROM cromos '
@@ -231,10 +214,8 @@ const getCromosAlaVenta = function getCromosAlaVenta(coleccion) {
         connection.query($query, [coleccion], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
-                //console.log(err);
                 reject(err);
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows);
             }
         });
@@ -333,8 +314,6 @@ const venderCromo = function venderCromo(cromo, album) {
                 console.log("No tiene el album necesario para comprar ese cromo");
                 reject("No tiene el album necesario para comprar ese cromo");
             } else {
-                console.log("Query succesfully executed: ", rows);
-
                 $query = 'UPDATE cromos SET cromos.album = ? WHERE cromos.id = ?'
 
                 connection.query($query, [album, cromo], function (err, filas, fields) {
@@ -342,7 +321,6 @@ const venderCromo = function venderCromo(cromo, album) {
                         console.log("An error ocurred performing the query.");
                         reject(err);
                     } else {
-                        console.log("Query succesfully executed: ", filas);
                         resolve(filas);
                     }
                 });
@@ -363,10 +341,8 @@ const venderAlbum = function venderAlbum(usuario, album) {
         connection.query($query, [usuario, album], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
-                //console.log(err);
                 reject('No puede comprar de nuevo un album que ya ha comprado.');
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows);
             }
         });
@@ -386,14 +362,10 @@ const getColeccionesActivas = function getColeccionesActivas() {
         connection.query($query, function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
-                //console.log(err);
                 reject(err);
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows);
             }
-
-
         });
     });
 }
@@ -407,14 +379,10 @@ const getEstadoColeccion = function getEstadoColeccion(coleccion) {
         connection.query($query, [coleccion], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
-                //console.log(err);
                 reject(err);
             } else {
-                console.log("Query succesfully executed: ", rows);
                 resolve(rows);
             }
-
-
         });
     });
 }
@@ -431,7 +399,6 @@ const setEstadoColeccion = function setEstadoColeccion(estado, coleccion) {
                 reject(err);
             }
             resolve()
-            console.log("Query succesfully executed: ", rows);
         });
     })
 }
@@ -448,7 +415,6 @@ const setEstadoAlbum = function setEstadoAlbum(estado, album) {
                 reject(err);
             }
             resolve()
-            console.log("Query succesfully executed: ", rows);
         });
     })
 }
@@ -528,12 +494,11 @@ const get_usuario = function get_usuario(nombre) {
         connection.query($query, [nombre], function (err, rows, fields) {
             if (err) {
                 console.log("An error ocurred performing the query.");
-                //console.log(err);
                 reject(err);
             }
 
             if (rows.length > 0) {
-                console.log("Query succesfully executed: ", rows);
+
                 resolve(rows[0]);
             } else {
                 resolve("null")
