@@ -6,12 +6,6 @@ const dotenv = require('dotenv');
 // get config vars
 dotenv.config();
 
-
-const ejs = require('ejs');
-
-const fs = require("fs");
-const fsPro = fs.promises;
-const path = require("path");
 const cookieParser = require("cookie-parser");
 
 //Para usar ejs en los renders
@@ -41,17 +35,3 @@ app.use('/socio', require('./routes/socio'))
 app.listen(80, () => {
     console.log("El Kiosko ha abierto! 😈 Escuchando en http://localhost:80");
 });
-
-
-/* CREO QUE ESTO YA NO SIRVE PARA NADA
-//Post para recibir imagenes introducidas por el admin
-app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
-    const file = req.file;
-    if (!file) {
-        const error = new Error("Please upload a file");
-        error.httpStatusCode = 400;
-        return next(error);
-    }
-    res.end(200);
-});
-*/

@@ -5,6 +5,8 @@ const fs = require('fs')
 const {isAdmin} = require('../isAuth.js')
 const {crearTokenAcceso, enviarTokenAcceso} = require('../tokens.js')
 const multer = require("multer");
+const fsPro = fs.promises;
+const path = require("path");
 
 
 //Storage con multer
@@ -74,8 +76,8 @@ function uploadThings(req, res) {
     if (moverAColeccion(coleccion) == 1) {
         res.send(200);
     } else {
+        //Responde con estado 500 cuando el nombre del directorio existe en el proyecto
         res.sendStatus(500);
-        //send('El nombre de coleccion introducido ya esta utilizado')
     }
 
 }
