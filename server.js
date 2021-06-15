@@ -28,8 +28,9 @@ app.use((req, res, next) => {
 
 app.use(express.static("public"));
 app.use(require('./routes/index'))
-app.use('/admin', require('./routes/admin'))
-app.use('/socio', require('./routes/socio'))
+app.use('/admin', require('./routes/admin/'))
+app.use('/socio', require('./routes/socio/'))
+app.use('/socio/juegos', require('./routes/socio/juegos'))
 
 
 app.listen(80, () => {

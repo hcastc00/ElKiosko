@@ -2,8 +2,9 @@ express = require('express')
 router = express.Router()
 
 const fs = require('fs')
-const { isSocio } = require('../isAuth.js')
-const { crearTokenAcceso, enviarTokenAcceso } = require('../tokens.js')
+const db = require('../../DBHandler.js')
+const { isSocio } = require('../../isAuth.js')
+const { crearTokenAcceso, enviarTokenAcceso } = require('../../tokens.js')
 
 
 router.use((req, res, next) => {
@@ -34,7 +35,7 @@ router.use((req, res, next) => {
 router.get('/', (req, res) => {
     let saldoUsuario;
     let nombre = req.nombre;
-    require('../DBHandler.js').getSaldo(nombre)
+    db.getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
             res.render("socio/index", { nombre: nombre, saldo: saldoUsuario })
@@ -49,11 +50,11 @@ router.get('/tienda', (req, res) => {
     let nombre = req.nombre;
     let saldoUsuario;
     let portadas;
-    require('../DBHandler.js').getSaldo(nombre)
+    db.getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
             //Obtengo de la base de datos una lista con las colecciones que tienen cromos para comprar
-            require('../DBHandler.js').getColeccionesActivas()
+            db.getColeccionesActivas()
                 .then(function (result) {
                     portadas = getPortadasColecciones(result)
                     console.log(result)
@@ -76,10 +77,10 @@ router.get('/tiendaCromos', (req, res) => {
     let usuario = req.nombre;
     let saldoUsuario;
 
-    require('../DBHandler.js').getSaldo(usuario)
+    db.getSaldo(usuario)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            require('../DBHandler.js').getCromosAlaVenta(coleccion)
+            db.getCromosAlaVenta(coleccion)
                 .then(function (result) {
                     console.log( result.length);
                     res.render("socio/tienda_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
@@ -98,10 +99,10 @@ router.get('/inventario', (req, res) => {
     let numeroCromosColeccion = [];
     let numeroCromosAlbum;
     let portadas
-    require('../DBHandler.js').getSaldo(nombre)
+    db.getSaldo(nombre)
         .then(function (result) {
             saldoUsuario = result.saldo;
-            require('../DBHandler.js').getAlbumesUsuario(nombre)
+            db.getAlbumesUsuario(nombre)
                 .then(function (result) {
                     albumes = result;
 
@@ -112,11 +113,11 @@ router.get('/inventario', (req, res) => {
                         let coleccion = album.nombre;
                         let path = 'public/cromos/' + coleccion;
                         numeroCromosColeccion.push(fs.readdirSync(path));
-                        require('../DBHandler.js').getNumeroCromosAlbum(nombre, coleccion)
+                        db.getNumeroCromosAlbum(nombre, coleccion)
                             .then(function (result) {
                                 numeroCromosAlbum = result;
                                 album.estado = estadoAlbum(numeroCromosColeccion.length, numeroCromosAlbum)
-                                require('../DBHandler.js').setEstadoAlbum(album.estado, album.id)
+                                db.setEstadoAlbum(album.estado, album.id)
                                     .then(function (result){
                                         if (index==albumes.length-1){
                                             res.render("socio/inventario_albumes", { nombre: nombre, saldo: saldoUsuario, portadas: portadas, albumes: albumes})
@@ -147,13 +148,13 @@ router.get('/inventarioCromos', (req, res) => {
     let usuario = req.nombre;
     let saldoUsuario, album;
 
-    require('../DBHandler.js').getAlbum(usuario, coleccion)
+    db.getAlbum(usuario, coleccion)
         .then(function(result){
             album = result
-            require('../DBHandler.js').getSaldo(usuario)
+            db.getSaldo(usuario)
             .then(function (result) {
                 saldoUsuario = result.saldo;
-                require('../DBHandler.js').getCromosAlbum(album)
+                db.getCromosAlbum(album)
                     .then(function (result) {
                         console.log( result.length);
                         res.render("socio/inventario_cromos", { usuario: usuario, saldo: saldoUsuario, coleccion: coleccion, cromos: result })
@@ -170,48 +171,6 @@ router.get('/inventarioCromos', (req, res) => {
         })
 })
 
-router.get('/juegos/tetris', (req, res) => {
-    let saldoUsuario;
-    let nombre = req.nombre;
-    require('../DBHandler.js').getSaldo(nombre)
-        .then(function (result) {
-            saldoUsuario = result.saldo;
-            res.render("socio/tetris", { usuario: nombre, saldo: saldoUsuario })
-        })
-        .catch(function (err) {
-            console.log(err)
-        })
-})
-
-router.post('/juegos/tetris', (req, res) => {
-
-    let monedas = Math.floor(req.body.score/300);
-    let username = req.nombre;
-    require('../DBHandler.js').modificaSaldo(username, monedas)
-    res.send({monedas : monedas});
-})
-
-router.get('/juegos/breakout', (req, res) => {
-    let saldoUsuario;
-    let nombre = req.nombre;
-    require('../DBHandler.js').getSaldo(nombre)
-        .then(function (result) {
-            saldoUsuario = result.saldo;
-            res.render("socio/breakout", { usuario: nombre, saldo: saldoUsuario })
-        })
-        .catch(function (err) {
-            console.log(err)
-        })
-})
-
-router.post('/juegos/breakout', (req, res) => {
-    let monedas = req.body.score;
-    let nombre = req.nombre;
-    require('../DBHandler.js').modificaSaldo(nombre,monedas)
-    res.send({monedas : monedas});
-})
-
-
 router.post('/comprarCromo', (req, res) => {
     const cromo = req.body.cromo;
     const cromoID = cromo.id;
@@ -222,25 +181,25 @@ router.post('/comprarCromo', (req, res) => {
     const usuario = req.nombre;
 
 
-    require('../DBHandler.js').getAlbum(usuario, coleccion)
+    db.getAlbum(usuario, coleccion)
 
         .then(function (result) {
             album = result
-            require('../DBHandler.js').tieneDineroParaCromo(cromoID, usuario)
+            db.tieneDineroParaCromo(cromoID, usuario)
                 .then(function (result) {
                     console.log('Se puede comprar el cromo sin problema')
 
-                    require('../DBHandler.js').tieneCromoEnAlbum(rutaCromo, album)
+                    db.tieneCromoEnAlbum(rutaCromo, album)
                         .then(function (result) {
-                            require('../DBHandler.js').venderCromo(cromoID, album)
+                            db.venderCromo(cromoID, album)
                                 .then(function (result) {
                                     console.log('El cromo se ha comprado de manera satisfactoria')
-                                    require('../DBHandler.js').modificaSaldo(usuario, precioCromo)
-                                    require('../DBHandler.js').getCromosAlaVenta(coleccion)
+                                    db.modificaSaldo(usuario, precioCromo)
+                                    db.getCromosAlaVenta(coleccion)
                                         .then(function (result){
                                             let estado = estadoColeccion(coleccion, result)
                                             if(estado === 'agotada'){
-                                                require('../DBHandler.js').setEstadoColeccion(estado, coleccion)
+                                                db.setEstadoColeccion(estado, coleccion)
                                                 res.send({agotada: estado})
                                         }
                                         res.sendStatus(200);
@@ -293,12 +252,12 @@ router.post('/comprarAlbum', (req, res) => {
     const usuario = req.nombre;
 
     //Primero se comprueba si tiene el saldo necesario para comprarlo y si tiene se compra
-    require('../DBHandler.js').tieneDineroParaAlbum(usuario, albumID)
+    db.tieneDineroParaAlbum(usuario, albumID)
         .then(function (result) {
-            require('../DBHandler.js').venderAlbum(usuario, albumID)
+            db.venderAlbum(usuario, albumID)
                 .then(function (result) {
                     console.log('El album se ha vendido de manera satisfactoria')
-                    require('../DBHandler.js').modificaSaldo(usuario, precioAlbum)
+                    db.modificaSaldo(usuario, precioAlbum)
                     res.sendStatus(200)
                 })
 

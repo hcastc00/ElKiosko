@@ -2,8 +2,9 @@ express = require('express')
 router = express.Router()
 
 const fs = require('fs')
-const {isAdmin} = require('../isAuth.js')
-const {crearTokenAcceso, enviarTokenAcceso} = require('../tokens.js')
+const db = require('../../DBHandler.js')
+const {isAdmin} = require('../../isAuth.js')
+const {crearTokenAcceso, enviarTokenAcceso} = require('../../tokens.js')
 const multer = require("multer");
 const fsPro = fs.promises;
 const path = require("path");
@@ -91,14 +92,14 @@ function uploadCromos(req, res) {
     let usuario = req.nombre;
     let coleccion = req.body.nombreColeccion;
     let cromoJSON = req.body.cromosJSON;
-    require('../DBHandler.js').getAlbum(usuario, coleccion)
+    db.getAlbum(usuario, coleccion)
         .then(function (id) {
             album = id
             for (let i = 0; i < cromoJSON.length; i++) {
-                require('../DBHandler.js').insertarCromo(cromoJSON[i].nombre, cromoJSON[i].ruta, cromoJSON[i].precio, album, coleccion)
+                db.insertarCromo(cromoJSON[i].nombre, cromoJSON[i].ruta, cromoJSON[i].precio, album, coleccion)
                     .then(function (result) {
                         if (cromoJSON[i].cantidad > 1) {
-                            require('../DBHandler.js').duplicarCromo(cromoJSON[i].ruta, album, coleccion, (cromoJSON[i].cantidad-1))
+                            db.duplicarCromo(cromoJSON[i].ruta, album, coleccion, (cromoJSON[i].cantidad-1))
                                 .then(function (result) {
                                 }).catch(function (err) {
                                 console.log(err);
@@ -124,7 +125,7 @@ function crearAlbum(req, res) {
     let coleccion = req.body.nombreColeccion;
     let usuario = req.nombre
     let estado = 'finalizada'
-    require('../DBHandler.js').insertarAlbum(usuario, coleccion, estado)
+    db.insertarAlbum(usuario, coleccion, estado)
         .then(function (result) {
             res.sendStatus(200);
         });
@@ -136,7 +137,7 @@ function crearColeccion(req, res) {
     let nombre = req.body.nombreColeccion;
     let precioAlbum = req.body.precio;
     let estado = 'activa';
-    require('../DBHandler.js').insertarColeccion(nombre, precioAlbum, estado)
+    db.insertarColeccion(nombre, precioAlbum, estado)
 }
 
 router.get('/colecciones_creadas', (req, res) => {
@@ -147,7 +148,7 @@ router.get('/colecciones_creadas', (req, res) => {
     let numeroCromosAlbum;
     let portadas
 
-    require('../DBHandler.js').getAlbumesUsuario(nombre)
+    db.getAlbumesUsuario(nombre)
         .then(function (result) {
             albumes = result;
 
@@ -173,10 +174,10 @@ router.get('/inventarioCromos', (req, res) => {
     let coleccion = req.query.coleccion;
     let usuario = req.nombre;
 
-    require('../DBHandler.js').getAlbum(usuario, coleccion)
+    db.getAlbum(usuario, coleccion)
         .then(function (result) {
             let album = result
-            require('../DBHandler.js').getCromosColeccion(coleccion)
+            db.getCromosColeccion(coleccion)
                 .then(function (result) {
                     console.log(result.length);
                     res.render("admin/inventario_cromos", {
@@ -199,9 +200,9 @@ router.get('/inventarioCromos', (req, res) => {
 router.post('/inventarioCromos', (req, res) => {
 
     if (req.body.copias >= 1) {
-        require('../DBHandler.js').duplicarCromo(req.body.ruta, req.body.album, req.body.coleccion, req.body.copias)
+        db.duplicarCromo(req.body.ruta, req.body.album, req.body.coleccion, req.body.copias)
             .then((result) => {
-                require('../DBHandler.js').setEstadoColeccion('activa', req.body.coleccion)
+                db.setEstadoColeccion('activa', req.body.coleccion)
                 res.end()
             })
             .catch((error) => {
