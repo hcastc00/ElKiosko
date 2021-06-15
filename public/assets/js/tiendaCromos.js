@@ -25,8 +25,7 @@ function comprarCromo(id, ruta, coleccion){
                     hideAfter: 6000
                 })
             }
-            //TODO mirar como hacer pa que esto se muestre despues de que se acabe el toast, o por lo menos que espere un poco
-            location.reload()
+            sleep(2500).then(() => {  location.reload(); });
         })
 
         .fail(function(xhr, status, error){
@@ -61,4 +60,8 @@ function comprarCromo(id, ruta, coleccion){
                     break;    
             }            
         })
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }
